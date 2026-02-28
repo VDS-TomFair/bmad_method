@@ -76,7 +76,6 @@ mkdir -p "$A0PROJ/knowledge/main"
 mkdir -p "$A0PROJ/knowledge/fragments"
 mkdir -p "$A0PROJ/knowledge/solutions"
 mkdir -p "$A0PROJ/instructions"
-mkdir -p "$A0PROJ/skills"
 
 # Copy BMAD framework (only if not already present)
 if [ ! -d "$A0PROJ/_bmad" ]; then
@@ -88,17 +87,6 @@ if [ ! -d "$A0PROJ/_bmad" ]; then
 else
   echo "Framework already present, skipping copy."
   BMAD_STATUS="already existed"
-fi
-
-# Copy skills (only if not already present)
-if [ ! -d "$A0PROJ/skills/bmad-init" ]; then
-  echo "Copying BMAD skills from $TEMPLATE_SRC/skills/ ..."
-  cp -r "$TEMPLATE_SRC/skills/." "$A0PROJ/skills/"
-  echo "Skills copied."
-  SKILLS_STATUS="copied"
-else
-  echo "Skills already present, skipping copy."
-  SKILLS_STATUS="already existed"
 fi
 
 # Write 01-bmad-config.md (only if not already present — immutable config)
@@ -164,7 +152,6 @@ echo "    test-artifacts/"
 echo "  .a0proj/knowledge/                <- Project knowledge base"
 echo "    main/ | fragments/ | solutions/"
 echo "  .a0proj/instructions/             <- Auto-injected state"
-echo "  .a0proj/skills/                   <- BMAD skills ($SKILLS_STATUS)"
 echo ""
 echo "State files:"
 echo "  01-bmad-config.md  — Project configuration ($CONFIG_STATUS)"

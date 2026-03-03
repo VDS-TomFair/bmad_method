@@ -1,0 +1,8 @@
+{
+    "chat_model_name": "olafangensan-glm-4.7-flash-heretic",
+    "chat_model_ctx_length": 128000,
+    "chat_model_kwargs": {
+        "temperature": 0.90,
+        "top_p": 0.95
+    }
+}

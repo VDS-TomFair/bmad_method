@@ -1,0 +1,16 @@
+<html>
+<head>
+  <script type="module" src="/usr/plugins/bmad/webui/bmad-dashboard-store.js"></script>
+</head>
+<body>
+  <div x-data>
+    <template x-if="$store.bmadDashboard">
+      <button class="config-button"
+              @click="openModal('/usr/plugins/bmad/webui/bmad-dashboard.html')"
+              title="BMAD Dashboard">
+        <span class="material-symbols-outlined">dashboard</span>
+      </button>
+    </template>
+  </div>
+</body>
+</html>

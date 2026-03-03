@@ -1,0 +1,8 @@
+{
+    "chat_model_name": "claude-sonnet-4-6",
+    "chat_model_ctx_length": 200000,
+    "chat_model_kwargs": {
+        "temperature": 0.78,
+        "top_p": 0.93
+    }
+}

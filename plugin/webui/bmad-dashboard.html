@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BMAD Dashboard</title>
+  <script type="module" src="/usr/plugins/bmad/webui/bmad-dashboard-store.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+         background:var(--color-bg,#1e1e2e);color:var(--color-fg,#cdd6f4);
+         min-height:100vh;padding:0}
+    .dash{max-width:860px;margin:0 auto;padding:20px 16px 32px}
+    .dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .dash-title{font-size:1.25rem;font-weight:700;display:flex;align-items:center;gap:8px}
+    .dash-meta{font-size:.75rem;color:#6c7086}
+    .refresh-btn{background:none;border:1px solid #45475a;color:#cdd6f4;border-radius:6px;
+                 padding:5px 12px;cursor:pointer;font-size:.8rem;transition:all .15s}
+    .refresh-btn:hover{background:#313244;border-color:#89b4fa}
+    .section{background:#181825;border:1px solid #313244;border-radius:10px;margin-bottom:14px;overflow:hidden}
+    .section-head{padding:10px 16px;background:#1e1e2e;border-bottom:1px solid #313244;
+                  display:flex;align-items:center;justify-content:space-between}
+    .section-title{font-size:.8rem;font-weight:700;text-transform:uppercase;
+                   letter-spacing:.08em;color:#89b4fa}
+    .section-body{padding:14px 16px}
+    /* State */
+    .state-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .state-item label{font-size:.7rem;color:#6c7086;display:block;margin-bottom:2px}
+    .state-item span{font-size:.9rem;font-weight:600}
+    .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
+    .badge-ready{background:#1e3a1e;color:#a6e3a1}
+    .badge-phase{background:#2a2a1e;color:#f9e2af}
+    .badge-unknown{background:#2a1e1e;color:#f38ba8}
+    .issues-list{margin-top:10px;display:flex;flex-direction:column;gap:4px}
+    .issue-item{font-size:.78rem;color:#f9e2af;background:#2a2a1e;
+                border-radius:4px;padding:4px 10px;border-left:3px solid #f9e2af}
+    /* Agents */
+    .agent-summary{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .health-bar-wrap{flex:1;height:8px;background:#313244;border-radius:4px;overflow:hidden}
+    .health-bar-fill{height:100%;border-radius:4px;transition:width .4s}
+    .health-bar-fill.all-ok{background:#a6e3a1}
+    .health-bar-fill.partial{background:#f9e2af}
+    .health-bar-fill.critical{background:#f38ba8}
+    .health-score{font-size:.85rem;font-weight:700;min-width:60px;text-align:right}
+    .agent-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
+    .agent-chip{display:flex;align-items:center;gap:6px;padding:5px 8px;
+                background:#1e1e2e;border-radius:6px;border:1px solid #313244;font-size:.78rem}
+    .agent-chip.broken{border-color:#f38ba870;background:#2a1e1e}
+    .agent-chip .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .dot-ok{background:#a6e3a1}
+    .dot-fail{background:#f38ba8}
+    .agent-chip .aname{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .broken-detail{margin-top:8px;padding:8px 10px;background:#2a1e1e;
+                   border-radius:6px;border:1px solid #f38ba850}
+    .broken-detail h4{font-size:.75rem;color:#f38ba8;margin-bottom:4px}
+    .broken-detail li{font-size:.72rem;color:#cba6f7;list-style:none;padding:1px 0;font-family:monospace}
+    /* Skills */
+    .skills-row{display:flex;flex-wrap:wrap;gap:6px}
+    .skill-badge{padding:4px 10px;border-radius:6px;font-size:.78rem;font-weight:600}
+    .skill-ok{background:#1e3a1e;color:#a6e3a1}
+    .skill-fail{background:#2a1e1e;color:#f38ba8}
+    /* Tests */
+    .test-row{display:flex;align-items:center;gap:12px}
+    .test-score{font-size:1.4rem;font-weight:800}
+    .test-score.ok{color:#a6e3a1}
+    .test-score.warn{color:#f38ba8}
+    .test-meta{font-size:.75rem;color:#6c7086}
+    .wwn-block{margin-top:8px;background:#2a2a1e;border-radius:6px;padding:8px 12px}
+    .wwn-block p{font-size:.77rem;margin-bottom:3px}
+    .wwn-block strong{color:#f9e2af}
+    /* Langfuse */
+    .lf-row{display:flex;gap:24px;flex-wrap:wrap}
+    .lf-stat label{font-size:.7rem;color:#6c7086;display:block}
+    .lf-stat span{font-size:.95rem;font-weight:700;color:#89b4fa}
+    .top-agents{margin-top:10px}
+    .top-agents h4{font-size:.72rem;color:#6c7086;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+    .ta-row{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+    .ta-bar-wrap{flex:1;height:5px;background:#313244;border-radius:3px;overflow:hidden}
+    .ta-bar{height:100%;background:#89b4fa;border-radius:3px}
+    .ta-name{font-size:.75rem;min-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ta-count{font-size:.72rem;color:#6c7086;min-width:24px;text-align:right}
+    /* Recommendation */
+    .rec-section{background:#1a1a2e;border:1px solid #89b4fa40;border-radius:10px;padding:14px 16px;margin-bottom:14px}
+    .rec-label{font-size:.8rem;color:#6c7086;margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em}
+    .rec-action{font-size:1rem;font-weight:700;color:#89b4fa;margin-bottom:4px}
+    .rec-hint{font-size:.82rem;color:#a6adc8}
+    .issue-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .issue-chip{padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
+    .chip-blocker{background:#2a1e1e;color:#f38ba8;border:1px solid #f38ba860}
+    .chip-warn{background:#2a2a1e;color:#f9e2af;border:1px solid #f9e2af60}
+    .chip-open{background:#1e2a2a;color:#94e2d5;border:1px solid #94e2d560}
+    /* Loading/Error */
+    .loading-state{text-align:center;padding:40px;color:#6c7086}
+    .loading-spin{display:inline-block;animation:spin 1s linear infinite;font-size:1.5rem}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .error-state{background:#2a1e1e;border:1px solid #f38ba860;border-radius:8px;
+                 padding:16px;text-align:center;color:#f38ba8}
+    .archetypes-note{font-size:.72rem;color:#6c7086;margin-top:6px;font-style:italic}
+  </style>
+</head>
+<body>
+<div x-data>
+  <template x-if="$store.bmadDashboard">
+    <div x-init="$store.bmadDashboard.onOpen()" x-destroy="$store.bmadDashboard.cleanup()">
+
+      <div class="dash">
+        <!-- Header -->
+        <div class="dash-header">
+          <div class="dash-title">🧙 BMAD Dashboard</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="dash-meta" x-text="$store.bmadDashboard.lastRefresh ? 'Updated ' + $store.bmadDashboard.lastRefresh : ''"></span>
+            <button class="refresh-btn" @click="$store.bmadDashboard.refresh()" :disabled="$store.bmadDashboard.loading">
+              <span x-text="$store.bmadDashboard.loading ? '⟳ Loading...' : '⟳ Refresh'"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <template x-if="$store.bmadDashboard.loading && !$store.bmadDashboard.data">
+          <div class="loading-state"><span class="loading-spin">⟳</span><br>Loading BMAD status...</div>
+        </template>
+
+        <!-- Error -->
+        <template x-if="$store.bmadDashboard.error && !$store.bmadDashboard.data">
+          <div class="error-state">⚠️ <span x-text="$store.bmadDashboard.error"></span></div>
+        </template>
+
+        <!-- Main content -->
+        <template x-if="$store.bmadDashboard.data">
+          <div>
+
+            <!-- ⚡ Recommendation -->
+            <div class="rec-section">
+              <div class="rec-label">⚡ Recommended Next Action</div>
+              <div class="rec-action" x-text="$store.bmadDashboard.data.recommendation.label"></div>
+              <div class="rec-hint">→ <span x-text="$store.bmadDashboard.data.recommendation.action"></span></div>
+              <div class="issue-chips" x-show="$store.bmadDashboard.data.recommendation.issues.length > 0">
+                <template x-for="issue in $store.bmadDashboard.data.recommendation.issues" :key="issue.what">
+                  <span class="issue-chip"
+                        :class="{'chip-blocker': issue.sev==='blocker', 'chip-warn': issue.sev==='warn', 'chip-open': issue.sev==='open'}"
+                        x-text="issue.what"></span>
+                </template>
+              </div>
+            </div>
+
+            <!-- 📍 Project State -->
+            <div class="section">
+              <div class="section-head">
+                <span class="section-title">📍 Project State</span>
+                <span class="dash-meta" x-text="$store.bmadDashboard.data.generated"></span>
+              </div>
+              <div class="section-body">
+                <div class="state-grid">
+                  <div class="state-item">
+                    <label>Phase</label>
+                    <span class="badge" :class="{
+                      'badge-ready': $store.bmadDashboard.data.state.phase === 'ready',
+                      'badge-phase': $store.bmadDashboard.data.state.phase !== 'ready' && $store.bmadDashboard.data.state.phase !== 'unknown',
+                      'badge-unknown': $store.bmadDashboard.data.state.phase === 'unknown'
+                    }" x-text="$store.bmadDashboard.data.state.phase"></span>
+                  </div>
+                  <div class="state-item">
+                    <label>Active Artifact</label>
+                    <span style="font-size:.82rem" x-text="$store.bmadDashboard.data.state.artifact"></span>
+                  </div>
+                </div>
+                <div class="issues-list" x-show="$store.bmadDashboard.data.state.issues.length > 0">
+                  <template x-for="issue in $store.bmadDashboard.data.state.issues" :key="issue">
+                    <div class="issue-item" x-text="issue"></div>
+                  </template>
+                </div>
+                <div x-show="$store.bmadDashboard.data.state.issues.length === 0"
+                     style="margin-top:8px;font-size:.8rem;color:#a6e3a1">✅ No open architecture items</div>
+              </div>
+            </div>
+
+            <!-- 🤖 Agent Health -->
+            <div class="section">
+              <div class="section-head">
+                <span class="section-title">🤖 Agent Health</span>
+                <span style="font-size:.78rem;color:#6c7086"
+                      x-text="$store.bmadDashboard.data.agents.healthy.length + '/' + $store.bmadDashboard.data.agents.total + ' healthy'"></span>
+              </div>
+              <div class="section-body">
+                <div class="agent-summary">
+                  <div class="health-bar-wrap">
+                    <div class="health-bar-fill"
+                         :class="{
+                           'all-ok': $store.bmadDashboard.agentHealthPercent === 100,
+                           'partial': $store.bmadDashboard.agentHealthPercent >= 50 && $store.bmadDashboard.agentHealthPercent < 100,
+                           'critical': $store.bmadDashboard.agentHealthPercent < 50
+                         }"
+                         :style="'width:' + $store.bmadDashboard.agentHealthPercent + '%'"></div>
+                  </div>
+                  <div class="health-score"
+                       :style="$store.bmadDashboard.agentHealthPercent === 100 ? 'color:#a6e3a1' : 'color:#f38ba8'"
+                       x-text="$store.bmadDashboard.agentHealthPercent + '%'"></div>
+                </div>
+                <div class="agent-list">
+                  <template x-for="agent in $store.bmadDashboard.data.agents.healthy" :key="agent.name">
+                    <div class="agent-chip">
+                      <div class="dot dot-ok"></div>
+                      <span class="aname" x-text="agent.display"></span>
+                    </div>
+                  </template>
+                  <template x-for="agent in $store.bmadDashboard.data.agents.broken" :key="agent.name">
+                    <div class="agent-chip broken">
+                      <div class="dot dot-fail"></div>
+                      <span class="aname" x-text="agent.display"></span>
+                    </div>
+                  </template>
+                </div>
+                <div x-show="$store.bmadDashboard.data.agents.broken.length > 0" style="margin-top:10px">
+                  <template x-for="agent in $store.bmadDashboard.data.agents.broken" :key="agent.name + '-detail'">
+                    <div class="broken-detail">
+                      <h4>🔴 <span x-text="agent.display"></span> — missing files:</h4>
+                      <ul>
+                        <template x-for="f in agent.missing" :key="f">
+                          <li x-text="f"></li>
+                        </template>
+                      </ul>
+                    </div>
+                  </template>
+                </div>
+                <div class="archetypes-note">+ 5 Party Mode archetypes (Leonardo, Dalí, de Bono, Campbell, Jobs) — manifest-only</div>
+              </div>
+            </div>
+
+            <!-- 🔌 Skills + 🧪 Tests (2-col) -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+
+              <div class="section" style="margin-bottom:0">
+                <div class="section-head"><span class="section-title">🔌 Skills</span></div>
+                <div class="section-body">
+                  <div class="skills-row">
+                    <template x-for="s in $store.bmadDashboard.data.skills.ok" :key="s">
+                      <span class="skill-badge skill-ok" x-text="s"></span>
+                    </template>
+                    <template x-for="s in $store.bmadDashboard.data.skills.broken" :key="s">
+                      <span class="skill-badge skill-fail" x-text="s + ' ✗'"></span>
+                    </template>
+                  </div>
+                  <div style="margin-top:8px;font-size:.75rem;color:#6c7086"
+                       x-text="$store.bmadDashboard.data.skills.ok.length + '/' + $store.bmadDashboard.data.skills.total + ' symlinks OK'"></div>
+                </div>
+              </div>
+
+              <div class="section" style="margin-bottom:0">
+                <div class="section-head"><span class="section-title">🧪 Tests</span></div>
+                <div class="section-body">
+                  <template x-if="$store.bmadDashboard.data.tests.status === 'ok'">
+                    <div>
+                      <div class="test-row">
+                        <div class="test-score" :class="$store.bmadDashboard.testStatusClass"
+                             x-text="$store.bmadDashboard.data.tests.passed + '/' + $store.bmadDashboard.data.tests.total"></div>
+                        <div class="test-meta">
+                          <div x-text="$store.bmadDashboard.data.tests.failing === 0 ? 'All passing ✅' : $store.bmadDashboard.data.tests.failing + ' failing ❌'"></div>
+                          <div x-text="'Verified: ' + $store.bmadDashboard.data.tests.verified"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <template x-if="$store.bmadDashboard.data.tests.status !== 'ok'">
+                    <div style="color:#6c7086;font-size:.82rem">No test report found</div>
+                  </template>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 📊 Langfuse -->
+            <div class="section">
+              <div class="section-head">
+                <span class="section-title">📊 Langfuse Telemetry</span>
+                <span style="font-size:.75rem" :style="$store.bmadDashboard.data.langfuse.status === 'connected' ? 'color:#a6e3a1' : 'color:#6c7086'"
+                      x-text="$store.bmadDashboard.data.langfuse.status"></span>
+              </div>
+              <div class="section-body">
+                <template x-if="$store.bmadDashboard.data.langfuse.status === 'connected'">
+                  <div>
+                    <div class="lf-row">
+                      <div class="lf-stat">
+                        <label>Total Traces</label>
+                        <span x-text="$store.bmadDashboard.data.langfuse.trace_count"></span>
+                      </div>
+                      <div class="lf-stat" x-show="$store.bmadDashboard.data.langfuse.last_trace">
+                        <label>Last Trace</label>
+                        <span style="font-size:.85rem" x-text="$store.bmadDashboard.data.langfuse.last_trace"></span>
+                      </div>
+                      <div class="lf-stat">
+                        <label>Host</label>
+                        <span style="font-size:.72rem;color:#6c7086" x-text="$store.bmadDashboard.data.langfuse.host"></span>
+                      </div>
+                    </div>
+                    <div class="top-agents" x-show="$store.bmadDashboard.data.langfuse.top_agents && $store.bmadDashboard.data.langfuse.top_agents.length > 0">
+                      <h4>Top Agents</h4>
+                      <template x-for="(agent, idx) in $store.bmadDashboard.data.langfuse.top_agents" :key="agent.name">
+                        <div class="ta-row">
+                          <span class="ta-name" x-text="agent.name"></span>
+                          <div class="ta-bar-wrap">
+                            <div class="ta-bar" :style="'width:' + Math.min(100, (agent.count / ($store.bmadDashboard.data.langfuse.top_agents[0].count || 1)) * 100) + '%'"></div>
+                          </div>
+                          <span class="ta-count" x-text="agent.count"></span>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+                </template>
+                <template x-if="$store.bmadDashboard.data.langfuse.status !== 'connected'">
+                  <div style="color:#6c7086;font-size:.82rem">Langfuse not connected — configure plugin keys to enable telemetry</div>
+                </template>
+              </div>
+            </div>
+
+          </div>
+        </template>
+      </div>
+
+    </div>
+  </template>
+</div>
+</body>
+</html>

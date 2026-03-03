@@ -1,0 +1,6 @@
+title: BMAD Dashboard
+description: Live BMAD Framework status dashboard — agent health, skills, tests, Langfuse telemetry, and next-action recommendations.
+version: 1.0.0
+settings_sections: []
+per_project_config: false
+per_agent_config: false

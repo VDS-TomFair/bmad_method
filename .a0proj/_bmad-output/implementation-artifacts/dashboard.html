@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMAD Agent Health Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f2f5;color:#222;min-height:100vh}
+header{padding:0}
+#summary-banner{padding:20px 24px;font-size:1.4rem;font-weight:700;text-align:center;letter-spacing:.02em;transition:background .3s}
+#summary-banner.all-green{background:#2d9e2d;color:#fff}
+#summary-banner.partial{background:#e6a817;color:#fff}
+#summary-banner.critical{background:#c0392b;color:#fff}
+#summary-banner.loading{background:#555;color:#fff}
+main{max-width:900px;margin:28px auto;padding:0 16px}
+h2{font-size:1rem;color:#555;margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+#agent-list{list-style:none;border:1px solid #dde;border-radius:8px;overflow:hidden;background:#fff}
+#agent-list li{padding:12px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee;font-size:.97rem}
+#agent-list li:last-child{border-bottom:none}
+#agent-list li:nth-child(odd){background:#f9f9fb}
+#agent-list li:nth-child(even){background:#fff}
+.agent-icon{font-size:1.15rem;flex-shrink:0}
+.agent-name{font-weight:600;flex:1;font-family:monospace;font-size:.95rem}
+.agent-status{font-size:.85rem;color:#555}
+.agent-status.ok{color:#2d7a2d;font-weight:600}
+.agent-status.fail{color:#b22222;font-weight:600}
+.agent-detail-wrap{width:100%;margin-top:6px}
+details{margin-top:4px;width:100%}
+details summary{cursor:pointer;font-size:.83rem;color:#a00;font-weight:600;padding:3px 0;user-select:none}
+details summary:hover{text-decoration:underline}
+.missing-list{margin:6px 0 0 16px;padding:0;list-style:none}
+.missing-list li{font-family:monospace;font-size:.78rem;color:#c0392b;background:#fff0f0;border-radius:3px;padding:2px 8px;margin-bottom:3px}
+.agent-row{width:100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+#loading{text-align:center;padding:32px;color:#777;font-size:1.1rem}
+footer{text-align:center;padding:18px;font-size:.8rem;color:#999}
+@media(max-width:600px){.agent-name{font-size:.82rem}}
+</style>
+</head>
+<body>
+<header>
+  <div id="summary-banner" class="loading" role="banner" aria-live="polite">Checking agents...</div>
+</header>
+<main>
+  <h2>BMAD Agent Health Check</h2>
+  <ul id="agent-list" role="list" aria-label="Agent health status list">
+    <li id="loading">&#9203; Running health checks&hellip;</li>
+  </ul>
+</main>
+<footer>BMAD Agent Health Dashboard &mdash; file:// compatible &mdash; zero dependencies</footer>
+<script>
+// ── CONFIGURATION CONSTANTS ──────────────────────────────────────────────────
+const BASE_PATH = '../../../agents';
+const REQUIRED_FILES = [
+  'agent.system.main.role.md',
+  'agent.system.main.communication.md',
+  'agent.system.main.communication_additions.md',
+  'agent.system.main.tips.md'
+];
+const AGENTS = [
+  'bmad-analyst', 'bmad-architect', 'bmad-agent-builder',
+  'bmad-brainstorming-coach', 'bmad-design-thinking', 'bmad-dev',
+  'bmad-innovation', 'bmad-master', 'bmad-module-builder', 'bmad-pm',
+  'bmad-presentation', 'bmad-problem-solver', 'bmad-qa', 'bmad-quick-dev',
+  'bmad-sm', 'bmad-storyteller', 'bmad-tech-writer', 'bmad-test-architect',
+  'bmad-ux-designer', 'bmad-workflow-builder'
+];
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function checkFile(agentName, fileName) {
+  try {
+    const url = `${BASE_PATH}/${agentName}/prompts/${fileName}`;
+    const res = await fetch(url, { method: 'HEAD' });
+    return res.ok;
+  } catch (_) {
+    return false;
+  }
+}
+
+async function checkAgent(agentName) {
+  const results = await Promise.all(
+    REQUIRED_FILES.map(f => checkFile(agentName, f))
+  );
+  const missing = REQUIRED_FILES.filter((_, i) => !results[i]);
+  return { name: agentName, healthy: missing.length === 0, missing };
+}
+
+async function runHealthCheck() {
+  return Promise.all(AGENTS.map(a => checkAgent(a)));
+}
+
+function renderAgent(result) {
+  const li = document.createElement('li');
+  li.setAttribute('role', 'listitem');
+
+  const icon = document.createElement('span');
+  icon.className = 'agent-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = result.healthy ? '\u2705' : '\u274C';
+
+  const name = document.createElement('span');
+  name.className = 'agent-name';
+  name.textContent = result.name;
+
+  const status = document.createElement('span');
+  status.className = result.healthy ? 'agent-status ok' : 'agent-status fail';
+  status.textContent = result.healthy ? 'healthy' : `${result.missing.length} file(s) missing`;
+
+  li.appendChild(icon);
+  li.appendChild(name);
+  li.appendChild(status);
+
+  if (!result.healthy && result.missing.length > 0) {
+    const wrap = document.createElement('div');
+    wrap.className = 'agent-detail-wrap';
+    const missingItems = result.missing
+      .map(f => `<li>${BASE_PATH}/${result.name}/prompts/${f}</li>`)
+      .join('');
+    wrap.innerHTML = `<details><summary>Show missing files</summary><ul class="missing-list">${missingItems}</ul></details>`;
+    li.style.flexWrap = 'wrap';
+    li.appendChild(wrap);
+  }
+
+  return li;
+}
+
+function renderSummary(results) {
+  const healthyCount = results.filter(r => r.healthy).length;
+  const total = results.length;
+  const banner = document.getElementById('summary-banner');
+  banner.textContent = `${healthyCount} / ${total} agents healthy`;
+  banner.className = '';
+  if (healthyCount === total) {
+    banner.classList.add('all-green');
+  } else if (healthyCount >= 10) {
+    banner.classList.add('partial');
+  } else {
+    banner.classList.add('critical');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const list = document.getElementById('agent-list');
+  // Clear loading placeholder
+  list.innerHTML = '';
+
+  const results = await runHealthCheck();
+
+  const fragment = document.createDocumentFragment();
+  results.forEach(r => fragment.appendChild(renderAgent(r)));
+  list.appendChild(fragment);
+
+  renderSummary(results);
+});
+</script>
+</body>
+</html>

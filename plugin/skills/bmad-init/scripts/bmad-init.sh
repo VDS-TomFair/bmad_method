@@ -34,7 +34,7 @@ if [ ! -f "$A0PROJ/instructions/01-bmad-config.md" ]; then
 | \`{output_folder}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/_bmad-output/\` |
 
 ### User Settings
-- **User Name:** Vanja
+- **User Name:** User
 - **Communication Language:** English
 - **User Skill Level:** intermediate
 CONFIG

@@ -18,10 +18,12 @@ export const store = createStore("bmadDashboard", {
         this.loading = true;
         this.error = "";
         try {
+            // Send ctxid so the backend resolves state for THIS active project
+            const ctxid = globalThis.getContext ? globalThis.getContext() : "";
             const resp = await fetch("/api/plugins/bmad/_bmad_status", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({})
+                body: JSON.stringify({ ctxid })
             });
             if (!resp.ok) throw new Error("HTTP " + resp.status);
             const json = await resp.json();

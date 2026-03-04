@@ -3,13 +3,35 @@ import re, json, base64, urllib.request, urllib.error
 from pathlib import Path
 from datetime import datetime
 
-PROJECT_ROOT = Path("/a0/usr/projects/a0_bmad_method")
+# --- Self-aware path resolution ---
+# Works in both dev (symlink) and production (direct copy) modes.
+# Path(__file__).resolve() follows symlinks to the real file location.
+_PLUGIN_ROOT = Path(__file__).resolve().parent.parent
+
+# Walk up from plugin root to find the project root (.a0proj marker)
+def _find_project_root(start: Path) -> Path:
+    for parent in [start, *start.parents]:
+        if (parent / ".a0proj").exists():
+            return parent
+    return start  # fallback to plugin root
+
+PROJECT_ROOT = _find_project_root(_PLUGIN_ROOT)
 STATE_FILE   = PROJECT_ROOT / ".a0proj/instructions/02-bmad-state.md"
-AGENTS_DIR   = Path("/a0/usr/plugins/bmad/agents")
-SKILLS_DIR   = Path("/a0/usr/plugins/bmad/skills")
+AGENTS_DIR   = _PLUGIN_ROOT / "agents"
+SKILLS_DIR   = _PLUGIN_ROOT / "skills"
 TEST_DIR     = PROJECT_ROOT / ".a0proj/_bmad-output/test-artifacts"
-LANGFUSE_CFG = Path("/a0/usr/plugins/langfuse-observability/config.json")
 SKILL_NAMES  = ["bmad-init","bmad-bmm","bmad-bmb","bmad-tea","bmad-cis"]
+
+# Langfuse config: check user plugins first, then builtin (A0 priority order)
+def _find_langfuse_cfg() -> Path:
+    from python.helpers import plugins
+    for root in plugins.get_plugin_roots("langfuse-observability"):
+        cfg = Path(root) / "config.json"
+        if cfg.exists():
+            return cfg
+    return Path("/a0/plugins/langfuse-observability/config.json")  # fallback
+
+LANGFUSE_CFG = _find_langfuse_cfg()
 
 AGENT_NAMES = {
     "bmad-master":"BMad Master","bmad-analyst":"Mary (Analyst)",

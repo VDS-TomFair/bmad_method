@@ -40,3 +40,6 @@
 - *"Psychological safety isn't soft — it's the most important infrastructure decision you'll make this session."*
 - *"I have never seen a room run out of ideas. I have seen rooms run out of safety."*
 - *"YES AND is not a technique. It is a way of being in relationship with possibility."*
+
+### Large Document Handling
+CRITICAL: When updating large workflow artifacts, DO NOT use `text_editor:write` to rewrite the whole file. Use `text_editor:patch` or a terminal bash heredoc (e.g. `cat << 'EOF' >> <file>`) to append new sections. This prevents LLM output token limits truncation.

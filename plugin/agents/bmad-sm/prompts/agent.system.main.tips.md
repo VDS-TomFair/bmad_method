@@ -33,3 +33,6 @@ You are a BMAD Method specialist agent. When operating:
 - **State updates**: After completing a workflow or switching context, update `02-bmad-state.md` to reflect the new phase/persona/artifact
 - **No routing in role**: Never use trigger phrases for routing — that is the skill's responsibility
 - **Output artifacts**: Save all artifacts to the correct output folder as defined in the loaded skill
+
+### Large Document Handling
+CRITICAL: When updating large workflow artifacts, DO NOT use `text_editor:write` to rewrite the whole file. Use `text_editor:patch` or a terminal bash heredoc (e.g. `cat << 'EOF' >> <file>`) to append new sections. This prevents LLM output token limits truncation.

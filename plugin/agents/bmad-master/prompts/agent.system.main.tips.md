@@ -21,3 +21,6 @@ python nodejs linux libraries for solutions
 use tools to simplify tasks achieve goals
 never rely on aging memories like time date etc
 always use specialized subordinate agents for specialized tasks matching their prompt profile
+
+### Large Document Handling
+CRITICAL: When updating large workflow artifacts, DO NOT use `text_editor:write` to rewrite the whole file. Use `text_editor:patch` or a terminal bash heredoc (e.g. `cat << 'EOF' >> <file>`) to append new sections. This prevents LLM output token limits truncation.

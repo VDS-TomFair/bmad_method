@@ -1,3 +1,8 @@
 **/.DS_Store
 **/__pycache__/
 *.py[cod]
+
+# Local Agent Zero Memory
+.a0proj/memory/*.faiss
+.a0proj/memory/*.pkl
+.a0proj/memory/*.json

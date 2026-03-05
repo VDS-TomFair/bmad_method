@@ -1,9 +1,12 @@
+from pathlib import Path
 from python.helpers.extension import Extension
 from python.helpers import files
 from agent import LoopData
 
-BMAD_HELP_CSV = "/a0/skills/bmad-init/_config/bmad-help.csv"
-BMAD_STATE_FILE = "/a0/usr/projects/a0_bmad_method/.a0proj/instructions/02-bmad-state.md"
+# Dynamic path resolution — works regardless of install method (plugin, symlink, dev)
+_PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+_BMAD_HELP_CSV = _PLUGIN_ROOT / "skills" / "bmad-init" / "_config" / "bmad-help.csv"
+_BMAD_CONFIG_DIR = _PLUGIN_ROOT / "skills" / "bmad-init" / "_config"
 BMAD_MASTER_PROFILE = "bmad-master"
 
 # Phase → relevant modules map
@@ -18,23 +21,66 @@ PHASE_MODULES = {
 }
 
 
+def _resolve_state_file(agent) -> Path | None:
+    """Resolve the BMAD state file from the active project context."""
+    try:
+        from python.helpers import projects
+        project_name = projects.get_context_project_name(agent.context)
+        if project_name:
+            folder = Path(projects.get_project_folder(project_name))
+            state = folder / ".a0proj" / "instructions" / "02-bmad-state.md"
+            if state.exists():
+                return state
+    except Exception:
+        pass
+
+    # Fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
+    try:
+        projects_dir = Path("/a0/usr/projects")
+        if projects_dir.exists():
+            candidates = []
+            for proj in projects_dir.iterdir():
+                if not proj.is_dir():
+                    continue
+                state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
+                if state.exists():
+                    candidates.append((state.stat().st_mtime, state))
+            if candidates:
+                candidates.sort(reverse=True)
+                return candidates[0][1]
+    except Exception:
+        pass
+
+    return None
+
+
 class BmadRoutingManifest(Extension):
     """Injects compact bmad routing manifest into bmad-master context.
     Phase-aware: loads all modules when phase=ready, otherwise loads phase-relevant modules only.
+    Also injects resolved BMAD config paths so prompts never need hardcoded paths.
     """
 
     async def execute(self, loop_data: LoopData = LoopData(), **kwargs):
         if not self.agent or self.agent.config.profile != BMAD_MASTER_PROFILE:
             return
 
-        if not files.exists(BMAD_HELP_CSV):
+        csv_path = str(_BMAD_HELP_CSV)
+        if not files.exists(csv_path):
             return
 
         try:
+            # Inject resolved paths so prompts can reference them
+            loop_data.extras_temporary["bmad_paths"] = (
+                f"bmad_config_dir: {_BMAD_CONFIG_DIR}\n"
+                f"bmad_plugin_root: {_PLUGIN_ROOT}"
+            )
+
             # Read current phase from state file
+            phase = "ready"
             active_modules = None
-            if files.exists(BMAD_STATE_FILE):
-                state = files.read_file(BMAD_STATE_FILE)
+            state_path = _resolve_state_file(self.agent)
+            if state_path:
+                state = state_path.read_text()
                 for line in state.splitlines():
                     if line.strip().startswith("- Phase:"):
                         phase = line.split(":", 1)[1].strip().lower()
@@ -42,7 +88,7 @@ class BmadRoutingManifest(Extension):
                         break
 
             # Parse CSV
-            csv_content = files.read_file(BMAD_HELP_CSV)
+            csv_content = files.read_file(csv_path)
             lines = csv_content.strip().split("\n")
             if len(lines) < 2:
                 return

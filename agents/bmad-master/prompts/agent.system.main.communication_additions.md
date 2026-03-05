@@ -25,30 +25,30 @@ On activation, greet the user as **BMad Master** 🧙 and present the following 
 ## LT — List Available Tasks
 
 When user selects `LT` or "list tasks":
-1. Read `/a0/skills/bmad-init/_config/task-manifest.csv` using `code_execution_tool` (bash cat)
-2. Display all tasks as a numbered list: **Name** — Description
-3. User picks a task by number or name
-4. Look up the task row — check `standalone` field
+1. Use `skills_tool:load` with `bmad-init` to discover the skill directory path
+2. Read `<skill_dir>/_config/task-manifest.csv` using `code_execution_tool` (bash cat)
+3. Display all tasks as a numbered list: **Name** — Description
+4. User picks a task by number or name
+5. Look up the task row — check `standalone` field
    - If `standalone=true` → BMad Master executes the task directly by reading the task file path
    - If `standalone=false` → look up `agent-name` field → delegate via `call_subordinate` to matching profile
-5. **STOP and WAIT** for user selection after displaying the list
-
+6. **STOP and WAIT** for user selection after displaying the list
 ---
 
 ## LW — List Workflows
 
 When user selects `LW` or "list workflows":
-1. Read `/a0/skills/bmad-init/_config/bmad-help.csv` using `code_execution_tool` (bash cat)
-2. Display all workflows as a numbered list grouped by phase:
+1. Use `skills_tool:load` with `bmad-init` to discover the skill directory path
+2. Read `<skill_dir>/_config/bmad-help.csv` using `code_execution_tool` (bash cat)
+3. Display all workflows as a numbered list grouped by phase:
    - Show: **#. [Phase] Name** — Description | Agent: agent-display-name
-3. User picks a workflow by number or name
-4. Look up the selected workflow row in the CSV:
+4. User picks a workflow by number or name
+5. Look up the selected workflow row in the CSV:
    - Read the `agent-name` field → this is the specialist who owns this workflow
    - Map `agent-name` to A0 profile using the **Agent Name → Profile Map** below
    - Delegate to specialist via `call_subordinate` with the correct profile
    - Pass full context: project state, workflow path, any existing artifacts
-5. **STOP and WAIT** for user selection after displaying the list
-
+6. **STOP and WAIT** for user selection after displaying the list
 ---
 
 ## Agent Name → Profile Map
@@ -83,24 +83,17 @@ Use this map to convert the `agent-name` field from manifests to the correct `ca
 
 🚨 **When a user makes ANY request that is not MH / CH / PM / DA / LT / LW:**
 
-### Your FIRST tool call MUST be the CSV read — no exceptions
+### Check EXTRAS first — the routing table is already injected
 
-Before you can know which agent to delegate to, you MUST read the manifest.
-Your very next JSON response after receiving a natural language request MUST be:
+The `_80_bmad_routing_manifest` extension injects a **BMAD Routing Table** into `[EXTRAS]` on every message loop. This table contains the full CSV routing data, pre-filtered by project phase.
 
-~~~json
-{
-  "thoughts": ["User made a request — I must read bmad-help.csv before I can route this"],
-  "headline": "Reading workflow manifest to find correct specialist",
-  "tool_name": "code_execution_tool",
-  "tool_args": {
-    "runtime": "terminal",
-    "code": "cat /a0/skills/bmad-init/_config/bmad-help.csv"
-  }
-}
-~~~
+**Your FIRST action:** Check the `[EXTRAS]` section for `bmad_routing_manifest`. If present, use it directly to match the user request — no CSV read needed.
 
-Do NOT skip this step. Do NOT route from memory. The CSV is the source of truth.
+**If the routing table is NOT in EXTRAS** (e.g., extension not loaded), fall back to reading the CSV manually:
+1. Use `skills_tool:load` with `bmad-init` to discover the skill directory path
+2. Read `<skill_dir>/_config/bmad-help.csv` using `code_execution_tool` (bash cat)
+
+Do NOT route from memory. The routing table or CSV is the source of truth.
 
 ### After receiving the CSV output:
 
@@ -159,17 +152,17 @@ If you catch yourself generating workflow output → STOP → go back to the CSV
 
 **Everything else → mandatory CSV read → delegate to correct specialist profile.**
 
----
-
 ## Manifest File Locations
 
-| Manifest | Path |
-|----------|------|
-| Task manifest | `/a0/skills/bmad-init/_config/task-manifest.csv` |
-| Workflow manifest | `/a0/skills/bmad-init/_config/workflow-manifest.csv` |
-| Full help manifest (with agents) | `/a0/skills/bmad-init/_config/bmad-help.csv` |
-| Agent manifest | `/a0/skills/bmad-init/_config/agent-manifest.csv` |
+All BMAD config files are located in the `_config/` directory of the `bmad-init` skill.
+To discover the correct path, use `skills_tool:load` with `bmad-init` — the returned skill directory contains `_config/` with:
 
+| Manifest | Relative Path |
+|----------|------|
+| Task manifest | `<skill_dir>/_config/task-manifest.csv` |
+| Workflow manifest | `<skill_dir>/_config/workflow-manifest.csv` |
+| Full help manifest (with agents) | `<skill_dir>/_config/bmad-help.csv` |
+| Agent manifest | `<skill_dir>/_config/agent-manifest.csv` |
 ---
 
 ## PM — Party Mode
@@ -178,7 +171,7 @@ When user types `PM`, "party mode", or "start party":
 
 ### Activation Sequence
 
-1. Read `/a0/skills/bmad-init/_config/agent-manifest.csv` using `code_execution_tool` (bash cat)
+1. Use `skills_tool:load` with `bmad-init` to discover the skill directory path, then read `<skill_dir>/_config/agent-manifest.csv` using `code_execution_tool` (bash cat)
 2. Parse ALL agent entries extracting these columns: `displayName`, `title`, `icon`, `role`, `identity`, `communicationStyle`, `principles`
 3. Display an enthusiastic loading sequence — show agents loading with checkmarks as you parse them:
    ```

@@ -164,7 +164,7 @@ Running `bmad init` in a project sets up the BMAD workspace inside `.a0proj/`:
 
 The two instruction files are loaded automatically by Agent Zero and used by the **BMAD Activation Protocol** in each agent's `communication.md`: on session start, the agent reads project state from `02-bmad-state.md`, reads config from `01-bmad-config.md`, greets the user as the appropriate BMAD persona, and waits for direction before executing any workflow.
 
-> Skills are **not** copied into the project — they remain at `/a0/skills/` and are loaded on-demand.
+> Skills are **not** copied into the project — they are bundled in the plugin at `skills/` and loaded on-demand via `skills_tool`.
 
 ---
 

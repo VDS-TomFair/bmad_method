@@ -19,7 +19,7 @@
 
 ## CONTEXT BOUNDARIES:
 
-- Agent manifest CSV is available at `/a0/skills/bmad-init/_config/agent-manifest.csv`
+- Agent manifest CSV is discovered via `skills_tool:load bmad-init`, then read from `<skill_dir>/_config/agent-manifest.csv`
 - User configuration from config.yaml is loaded and resolved
 - Party mode is standalone interactive workflow
 - All agent data is available for conversation orchestration
@@ -38,7 +38,7 @@ Begin agent loading process:
 
 **Agent Manifest Loading:**"
 
-Load and parse the agent manifest CSV from `/a0/skills/bmad-init/_config/agent-manifest.csv`
+Load and parse the agent manifest CSV (discovered via `skills_tool:load bmad-init` → `<skill_dir>/_config/agent-manifest.csv`)
 
 ### 2. Extract Agent Data
 

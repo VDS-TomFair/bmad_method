@@ -1,6 +1,43 @@
 import asyncio
 import json
+from pathlib import Path
 from python.helpers.extension import Extension
+
+# Dynamic path resolution — works regardless of install method
+_PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+_STATUS_SCRIPT = _PLUGIN_ROOT / "skills" / "bmad-init" / "scripts" / "bmad-status.py"
+
+
+def _resolve_project_path(agent) -> str | None:
+    """Resolve the active project path from agent context."""
+    try:
+        from python.helpers import projects
+        project_name = projects.get_context_project_name(agent.context)
+        if project_name:
+            folder = Path(projects.get_project_folder(project_name))
+            if (folder / ".a0proj").exists():
+                return str(folder)
+    except Exception:
+        pass
+
+    # Fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
+    try:
+        projects_dir = Path("/a0/usr/projects")
+        if projects_dir.exists():
+            candidates = []
+            for proj in projects_dir.iterdir():
+                if not proj.is_dir():
+                    continue
+                state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
+                if state.exists():
+                    candidates.append((state.stat().st_mtime, proj))
+            if candidates:
+                candidates.sort(reverse=True)
+                return str(candidates[0][1])
+    except Exception:
+        pass
+
+    return None
 
 
 class BmadAutoBrief(Extension):
@@ -24,10 +61,20 @@ class BmadAutoBrief(Extension):
         if self.agent.context.log.logs:
             return
 
+        # Verify status script exists
+        if not _STATUS_SCRIPT.exists():
+            return
+
+        # Build command args
+        cmd_args = ["python", str(_STATUS_SCRIPT), "--base-path", str(_PLUGIN_ROOT)]
+        project_path = _resolve_project_path(self.agent)
+        if project_path:
+            cmd_args.extend(["--project-path", project_path])
+
         # Run STATUS script (async to avoid blocking event loop during agent_init)
         try:
             proc = await asyncio.create_subprocess_exec(
-                "python", "/a0/skills/bmad-init/scripts/bmad-status.py",
+                *cmd_args,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )

@@ -220,7 +220,7 @@ class BmadStatus(ApiHandler):
         issues = []
         if skills["broken"]:
             issues.append({"sev":"blocker","what":str(len(skills["broken"]))+" skill(s) missing",
-                "fix":"ln -sf /a0/usr/projects/a0_bmad_method/skills/bmad-* /a0/skills/"})
+                "fix":"Verify BMAD plugin is installed and enabled"})
         if agents["broken"]:
             issues.append({"sev":"warn","what":str(len(agents["broken"]))+" agent(s) unhealthy",
                 "fix":"Restore missing prompt files - see Agent Health section"})

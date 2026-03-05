@@ -1,15 +1,44 @@
 #!/usr/bin/env python3
-"""BMAD Framework Status Dashboard v0.4 - WHAT/WHY/NEXT + Recommendation Engine."""
-import re, sys, json, urllib.request, urllib.error, base64
+"""BMAD Framework Status Dashboard v0.5 - Dynamic path resolution + WHAT/WHY/NEXT."""
+import argparse, re, sys, json, urllib.request, urllib.error, base64
 from datetime import datetime
 from pathlib import Path
 
-PROJECT_ROOT = Path("/a0/usr/projects/a0_bmad_method")
-STATE_FILE   = PROJECT_ROOT / ".a0proj/instructions/02-bmad-state.md"
-AGENTS_DIR   = Path("/a0/agents")
-SKILLS_DIR   = Path("/a0/skills")
-TEST_DIR     = PROJECT_ROOT / ".a0proj/_bmad-output/test-artifacts"
-LANGFUSE_CFG = Path("/a0/plugins/langfuse-observability/config.json")
+# --- Dynamic path resolution ---
+# All paths are resolved at runtime from CLI args or self-discovery.
+# No hardcoded absolute paths.
+
+def _resolve_plugin_root(base_path_arg: str | None) -> Path:
+    """Resolve the BMAD plugin root directory."""
+    if base_path_arg:
+        return Path(base_path_arg).resolve()
+    # Fallback: this script is at <plugin_root>/skills/bmad-init/scripts/bmad-status.py
+    return Path(__file__).resolve().parents[3]
+
+def _resolve_project_root(project_path_arg: str | None) -> Path | None:
+    """Resolve the active BMAD project root."""
+    if project_path_arg:
+        p = Path(project_path_arg).resolve()
+        if (p / ".a0proj").exists():
+            return p
+        return None
+
+    # Fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
+    projects_dir = Path("/a0/usr/projects")
+    if projects_dir.exists():
+        candidates = []
+        for proj in projects_dir.iterdir():
+            if not proj.is_dir():
+                continue
+            state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
+            if state.exists():
+                candidates.append((state.stat().st_mtime, proj))
+        if candidates:
+            candidates.sort(reverse=True)
+            return candidates[0][1]
+    return None
+
+
 SKILL_NAMES  = ["bmad-init","bmad-bmm","bmad-bmb","bmad-tea","bmad-cis"]
 NOW          = datetime.now().strftime("%Y-%m-%d %H:%M")
 DIV          = "\u2501" * 45
@@ -56,10 +85,10 @@ PHASE_ACTIONS = {
     "unknown": ("Initialize BMAD", "Run: bmad init"),
 }
 
-def read_state():
-    if not STATE_FILE.exists():
+def read_state(state_file: Path):
+    if not state_file.exists():
         return {"phase":"unknown","artifact":"none","issues":[]}
-    text = STATE_FILE.read_text(encoding="utf-8")
+    text = state_file.read_text(encoding="utf-8")
     phase    = re.search(r"Phase:\s*(.+)", text)
     artifact = re.search(r"Active Artifact:\s*(.+)", text)
     issues   = [l.strip().lstrip("-# ") for l in text.splitlines()
@@ -70,9 +99,11 @@ def read_state():
         "issues":   issues
     }
 
-def check_agents():
+def check_agents(agents_dir: Path):
     healthy, broken = [], []
-    for d in AGENTS_DIR.iterdir():
+    if not agents_dir.exists():
+        return healthy, broken
+    for d in agents_dir.iterdir():
         if not d.is_dir() or not d.name.startswith("bmad-"): continue
         prompts = d / "prompts"
         if not prompts.exists():
@@ -84,15 +115,15 @@ def check_agents():
             healthy.append(d.name)
     return healthy, broken
 
-def check_skills():
+def check_skills(skills_dir: Path):
     ok, broken = [], []
     for n in SKILL_NAMES:
-        (ok if (SKILLS_DIR / n / "SKILL.md").exists() else broken).append(n)
+        (ok if (skills_dir / n / "SKILL.md").exists() else broken).append(n)
     return ok, broken
 
-def read_tests():
-    if not TEST_DIR.exists(): return None, None, None
-    reports = sorted(TEST_DIR.glob("behavioral-test-report*.md"),
+def read_tests(test_dir: Path):
+    if not test_dir.exists(): return None, None, None
+    reports = sorted(test_dir.glob("behavioral-test-report*.md"),
                      key=lambda p: p.stat().st_mtime, reverse=True)
     if not reports: return None, None, None
     latest  = reports[0]
@@ -105,12 +136,19 @@ def read_tests():
     return None, None, mtime
 
 def read_langfuse_config():
-    if not LANGFUSE_CFG.exists(): return None
-    try:
-        cfg = json.loads(LANGFUSE_CFG.read_text())
-        if cfg.get("langfuse_enabled") and cfg.get("langfuse_public_key") and cfg.get("langfuse_secret_key"):
-            return cfg
-    except Exception: pass
+    """Search for langfuse config in common plugin locations."""
+    candidates = [
+        Path("/a0/usr/plugins/langfuse-observability/config.json"),
+        Path("/a0/plugins/langfuse-observability/config.json"),
+    ]
+    for cfg_path in candidates:
+        if cfg_path.exists():
+            try:
+                cfg = json.loads(cfg_path.read_text())
+                if cfg.get("langfuse_enabled") and cfg.get("langfuse_public_key") and cfg.get("langfuse_secret_key"):
+                    return cfg
+            except Exception:
+                pass
     return None
 
 def fetch_langfuse(cfg):
@@ -148,16 +186,16 @@ def wwn(what, why, nxt, indent="   "):
     print(indent + "NEXT: " + nxt)
 
 
-def recommend_next(state, broken_agents, broken_skills, passed, total_t):
+def recommend_next(state, broken_agents, broken_skills, passed, total_t, agents_dir):
     issues = []
     if broken_skills:
         issues.append(("\U0001f534 BLOCKER",
             str(len(broken_skills)) + " skill(s) missing",
-            "ln -sf /a0/usr/projects/a0_bmad_method/skills/bmad-* /a0/skills/"))
+            "Verify BMAD plugin is installed and enabled"))
     if broken_agents:
         issues.append(("\U0001f7e1 WARN",
             str(len(broken_agents)) + " agent(s) unhealthy",
-            "Restore missing prompt files - see agent detail above"))
+            "Restore missing prompt files in " + str(agents_dir)))
     if passed and total_t and int(passed) < int(total_t):
         failed = int(total_t) - int(passed)
         issues.append(("\U0001f7e1 WARN",
@@ -180,12 +218,27 @@ def recommend_next(state, broken_agents, broken_skills, passed, total_t):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="BMAD Framework Status Dashboard")
+    parser.add_argument("--base-path", help="BMAD plugin root directory")
+    parser.add_argument("--project-path", help="Active BMAD project root directory")
+    args = parser.parse_args()
+
+    plugin_root  = _resolve_plugin_root(args.base_path)
+    project_root = _resolve_project_root(args.project_path)
+
+    agents_dir = plugin_root / "agents"
+    skills_dir = plugin_root / "skills"
+    test_dir   = project_root / ".a0proj/_bmad-output/test-artifacts" if project_root else Path("/nonexistent")
+    state_file = project_root / ".a0proj/instructions/02-bmad-state.md" if project_root else Path("/nonexistent")
+
     print("\n\U0001f9d9 BMAD Framework Status")
     print(DIV)
     print("Generated: " + NOW + " (live)")
+    if project_root:
+        print("Project:   " + project_root.name)
 
     # DS-01 State
-    state = read_state()
+    state = read_state(state_file)
     print("\n\U0001f4cd Phase:     " + state["phase"])
     print("\U0001f4c4 Artifact:  " + state["artifact"])
     if state["issues"]:
@@ -196,7 +249,7 @@ def main():
         print("\n\u2705 No open architecture items")
 
     # DS-02 Agents
-    healthy, broken = check_agents()
+    healthy, broken = check_agents(agents_dir)
     total = len(healthy) + len(broken)
     print()
     if broken:
@@ -207,27 +260,27 @@ def main():
             wwn(
                 str(len(missing_files)) + " required prompt file(s) missing",
                 "Agent cannot be activated without all required prompt files",
-                "Restore in /a0/agents/" + name + "/prompts/: " + ", ".join(missing_files)
+                "Restore in " + str(agents_dir / name / "prompts") + ": " + ", ".join(missing_files)
             )
     else:
         print("\U0001f916 Agents:   " + str(total) + "/" + str(total) + " healthy  (+ 5 Party Mode archetypes)")
 
     # DS-03 Skills
-    ok_s, broken_s = check_skills()
+    ok_s, broken_s = check_skills(skills_dir)
     if broken_s:
         print("\U0001f50c Skills:   " + str(len(ok_s)) + "/" + str(len(SKILL_NAMES)) + " OK")
         for s in broken_s:
             print("   \U0001f534 " + s)
             wwn(
                 s + "/SKILL.md not found",
-                "Skill symlink broken — workflow routing will fail",
-                "ln -sf /a0/usr/projects/a0_bmad_method/skills/" + s + " /a0/skills/" + s
+                "Skill not accessible — workflow routing will fail",
+                "Verify BMAD plugin is installed at " + str(skills_dir)
             )
     else:
-        print("\U0001f50c Skills:   " + str(len(ok_s)) + "/" + str(len(SKILL_NAMES)) + " symlinks OK")
+        print("\U0001f50c Skills:   " + str(len(ok_s)) + "/" + str(len(SKILL_NAMES)) + " OK")
 
     # DS-04 Tests
-    passed, total_t, mtime = read_tests()
+    passed, total_t, mtime = read_tests(test_dir)
     if passed:
         p, t = int(passed), int(total_t)
         if p < t:
@@ -267,8 +320,8 @@ def main():
     else:
         print("\n\U0001f4ca Langfuse: unavailable \u2014 plugin config not found or disabled")
 
-    # v0.4 Next-Action Recommendation Engine
-    issues, label, action = recommend_next(state, broken, broken_s, passed, total_t)
+    # v0.5 Next-Action Recommendation Engine
+    issues, label, action = recommend_next(state, broken, broken_s, passed, total_t, agents_dir)
     print("\n" + DIV)
     if issues:
         print("\U0001f527 Issues requiring attention:")

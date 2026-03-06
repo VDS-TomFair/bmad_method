@@ -1,5 +1,5 @@
-import asyncio
 import json
+import subprocess
 from pathlib import Path
 from helpers.extension import Extension
 
@@ -47,7 +47,7 @@ class BmadAutoBrief(Extension):
     Only fires for agent 0 with bmad-master profile, and only on fresh sessions.
     """
 
-    async def execute(self, **kwargs):
+    def execute(self, **kwargs):
         # Only for main agent (not subordinates)
         if self.agent.number != 0:
             return
@@ -71,19 +71,17 @@ class BmadAutoBrief(Extension):
         if project_path:
             cmd_args.extend(["--project-path", project_path])
 
-        # Run STATUS script (async to avoid blocking event loop during agent_init)
+        # Run STATUS script synchronously
         try:
-            proc = await asyncio.create_subprocess_exec(
-                *cmd_args,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE
+            result = subprocess.run(
+                cmd_args,
+                capture_output=True,
+                text=True,
+                timeout=10
             )
-            try:
-                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=10)
-                status_output = stdout.decode().strip()
-            except asyncio.TimeoutError:
-                proc.kill()
-                status_output = "⚠️ Status unavailable: timeout"
+            status_output = result.stdout.strip()
+        except subprocess.TimeoutExpired:
+            status_output = "⚠️ Status unavailable: timeout"
         except Exception as e:
             status_output = f"⚠️ Status unavailable: {e}"
 

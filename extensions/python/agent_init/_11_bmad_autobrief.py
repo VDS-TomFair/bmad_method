@@ -1,7 +1,7 @@
 import asyncio
 import json
 from pathlib import Path
-from python.helpers.extension import Extension
+from helpers.extension import Extension
 
 # Dynamic path resolution — works regardless of install method
 _PLUGIN_ROOT = Path(__file__).resolve().parents[3]
@@ -11,7 +11,7 @@ _STATUS_SCRIPT = _PLUGIN_ROOT / "skills" / "bmad-init" / "scripts" / "bmad-statu
 def _resolve_project_path(agent) -> str | None:
     """Resolve the active project path from agent context."""
     try:
-        from python.helpers import projects
+        from helpers import projects
         project_name = projects.get_context_project_name(agent.context)
         if project_name:
             folder = Path(projects.get_project_folder(project_name))

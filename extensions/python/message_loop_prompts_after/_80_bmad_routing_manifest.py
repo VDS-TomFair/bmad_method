@@ -1,6 +1,6 @@
 from pathlib import Path
-from python.helpers.extension import Extension
-from python.helpers import files
+from helpers.extension import Extension
+from helpers import files
 from agent import LoopData
 
 # Dynamic path resolution — works regardless of install method (plugin, symlink, dev)
@@ -24,7 +24,7 @@ PHASE_MODULES = {
 def _resolve_state_file(agent) -> Path | None:
     """Resolve the BMAD state file from the active project context."""
     try:
-        from python.helpers import projects
+        from helpers import projects
         project_name = projects.get_context_project_name(agent.context)
         if project_name:
             folder = Path(projects.get_project_folder(project_name))

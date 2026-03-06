@@ -1,4 +1,4 @@
-from python.helpers.api import ApiHandler, Request, Response
+from helpers.api import ApiHandler, Request, Response
 import re, json, base64, urllib.request, urllib.error
 from pathlib import Path
 from datetime import datetime
@@ -23,7 +23,7 @@ def _resolve_project_root(ctxid: str | None) -> Path | None:
     if ctxid:
         try:
             from agent import AgentContext
-            from python.helpers import projects
+            from helpers import projects
             context = AgentContext.get(ctxid)
             if context:
                 project_name = projects.get_context_project_name(context)
@@ -61,7 +61,7 @@ def _resolve_project_root(ctxid: str | None) -> Path | None:
 # Langfuse config: check user plugins first, then builtin (A0 priority order)
 def _find_langfuse_cfg() -> Path | None:
     try:
-        from python.helpers import plugins
+        from helpers import plugins
         for root in plugins.get_plugin_roots("langfuse-observability"):
             cfg = Path(root) / "config.json"
             if cfg.exists():

@@ -171,7 +171,7 @@ cat > "$STATE_FILE" << 'STATEEOF'
 - Persona: BMad Mary (Business Analyst)
 - Active Artifact: product-brief.md
 - Last Updated: $(date +%Y-%m-%d)
-STATEOF
+STATEEOF
 echo "State written: $STATE_FILE"
 ~~~
 

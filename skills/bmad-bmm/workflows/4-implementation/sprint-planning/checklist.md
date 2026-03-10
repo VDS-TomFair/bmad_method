@@ -43,7 +43,7 @@ cat > "$STATE_FILE" << 'STATEEOF'
 - Persona: BMad Bob (Scrum Master)
 - Active Artifact: sprint-status.yaml
 - Last Updated: $(date +%Y-%m-%d)
-STATEOF
+STATEEOF
 echo "State written: $STATE_FILE"
 ~~~
 

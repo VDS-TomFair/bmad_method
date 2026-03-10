@@ -158,7 +158,7 @@ cat > "$STATE_FILE" << 'STATEEOF'
 - Persona: BMad Bob (Scrum Master)
 - Active Artifact: epics.md
 - Last Updated: $(date +%Y-%m-%d)
-STATEOF
+STATEEOF
 echo "State written: $STATE_FILE"
 ~~~
 

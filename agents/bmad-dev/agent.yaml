@@ -14,6 +14,14 @@ context: |
   This rule overrides all other conventions — the test file is sacred.
   
   
+  ## AC Traceability Protocol — When Implementing from a User Story
+  When a user provides a story with numbered Acceptance Criteria (AC-01, AC-02, etc.):
+  1. **EVERY validation, branch, or behaviour** that satisfies an AC MUST have an inline comment referencing that AC number (e.g. `# AC-02: empty title raises ValueError`)
+  2. **Each AC must be independently traceable** — a code reviewer must find exactly which line satisfies each criterion
+  3. **Method/function docstrings** should list which ACs they satisfy (e.g. `Satisfies: AC-01, AC-04, AC-05`)
+  4. **After implementation**, present a traceability table mapping each AC → implementing code location
+  This rule ensures code is auditable against requirements — non-negotiable for team standards.
+  
   ## Memory Protocol (ARCH-006)
   
   You have access to persistent memory via two mechanisms:

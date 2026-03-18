@@ -12,7 +12,6 @@ BMAD (Business Method for Agile Development) is a structured AI-first product de
 |---|---|
 | `agents/bmad-*/` | 20 BMAD agent profiles, each with a complete prompt system (4 files for subordinates, 5 files for bmad-master) |
 | `skills/bmad-*/` | 5 BMAD skills (init, bmm, bmb, cis, tea) — installed globally, not per-project |
-| `.a0proj/knowledge/main/bmad-{name}/` | 20 per-agent constitutional sidecar files — static standards and seeds, preloaded into FAISS at session start |
 
 ### Agent personas (20)
 
@@ -202,7 +201,6 @@ Each BMAD agent maintains isolated persistent memory across sessions:
 - **Constitutional knowledge layer** — `.a0proj/knowledge/main/bmad-{name}/` — static standards and seeds, preloaded into FAISS at session start via native A0 `agent_knowledge_subdir` mechanism
 - **Project knowledge** — `.a0proj/knowledge/main/` — shared FAISS-loaded documents available to all agents
 
-See [`knowledge/main/memory-architecture.md`](.a0proj/knowledge/main/memory-architecture.md) for the full reference.
 
 ---
 
@@ -215,14 +213,14 @@ Two Python extensions hook into Agent Zero's lifecycle:
 | `_11_bmad_autobrief.py` | `agent_init` | Auto-generates project brief for BMad Master on fresh sessions |
 | `_80_bmad_routing_manifest.py` | `message_loop_prompts_after` | Dynamically builds routing manifest from `skills/*/module-help.csv` for BMad Master orchestration |
 
+
 ---
 
 ## Documentation
 
-- [Architecture Alignment Report v3.0](.a0proj/_bmad-output/planning-artifacts/architecture-bmad-a0-alignment.md) — canonical system architecture reference
+- **Architecture Alignment Report v3.0** — canonical system architecture reference (internal dev doc, see `.a0proj/_bmad-output/planning-artifacts/` after `bmad init`)
 - [Detailed Install Guide](README-install.md) — installation, verification, upgrade, and developer setup
-- [Memory Architecture](.a0proj/knowledge/main/memory-architecture.md) — ARCH-006 reference
-
+- **Memory Architecture** — ARCH-006 FAISS-native reference (see `.a0proj/knowledge/main/memory-architecture.md` after `bmad init`)
 ---
 
 ## Requirements

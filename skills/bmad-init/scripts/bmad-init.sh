@@ -15,6 +15,16 @@ mkdir -p "$A0PROJ/knowledge/fragments"
 mkdir -p "$A0PROJ/knowledge/solutions"
 mkdir -p "$A0PROJ/instructions"
 
+# Seed BMAD framework knowledge into project (idempotent — no-clobber preserves user edits)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SEED_DIR="$SCRIPT_DIR/../seed-knowledge"
+if [ -d "$SEED_DIR" ]; then
+  cp -rn "$SEED_DIR/." "$A0PROJ/knowledge/main/"
+  echo "BMAD seed knowledge copied to project knowledge base."
+else
+  echo "Warning: seed-knowledge directory not found at $SEED_DIR — skipping knowledge seed."
+fi
+
 # Write 01-bmad-config.md (only if not already present — immutable config)
 if [ ! -f "$A0PROJ/instructions/01-bmad-config.md" ]; then
   INIT_DATE=$(date '+%Y-%m-%d')

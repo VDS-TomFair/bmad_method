@@ -39,7 +39,7 @@ def _resolve_project_root(project_path_arg: str | None) -> Path | None:
     return None
 
 
-SKILL_NAMES  = ["bmad-init","bmad-bmm","bmad-bmb","bmad-tea","bmad-cis","bmad-mkt"]
+SKILL_NAMES  = ["bmad-init","bmad-bmm","bmad-bmb","bmad-tea","bmad-cis"]
 NOW          = datetime.now().strftime("%Y-%m-%d %H:%M")
 DIV          = "\u2501" * 45
 

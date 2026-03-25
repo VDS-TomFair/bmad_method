@@ -29,20 +29,17 @@ SKILL_TO_MODULE = {
     "bmad-bmb": "bmb",
     "bmad-cis": "cis",
     "bmad-tea": "tea",
-    "bmad-mkt": "mkt",
 }
 
 # Phase → relevant modules map
-# Phase → relevant modules map
 PHASE_MODULES = {
-    "ready":            ["core", "bmm", "bmb", "tea", "cis", "mkt"],
-    "1-analysis":       ["core", "bmm", "mkt"],
-    "2-planning":       ["core", "bmm", "mkt"],
-    "3-solutioning":    ["core", "bmm", "tea", "mkt"],
-    "4-implementation": ["core", "bmm", "tea", "mkt"],
+    "ready":            ["core", "bmm", "bmb", "tea", "cis"],
+    "1-analysis":       ["core", "bmm"],
+    "2-planning":       ["core", "bmm"],
+    "3-solutioning":    ["core", "bmm", "tea"],
+    "4-implementation": ["core", "bmm", "tea"],
     "bmb":              ["core", "bmb"],
     "cis":              ["core", "cis"],
-    "mkt":              ["core", "mkt"],
 }
 
 

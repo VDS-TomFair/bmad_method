@@ -48,14 +48,6 @@ if [ ! -f "$A0PROJ/instructions/01-bmad-config.md" ]; then
 - **Communication Language:** English
 - **User Skill Level:** intermediate
 
-### Marketing Context
-- Brand Voice: [professional, casual, technical, playful]
-- Primary ICP: [ideal customer profile summary]
-- Key Differentiators: [what sets product apart]
-- Positioning Statement: [one-line positioning]
-- Distribution Channels: [organic, paid, social, email, partnerships]
-- Pricing Model: [free, freemium, trial, usage-based, flat-rate]
-- Marketing Stage: [pre-product, pre-launch, launch, growth, mature]
 CONFIG
   echo "Config file written."
 else
@@ -72,11 +64,6 @@ if [ ! -f "$A0PROJ/instructions/02-bmad-state.md" ]; then
 
 You are the BMad Master. Greet the user, explain BMAD capabilities, and offer to load any module or workflow.
 
-### Marketing State
-- Marketing Phase: [1-discovery, 2-strategy, 3-setup, 4-execution, 5-growth, 6-retention]
-- Active Marketing Agent: [none]
-- Completed Marketing Activities: []
-- Product Marketing Context: [pending]
 STATE
   echo "State file written."
 else

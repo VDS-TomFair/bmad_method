@@ -1,0 +1,29 @@
+---
+name: page-cro
+agent: growth-engineer
+phase: 5-growth
+source: "page-cro (marketingskills repo)"
+output: "{project-root}/_bmad-output/page-cro-{date}.md"
+---
+
+# Page CRO Workflow
+
+## Overview
+Optimize pages using frameworks, conversion rate analysis, and friction reduction techniques.
+
+## Content Coverage
+- Page optimization frameworks and checklists
+- Conversion rate analysis and testing
+- User experience and friction reduction
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/page-cro-{date}.md` containing:
+- Page analysis with friction points
+- Optimization recommendations
+- A/B testing hypotheses and metrics
+- Implementation guide and monitoring

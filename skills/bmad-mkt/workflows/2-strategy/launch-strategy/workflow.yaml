@@ -1,0 +1,29 @@
+---
+name: launch-strategy
+agent: marketing-strategist
+phase: 2-strategy
+source: "launch-strategy (marketingskills repo)"
+output: "{project-root}/_bmad-output/launch-strategy-{date}.md"
+---
+
+# Launch Strategy Workflow
+
+## Overview
+Plan and execute product launches using pre-launch research, coordinated execution, and post-launch measurement.
+
+## Content Coverage
+- Pre-launch strategy (audience research, messaging, positioning)
+- Launch execution plan (timeline, channels, content, team roles)
+- Post-launch measurement (KPIs, success metrics, feedback loops)
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/launch-strategy-{date}.md` containing:
+- Launch timeline with key milestones
+- Channel strategy and content plan
+- Success metrics and KPI definitions
+- Team roles and responsibilities

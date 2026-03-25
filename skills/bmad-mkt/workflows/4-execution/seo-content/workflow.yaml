@@ -1,0 +1,29 @@
+---
+name: seo-content
+agent: content-channels-lead
+phase: 4-execution
+source: "seo-content (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-content-{date}.md"
+---
+
+# SEO Content Workflow
+
+## Overview
+Perform content quality assessment using frameworks, E-E-A-T optimization, and AI citation readiness evaluation.
+
+## Content Coverage
+- Content quality assessment frameworks
+- E-E-A-T optimization techniques
+- AI citation readiness evaluation
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-content-{date}.md` containing:
+- Content quality audit with scoring
+- E-E-A-T optimization recommendations
+- AI citation readiness assessment
+- Readability and structure improvements

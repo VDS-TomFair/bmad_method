@@ -1,0 +1,29 @@
+---
+name: seo-page
+agent: content-channels-lead
+phase: 4-execution
+source: "seo-page (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-page-{date}.md"
+---
+
+# SEO Page Workflow
+
+## Overview
+Perform single-page SEO analysis using frameworks, on-page optimization, and user intent alignment.
+
+## Content Coverage
+- Single-page SEO analysis frameworks
+- On-page elements optimization
+- Content quality and user intent alignment
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-page-{date}.md` containing:
+- SEO page analysis report with findings
+- On-page element optimization recommendations
+- Content quality assessment and rewriting guidance
+- User intent mapping and content alignment

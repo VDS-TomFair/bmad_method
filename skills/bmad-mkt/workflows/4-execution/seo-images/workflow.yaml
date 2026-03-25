@@ -1,0 +1,29 @@
+---
+name: seo-images
+agent: content-channels-lead
+phase: 4-execution
+source: "seo-images (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-images-{date}.md"
+---
+
+# SEO Images Workflow
+
+## Overview
+Perform image optimization using frameworks, alt text best practices, and format selection techniques.
+
+## Content Coverage
+- Image optimization frameworks and checklists
+- Alt text and file naming best practices
+- Format selection and compression techniques
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-images-{date}.md` containing:
+- Image optimization audit with findings
+- Alt text guidelines and template
+- Format selection recommendations
+- Performance metrics and monitoring

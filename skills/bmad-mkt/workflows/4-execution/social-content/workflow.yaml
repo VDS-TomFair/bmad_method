@@ -1,0 +1,29 @@
+---
+name: social-content
+agent: content-channels-lead
+phase: 4-execution
+source: "social-content (marketingskills repo)"
+output: "{project-root}/_bmad-output/social-content-{date}.md"
+---
+
+# Social Content Workflow
+
+## Overview
+Create engaging social media content using platform strategies, calendars, and community building techniques.
+
+## Content Coverage
+- Social media platform strategies
+- Content calendar and posting schedules
+- Engagement and community building techniques
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/social-content-{date}.md` containing:
+- Social content calendar with themes and topics
+- Platform-specific content formats and guidelines
+- Engagement strategies and community guidelines
+- Performance metrics and KPI tracking

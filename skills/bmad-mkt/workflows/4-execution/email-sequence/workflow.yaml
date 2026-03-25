@@ -1,0 +1,29 @@
+---
+name: email-sequence
+agent: content-channels-lead
+phase: 4-execution
+source: "email-sequence (marketingskills repo)"
+output: "{project-root}/_bmad-output/email-sequence-{date}.md"
+---
+
+# Email Sequence Workflow
+
+## Overview
+Create engaging email sequences using lifecycle frameworks, personalization, and metrics tracking for lead nurturing.
+
+## Content Coverage
+- Email sequence frameworks and lifecycle stages
+- Subject line and copywriting techniques
+- Audience segmentation and personalization
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/email-sequence-{date}.md` containing:
+- Email sequence outline with topics and timing
+- Subject lines and preview text
+- Personalization variables and segmentation
+- Metrics and KPI tracking recommendations

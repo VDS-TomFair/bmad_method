@@ -1,0 +1,29 @@
+---
+name: seo-geo
+agent: content-channels-lead
+phase: 4-execution
+source: "seo-geo (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-geo-{date}.md"
+---
+
+# SEO GEO Workflow
+
+## Overview
+Optimize content for Generative Engine Optimization using frameworks, AI search strategies, and content optimization techniques.
+
+## Content Coverage
+- GEO (Generative Engine Optimization) frameworks
+- AI search engine optimization strategies
+- Content optimization for AI-powered search
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-geo-{date}.md` containing:
+- GEO strategy framework with techniques
+- AI search engine optimization guidelines
+- Content optimization recommendations for AI search
+- Performance metrics and monitoring approaches

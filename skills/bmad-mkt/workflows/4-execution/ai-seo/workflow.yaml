@@ -1,0 +1,29 @@
+---
+name: ai-seo
+agent: content-channels-lead
+phase: 4-execution
+source: "ai-seo (marketingskills repo)"
+output: "{project-root}/_bmad-output/ai-seo-{date}.md"
+---
+
+# AI SEO Workflow
+
+## Overview
+Optimize content for AI search engines using strategies, citation optimization, and passage-level techniques.
+
+## Content Coverage
+- AI search engine optimization strategies
+- Content optimization for AI-powered search
+- LLM citation and passage optimization
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/ai-seo-{date}.md` containing:
+- AI SEO strategy framework with techniques
+- Content optimization guidelines for AI search
+- Citation and passage optimization recommendations
+- Performance metrics and monitoring approaches

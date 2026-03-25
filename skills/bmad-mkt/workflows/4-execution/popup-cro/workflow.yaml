@@ -1,0 +1,29 @@
+---
+name: popup-cro
+agent: content-channels-lead
+phase: 4-execution
+source: "popup-cro (marketingskills repo)"
+output: "{project-root}/_bmad-output/popup-cro-{date}.md"
+---
+
+# Popup CRO Workflow
+
+## Overview
+Optimize popups using frameworks, design best practices, and personalization techniques.
+
+## Content Coverage
+- Popup optimization frameworks and checklists
+- Design and user experience best practices
+- A/B testing and personalization techniques
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/popup-cro-{date}.md` containing:
+- Popup analysis with friction points
+- Design optimization recommendations
+- A/B testing hypotheses and metrics
+- Implementation guide and monitoring

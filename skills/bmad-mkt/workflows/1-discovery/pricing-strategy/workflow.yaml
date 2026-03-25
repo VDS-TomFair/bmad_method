@@ -1,0 +1,31 @@
+---
+name: pricing-strategy
+agent: marketing-strategist
+phase: 1-discovery
+source: "pricing-strategy (marketingskills repo)"
+output: "{project-root}/_bmad-output/pricing-strategy-{date}.md"
+---
+
+# Pricing Strategy Workflow
+
+## Overview
+Design pricing models and packaging using Van Westendorp analysis, competitive benchmarking, and willingness-to-pay research.
+
+## Content Coverage
+- Pricing model selection (freemium/trial/paid/usage-based)
+- Tier/packaging design
+- Van Westendorp price sensitivity analysis
+- Competitive pricing benchmarking
+- Willingness-to-pay research methodology
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Market context (B2B/B2C)
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Value propositions, target market
+
+## Final Output
+`{project-root}/_bmad-output/pricing-strategy-{date}.md` containing:
+- Recommended pricing model with rationale
+- Tier structure (if applicable)
+- Pricing range recommendation
+- Competitive positioning on price

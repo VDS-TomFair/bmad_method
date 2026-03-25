@@ -1,0 +1,12 @@
+# <!-- Powered by BMAD-CORE™ -->
+bundle:
+  name: GTM Squad
+  icon: 🚀
+  description: Cross-functional Go-to-Market Team — Marketing strategy, content, growth, product, and architecture for end-to-end GTM execution
+agents:
+  - marketing-strategist
+  - content-channels-lead
+  - growth-engineer
+  - bmad-pm
+  - bmad-architect
+party: "./default-party.csv"

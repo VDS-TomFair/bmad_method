@@ -1,0 +1,29 @@
+---
+name: ab-test-setup
+agent: growth-engineer
+phase: 5-growth
+source: "ab-test-setup (marketingskills repo)"
+output: "{project-root}/_bmad-output/ab-test-setup-{date}.md"
+---
+
+# A/B Test Setup Workflow
+
+## Overview
+Set up A/B tests using frameworks, hypothesis formation, and statistical planning.
+
+## Content Coverage
+- A/B testing frameworks and methodologies
+- Hypothesis formation and statistical planning
+- Tool selection and implementation guidance
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/ab-test-setup-{date}.md` containing:
+- A/B test hypothesis framework
+- Statistical significance and sample size calculations
+- Tool implementation guide
+- Monitoring and analysis procedures

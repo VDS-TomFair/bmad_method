@@ -1,0 +1,24 @@
+---
+name: market-positioning
+agent: marketing-strategist
+phase: 1-discovery
+source: "product-marketing-context (marketingskills repo)"
+output: "{project-root}/_bmad-output/marketing-positioning-{date}.md"
+---
+
+# Market Positioning Workflow
+
+## Overview
+Define differentiated positioning using Jobs-to-be-Done (JTBD), Porter's Five Forces, and Blue Ocean Strategy.
+
+## Steps
+1. Context Gathering — Read BMAD config and product brief
+2. ICP Analysis — Define Ideal Customer Profile with JTBD evidence
+3. Positioning Statement — Craft value proposition with competitive moat
+4. Competitive Mapping — Validate positioning against Porter's Five Forces
+
+## Final Output
+`{project-root}/_bmad-output/marketing-positioning-{date}.md` containing:
+- ICP definition (≥3 specific attributes)
+- Value proposition statement (one sentence)
+- Competitive differentiation (≥3 specific differentiators with evidence)

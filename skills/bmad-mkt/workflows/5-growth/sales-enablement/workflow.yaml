@@ -1,0 +1,29 @@
+---
+name: sales-enablement
+agent: growth-engineer
+phase: 5-growth
+source: "sales-enablement (marketingskills repo)"
+output: "{project-root}/_bmad-output/sales-enablement-{date}.md"
+---
+
+# Sales Enablement Workflow
+
+## Overview
+Enable sales teams using frameworks, content creation, and CRM integration.
+
+## Content Coverage
+- Sales enablement frameworks and methodologies
+- Content creation and distribution strategies
+- CRM integration and tracking
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/sales-enablement-{date}.md` containing:
+- Sales enablement strategy framework
+- Content creation and distribution plan
+- CRM integration and tracking
+- Success metrics and monitoring

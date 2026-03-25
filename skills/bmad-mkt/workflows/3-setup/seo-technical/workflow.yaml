@@ -1,0 +1,30 @@
+---
+name: seo-technical
+agent: content-channels-lead
+phase: 3-setup
+source: "seo-technical (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-technical-{date}.md"
+---
+
+# SEO Technical Workflow
+
+## Overview
+Conduct comprehensive technical SEO audit and optimization to improve crawlability, indexation, and Core Web Vitals.
+
+## Content Coverage
+- Technical SEO audit categories
+- Crawlability and indexation issues
+- Core Web Vitals optimization
+- Security and structured data implementation
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-technical-{date}.md` containing:
+- Technical SEO audit report with findings
+- Crawl error resolution plan
+- Core Web Vitals improvement recommendations
+- Structured data implementation guide

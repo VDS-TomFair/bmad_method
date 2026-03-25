@@ -1,0 +1,29 @@
+---
+name: marketing-ideas
+agent: marketing-strategist
+phase: 2-strategy
+source: "marketing-ideas (marketingskills repo)"
+output: "{project-root}/_bmad-output/marketing-ideas-{date}.md"
+---
+
+# Marketing Ideas Workflow
+
+## Overview
+Generate innovative marketing ideas using frameworks, research, and audience insights to drive growth.
+
+## Content Coverage
+- Idea generation frameworks and techniques
+- Market research and competitive intelligence
+- Audience insights and pain point mapping
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/marketing-ideas-{date}.md` containing:
+- List of marketing ideas with descriptions
+- Prioritization framework for ideas
+- Implementation feasibility assessment
+- Alignment with audience needs and business goals

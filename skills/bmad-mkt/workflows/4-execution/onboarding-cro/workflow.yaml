@@ -1,0 +1,29 @@
+---
+name: onboarding-cro
+agent: content-channels-lead
+phase: 4-execution
+source: "onboarding-cro (marketingskills repo)"
+output: "{project-root}/_bmad-output/onboarding-cro-{date}.md"
+---
+
+# Onboarding CRO Workflow
+
+## Overview
+Optimize onboarding flows using frameworks, user experience, and activation strategies.
+
+## Content Coverage
+- Onboarding optimization frameworks and checklists
+- User experience and activation strategies
+- A/B testing and personalization techniques
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/onboarding-cro-{date}.md` containing:
+- Onboarding flow analysis with friction points
+- Activation strategy recommendations
+- A/B testing hypotheses and metrics
+- Implementation guide and monitoring

@@ -1,0 +1,29 @@
+---
+name: referral-program
+agent: growth-engineer
+phase: 5-growth
+source: "referral-program (marketingskills repo)"
+output: "{project-root}/_bmad-output/referral-program-{date}.md"
+---
+
+# Referral Program Workflow
+
+## Overview
+Create referral programs using frameworks, incentive design, and tracking methodologies.
+
+## Content Coverage
+- Referral program frameworks and strategies
+- Incentive design and reward structures
+- Tracking and measurement methodologies
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/referral-program-{date}.md` containing:
+- Referral program strategy framework
+- Incentive structure and reward recommendations
+- Tracking and measurement plan
+- Implementation guide and monitoring

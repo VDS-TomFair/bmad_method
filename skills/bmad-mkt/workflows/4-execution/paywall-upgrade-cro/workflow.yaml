@@ -1,0 +1,29 @@
+---
+name: paywall-upgrade-cro
+agent: content-channels-lead
+phase: 4-execution
+source: "paywall-upgrade-cro (marketingskills repo)"
+output: "{project-root}/_bmad-output/paywall-upgrade-cro-{date}.md"
+---
+
+# Paywall Upgrade CRO Workflow
+
+## Overview
+Optimize paywalls using frameworks, upgrade path design, and personalization techniques.
+
+## Content Coverage
+- Paywall optimization frameworks and checklists
+- Upgrade path design and user experience
+- A/B testing and personalization techniques
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/paywall-upgrade-cro-{date}.md` containing:
+- Paywall analysis with friction points
+- Upgrade path optimization recommendations
+- A/B testing hypotheses and metrics
+- Implementation guide and monitoring

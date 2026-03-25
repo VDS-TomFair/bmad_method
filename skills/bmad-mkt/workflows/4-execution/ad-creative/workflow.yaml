@@ -1,0 +1,29 @@
+---
+name: ad-creative
+agent: content-channels-lead
+phase: 4-execution
+source: "ad-creative (marketingskills repo)"
+output: "{project-root}/_bmad-output/ad-creative-{date}.md"
+---
+
+# Ad Creative Workflow
+
+## Overview
+Create compelling ad creative variations using frameworks, copywriting, and platform-specific guidelines.
+
+## Content Coverage
+- Ad creative frameworks and formats
+- Copywriting and design principles
+- Platform-specific creative guidelines
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/ad-creative-{date}.md` containing:
+- Ad creative variations with headlines and descriptions
+- Visual design guidelines and assets
+- Platform-specific creative templates
+- Performance metrics and A/B testing recommendations

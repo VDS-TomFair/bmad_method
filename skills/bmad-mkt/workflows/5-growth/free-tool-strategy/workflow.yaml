@@ -1,0 +1,29 @@
+---
+name: free-tool-strategy
+agent: growth-engineer
+phase: 5-growth
+source: "free-tool-strategy (marketingskills repo)"
+output: "{project-root}/_bmad-output/free-tool-strategy-{date}.md"
+---
+
+# Free Tool Strategy Workflow
+
+## Overview
+Create free tool strategies using frameworks, idea generation, and distribution methods.
+
+## Content Coverage
+- Free tool strategy frameworks and methodologies
+- Tool idea generation and validation
+- Implementation and distribution strategies
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/free-tool-strategy-{date}.md` containing:
+- Free tool strategy framework
+- Tool idea generation and scoring
+- Implementation and distribution plan
+- Success metrics and monitoring

@@ -1,0 +1,29 @@
+---
+name: seo-schema
+agent: content-channels-lead
+phase: 4-execution
+source: "seo-schema (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-schema-{date}.md"
+---
+
+# SEO Schema Workflow
+
+## Overview
+Implement schema markup using frameworks, JSON-LD generation, and validation procedures.
+
+## Content Coverage
+- Schema markup frameworks and types
+- JSON-LD generation and implementation
+- Validation and testing procedures
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-schema-{date}.md` containing:
+- Schema markup implementation guide
+- JSON-LD code snippets for key types
+- Validation checklist and testing procedures
+- Performance metrics and monitoring

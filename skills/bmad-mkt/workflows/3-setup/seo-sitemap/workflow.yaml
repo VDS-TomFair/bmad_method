@@ -1,0 +1,29 @@
+---
+name: seo-sitemap
+agent: content-channels-lead
+phase: 3-setup
+source: "seo-sitemap (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-sitemap-{date}.md"
+---
+
+# SEO Sitemap Workflow
+
+## Overview
+Generate and optimize XML sitemaps with indexation strategy, validation, and search engine submission.
+
+## Content Coverage
+- XML sitemap generation and structure
+- Indexation strategy and priority settings
+- Validation and submission to search engines
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-sitemap-{date}.md` containing:
+- XML sitemap structure and format guidelines
+- Indexation priority and frequency settings
+- Validation checklist and submission process
+- Monitoring and maintenance procedures

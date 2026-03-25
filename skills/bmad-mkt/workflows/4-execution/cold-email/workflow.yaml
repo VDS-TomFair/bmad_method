@@ -1,0 +1,29 @@
+---
+name: cold-email
+agent: content-channels-lead
+phase: 4-execution
+source: "cold-email (marketingskills repo)"
+output: "{project-root}/_bmad-output/cold-email-{date}.md"
+---
+
+# Cold Email Workflow
+
+## Overview
+Create high-conversion cold email campaigns using outreach frameworks, prospect research, and personalization techniques.
+
+## Content Coverage
+- Cold email frameworks and outreach strategies
+- Prospect research and personalization techniques
+- Subject line and copywriting best practices
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/cold-email-{date}.md` containing:
+- Cold email templates with variations
+- Prospect research methodology
+- Personalization variables and triggers
+- Follow-up sequence structure

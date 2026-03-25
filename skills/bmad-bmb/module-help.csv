@@ -1,5 +1,5 @@
 module,phase,name,code,sequence,workflow-file,command,required,agent,options,description,output-location,outputs,
-bmb,anytime,Create Agent,CA,10,skills/bmad-bmb/workflows/agent/workflow-create-agent.md,bmad_bmb_create_agent,false,agent-builder,Create Mode,"Create a new BMAD agent with best practices and compliance",bmb_creations_output_folder,"agent",
+bmb,anytime,Create Agent,BAG,10,skills/bmad-bmb/workflows/agent/workflow-create-agent.md,bmad_bmb_create_agent,false,agent-builder,Create Mode,"Create a new BMAD agent with best practices and compliance",bmb_creations_output_folder,"agent",
 bmb,anytime,Edit Agent,EA,15,skills/bmad-bmb/workflows/agent/workflow-edit-agent.md,bmad_bmb_edit_agent,false,agent-builder,Edit Mode,"Edit existing BMAD agents while maintaining compliance",bmb_creations_output_folder,"agent",
 bmb,anytime,Validate Agent,VA,20,skills/bmad-bmb/workflows/agent/workflow-validate-agent.md,bmad_bmb_validate_agent,false,agent-builder,Validate Mode,"Validate existing BMAD agents and offer to improve deficiencies","agent being validated folder","validation report",
 bmb,anytime,Create Module Brief,PB,30,skills/bmad-bmb/workflows/module/workflow-create-module-brief.md,bmad_bmb_create_module_brief,false,module-builder,Module Brief Mode,"Create product brief for BMAD module development",bmb_creations_output_folder,"product brief",

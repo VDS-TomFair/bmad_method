@@ -3,6 +3,7 @@
 import argparse, re, sys, json, urllib.request, urllib.error, base64
 from datetime import datetime
 from pathlib import Path
+from bmad_status_core import read_state, check_agents, check_modules, read_tests, SKILL_NAMES
 
 # --- Dynamic path resolution ---
 # All paths are resolved at runtime from CLI args or self-discovery.
@@ -39,7 +40,6 @@ def _resolve_project_root(project_path_arg: str | None) -> Path | None:
     return None
 
 
-SKILL_NAMES  = ["bmad-init","bmad-bmm","bmad-bmb","bmad-tea","bmad-cis"]
 NOW          = datetime.now().strftime("%Y-%m-%d %H:%M")
 DIV          = "\u2501" * 45
 
@@ -66,11 +66,6 @@ AGENT_NAMES = {
     "bmad-presentation":        "Caravaggio (Presentation)",
 }
 
-REQUIRED_PROMPTS = {
-    "agent.system.main.role.md",
-    "agent.system.main.communication_additions.md",
-}
-
 PHASE_ACTIONS = {
     "ready":   ("Start a new workflow",
                 "Type LW to list workflows, or describe what you want to build"),
@@ -85,57 +80,6 @@ PHASE_ACTIONS = {
     "unknown": ("Initialize BMAD", "Run: bmad init"),
 }
 
-def read_state(state_file: Path):
-    if not state_file.exists():
-        return {"phase":"unknown","artifact":"none","issues":[]}
-    text = state_file.read_text(encoding="utf-8")
-    phase    = re.search(r"Phase:\s*(.+)", text)
-    artifact = re.search(r"Active Artifact:\s*(.+)", text)
-    issues   = [l.strip().lstrip("-# ") for l in text.splitlines()
-                if re.search(r"(ARCH-|DEFECT-)\d+", l) and "PENDING" in l]
-    return {
-        "phase":    phase.group(1).strip()    if phase    else "unknown",
-        "artifact": artifact.group(1).strip() if artifact else "none",
-        "issues":   issues
-    }
-
-def check_agents(agents_dir: Path):
-    healthy, broken = [], []
-    if not agents_dir.exists():
-        return healthy, broken
-    for d in agents_dir.iterdir():
-        if not d.is_dir() or not d.name.startswith("bmad-"): continue
-        prompts = d / "prompts"
-        if not prompts.exists():
-            broken.append((d.name, ["prompts/ missing"])); continue
-        missing = REQUIRED_PROMPTS - {f.name for f in prompts.iterdir()}
-        if missing:
-            broken.append((d.name, sorted(missing)))
-        else:
-            healthy.append(d.name)
-    return healthy, broken
-
-def check_skills(skills_dir: Path):
-    ok, broken = [], []
-    for n in SKILL_NAMES:
-        (ok if (skills_dir / n / "SKILL.md").exists() else broken).append(n)
-    return ok, broken
-
-def read_tests(test_dir: Path):
-    if not test_dir.exists(): return None, None, None
-    reports = sorted(test_dir.glob("behavioral-test-report*.md"),
-                     key=lambda p: p.stat().st_mtime, reverse=True)
-    if not reports: return None, None, None
-    latest  = reports[0]
-    mtime   = datetime.fromtimestamp(latest.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
-    text    = latest.read_text(encoding="utf-8")
-    matches = re.findall(r"(\d+)\s+of\s+(\d+)[^\n]*PASS", text)
-    if matches:
-        best = max(matches, key=lambda x: int(x[0]))
-        return best[0], best[1], mtime
-    return None, None, mtime
-
-
 
 def wwn(what, why, nxt, indent="   "):
     """Print WHAT / WHY / NEXT diagnostic block."""
@@ -148,7 +92,7 @@ def recommend_next(state, broken_agents, broken_skills, passed, total_t, agents_
     issues = []
     if broken_skills:
         issues.append(("\U0001f534 BLOCKER",
-            str(len(broken_skills)) + " skill(s) missing",
+            str(len(broken_skills)) + " module(s) missing",
             "Verify BMAD plugin is installed and enabled"))
     if broken_agents:
         issues.append(("\U0001f7e1 WARN",
@@ -224,18 +168,18 @@ def main():
         print("\U0001f916 Agents:   " + str(total) + "/" + str(total) + " healthy  (+ 5 Party Mode archetypes)")
 
     # DS-03 Skills
-    ok_s, broken_s = check_skills(skills_dir)
+    ok_s, broken_s = check_modules(skills_dir)
     if broken_s:
-        print("\U0001f50c Skills:   " + str(len(ok_s)) + "/" + str(len(SKILL_NAMES)) + " OK")
+        print("\U0001f5c2\ufe0f Modules:  " + str(len(ok_s)) + "/" + str(len(SKILL_NAMES)) + " OK")
         for s in broken_s:
             print("   \U0001f534 " + s)
             wwn(
-                s + "/SKILL.md not found",
-                "Skill not accessible — workflow routing will fail",
+                s + "/module-help.csv not found",
+                "Skill not accessible \u2014 workflow routing will fail",
                 "Verify BMAD plugin is installed at " + str(skills_dir)
             )
     else:
-        print("\U0001f50c Skills:   " + str(len(ok_s)) + "/" + str(len(SKILL_NAMES)) + " OK")
+        print("\U0001f5c2\ufe0f Modules:  " + str(len(ok_s)) + "/" + str(len(SKILL_NAMES)) + " OK")
 
     # DS-04 Tests
     passed, total_t, mtime = read_tests(test_dir)

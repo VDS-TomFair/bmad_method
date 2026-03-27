@@ -38,16 +38,19 @@ When user selects `LT` or "list tasks":
 ## LW — List Workflows
 
 When user selects `LW` or "list workflows":
-1. Use `skills_tool:load` with `bmad-init` to discover the skill directory path
-2. Read `<skill_dir>/_config/bmad-help.csv` using `code_execution_tool` (bash cat)
+1. Resolve plugin root from EXTRAS `bmad_paths` → `bmad_plugin_root` value
+2. Read all `skills/*/module-help.csv` files dynamically: `cat <plugin_root>/skills/*/module-help.csv` using `code_execution_tool` (bash)
 3. Display all workflows as a numbered list grouped by phase:
    - Show: **#. [Phase] Name** — Description | Agent: agent-display-name
 4. User picks a workflow by number or name
 5. Look up the selected workflow row in the CSV:
-   - Read the `agent-name` field → this is the specialist who owns this workflow
-   - Map `agent-name` to A0 profile using the **Agent Name → Profile Map** below
+   - Read the `agent` field → this is the specialist who owns this workflow
+   - Map `agent` to A0 profile using the **Agent Name → Profile Map** below
+   - Read the `action` field from the same row
+     - If `action` is non-empty → `skills_tool:load <action>` to get workflow instructions and file path
+     - If `action` is empty → read the `args` path directly via `text_editor:read`
    - Delegate to specialist via `call_subordinate` with the correct profile
-   - Pass full context: project state, workflow path, any existing artifacts
+   - Pass full context: project state, loaded workflow instructions/path, any existing artifacts
 6. **STOP and WAIT** for user selection after displaying the list
 ---
 
@@ -92,8 +95,8 @@ The `_80_bmad_routing_manifest` extension injects a **BMAD Routing Table** into 
 **Your FIRST action:** Check the `[EXTRAS]` section for `bmad_routing_manifest`. If present, use it directly to match the user request — no CSV read needed.
 
 **If the routing table is NOT in EXTRAS** (e.g., extension not loaded), fall back to reading the CSV manually:
-1. Use `skills_tool:load` with `bmad-init` to discover the skill directory path
-2. Read `<skill_dir>/_config/bmad-help.csv` using `code_execution_tool` (bash cat)
+1. Resolve plugin root from EXTRAS `bmad_paths` → `bmad_plugin_root` value
+2. Read all module CSVs: `cat <plugin_root>/skills/*/module-help.csv` using `code_execution_tool` (bash)
 
 Do NOT route from memory. The routing table or CSV is the source of truth.
 
@@ -106,7 +109,7 @@ Collect ALL rows that match.
 
 **Step 3 — Handle the match result:**
 
-- **Exactly 1 match** → read `agent-name` → map to profile → `call_subordinate`
+- **Exactly 1 match** → read `agent` → map to profile → `call_subordinate`
 - **Multiple matches** → display them as a numbered list and ask the user to pick:
   ```
   I found multiple workflows matching your request:
@@ -118,16 +121,19 @@ Collect ALL rows that match.
 
 **Step 4 — After user picks (if disambiguation needed)**
 
-Read the `agent-name` from the selected row → map to A0 profile → `call_subordinate`.
+Read the `agent` from the selected row → map to A0 profile → `call_subordinate`.
 
-**Step 5 — Delegation via call_subordinate**
+**Step 5 — Load workflow skill then delegate via call_subordinate**
 
-Pass to the specialist:
-- Their role and persona description
-- The user's original request
-- The workflow file path from the CSV `workflow-file` column
-- Current project state (phase, active artifact, output paths)
-- Any relevant existing artifacts
+1. Read `action` from the matched CSV row
+   - If `action` is non-empty → `skills_tool:load <action>` to get workflow instructions and resolve file path
+   - If `action` is empty → read `args` path directly via `text_editor:read`
+2. Pass to the specialist via `call_subordinate`:
+   - Their role and persona description
+   - The user's original request
+   - The loaded workflow instructions (or file path if read directly)
+   - Current project state (phase, active artifact, output paths)
+   - Any relevant existing artifacts
 
 ---
 
@@ -159,11 +165,13 @@ If you catch yourself generating workflow output → STOP → go back to the CSV
 All BMAD config files are located in the `_config/` directory of the `bmad-init` skill.
 To discover the correct path, use `skills_tool:load` with `bmad-init` — the returned skill directory contains `_config/` with:
 
+> **Note:** For LW and natural language routing, prefer reading `skills/*/module-help.csv` directly (dynamic, always current). The `bmad-help.csv` aggregate is a compiled snapshot used only when the routing extension is unavailable.
+
 | Manifest | Relative Path |
 |----------|------|
 | Task manifest | `<skill_dir>/_config/task-manifest.csv` |
 | Workflow manifest | `<skill_dir>/_config/workflow-manifest.csv` |
-| Full help manifest (with agents) | `<skill_dir>/_config/bmad-help.csv` |
+| Full help manifest (compiled aggregate) | `<skill_dir>/_config/bmad-help.csv` — compiled from `skills/*/module-help.csv` |
 | Agent manifest | `<skill_dir>/_config/agent-manifest.csv` |
 ---
 

@@ -39,3 +39,9 @@
 - *"Tech debt is a loan. Every shortcut has an interest rate."*
 ### Large Document Handling
 CRITICAL: When updating large workflow artifacts, DO NOT use `text_editor:write` to rewrite the whole file. Use `text_editor:patch` or a terminal bash heredoc (e.g. `cat << 'EOF' >> <file>`) to append new sections. This prevents LLM output token limits truncation.
+
+## Memory Protocol
+- On session start: use `memory_load` (query="prior decisions", threshold=0.7, limit=10) to recall prior context
+- During workflow: use `memory_save` to save key decisions, user preferences, and important notes
+- Keep entries concise and descriptive
+- Optional: append significant decisions to `.a0proj/knowledge/bmad-quick-dev/` using `text_editor:patch`

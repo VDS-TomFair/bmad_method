@@ -212,11 +212,11 @@
               </div>
             </div>
 
-            <!-- 🔌 Skills + 🧪 Tests (2-col) -->
+            <!-- 🗂️ Modules + 🧪 Tests (2-col) -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
 
               <div class="section" style="margin-bottom:0">
-                <div class="section-head"><span class="section-title">🔌 Skills</span></div>
+                <div class="section-head"><span class="section-title">🗂️ Modules</span></div>
                 <div class="section-body">
                   <div class="skills-row">
                     <template x-for="s in $store.bmadDashboard.data.skills.ok" :key="s">
@@ -227,7 +227,7 @@
                     </template>
                   </div>
                   <div style="margin-top:8px;font-size:.75rem;color:#6c7086"
-                       x-text="$store.bmadDashboard.data.skills.ok.length + '/' + $store.bmadDashboard.data.skills.total + ' symlinks OK'"></div>
+                       x-text="$store.bmadDashboard.data.skills.ok.length + '/' + $store.bmadDashboard.data.skills.total + ' modules OK'"></div>
                 </div>
               </div>
 

@@ -2,13 +2,15 @@ from helpers.api import ApiHandler, Request, Response
 import re, json, base64, urllib.request, urllib.error
 from pathlib import Path
 from datetime import datetime
+from usr.plugins.bmad_method.helpers.bmad_status_core import (
+    check_agents, check_modules, read_state, read_tests, SKILL_NAMES
+)
 
 # --- Plugin-level paths (fixed, plugin-relative) ---
 # Path(__file__).resolve() follows symlinks to the real file location.
 _PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 AGENTS_DIR   = _PLUGIN_ROOT / "agents"
 SKILLS_DIR   = _PLUGIN_ROOT / "skills"
-SKILL_NAMES  = ["bmad-init","bmad-bmm","bmad-bmb","bmad-tea","bmad-cis"]
 
 # --- Project-level paths (per-request, resolved from active chat context) ---
 def _resolve_project_root(ctxid: str | None) -> Path | None:
@@ -58,7 +60,6 @@ def _resolve_project_root(ctxid: str | None) -> Path | None:
     return None  # no BMAD project found
 
 
-
 AGENT_NAMES = {
     "bmad-master":"BMad Master","bmad-analyst":"Mary (Analyst)",
     "bmad-pm":"John (PM)","bmad-architect":"Winston (Architect)",
@@ -76,7 +77,6 @@ AGENT_NAMES = {
     "bmad-storyteller":"Sophia (Storyteller)",
     "bmad-presentation":"Caravaggio (Presentation)",
 }
-REQUIRED_PROMPTS = {"agent.system.main.role.md","agent.system.main.communication_additions.md"}
 PHASE_ACTIONS = {
     "ready":           ("Start a new workflow","Type LW to list workflows or describe what you want to build"),
     "1":               ("Continue Phase 1 Analysis","Ask Mary (Analyst) to continue research or finalize product brief"),
@@ -112,58 +112,30 @@ class BmadStatus(ApiHandler):
 
     def _read_state(self, state_file: Path | None):
         if state_file is None or not state_file.exists():
-            return {"phase":"not_initialized","artifact":"none","issues":[]}
-        text     = state_file.read_text(encoding="utf-8")
-        phase    = re.search(r"Phase:\s*(.+)", text)
-        artifact = re.search(r"Active Artifact:\s*(.+)", text)
-        issues   = [l.strip().lstrip("-# ") for l in text.splitlines()
-                    if re.search(r"(ARCH-|DEFECT-)\d+", l) and "PENDING" in l]
-        return {
-            "phase":    phase.group(1).strip()    if phase    else "unknown",
-            "artifact": artifact.group(1).strip() if artifact else "none",
-            "issues":   issues,
-        }
+            return {"phase": "not_initialized", "artifact": "none", "issues": []}
+        return read_state(state_file)
 
     def _check_agents(self):
-        healthy, broken = [], []
-        if not AGENTS_DIR.exists():
-            return {"healthy":[],"broken":[]}
-        for d in AGENTS_DIR.iterdir():
-            if not d.is_dir() or not d.name.startswith("bmad-"):
-                continue
-            prompts = d / "prompts"
-            if not prompts.exists():
-                broken.append({"name":d.name,"display":AGENT_NAMES.get(d.name,d.name),"missing":["prompts/ missing"]})
-                continue
-            missing = REQUIRED_PROMPTS - {f.name for f in prompts.iterdir()}
-            if missing:
-                broken.append({"name":d.name,"display":AGENT_NAMES.get(d.name,d.name),"missing":sorted(missing)})
-            else:
-                healthy.append({"name":d.name,"display":AGENT_NAMES.get(d.name,d.name)})
-        return {"healthy":healthy,"broken":broken,"total":len(healthy)+len(broken)}
+        healthy_names, broken_tuples = check_agents(AGENTS_DIR)
+        healthy = [{"name": n, "display": AGENT_NAMES.get(n, n)} for n in healthy_names]
+        broken  = [{"name": n, "display": AGENT_NAMES.get(n, n), "missing": mf}
+                   for n, mf in broken_tuples]
+        return {"healthy": healthy, "broken": broken, "total": len(healthy) + len(broken)}
 
     def _check_skills(self):
-        ok, broken = [], []
-        for n in SKILL_NAMES:
-            (ok if (SKILLS_DIR/n/"SKILL.md").exists() else broken).append(n)
-        return {"ok":ok,"broken":broken,"total":len(SKILL_NAMES)}
+        ok, broken = check_modules(SKILLS_DIR)
+        return {"ok": ok, "broken": broken, "total": len(SKILL_NAMES)}
 
     def _read_tests(self, test_dir: Path | None):
         if test_dir is None or not test_dir.exists():
-            return {"status":"no_dir"}
-        reports = sorted(test_dir.glob("behavioral-test-report*.md"),
-                         key=lambda p:p.stat().st_mtime, reverse=True)
-        if not reports:
-            return {"status":"no_report"}
-        latest  = reports[0]
-        mtime   = datetime.fromtimestamp(latest.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
-        text    = latest.read_text(encoding="utf-8")
-        matches = re.findall(r"(\d+)\s+of\s+(\d+)[^\n]*PASS", text)
-        if matches:
-            best = max(matches, key=lambda x:int(x[0]))
-            return {"status":"ok","passed":int(best[0]),"total":int(best[1]),"verified":mtime,
-                    "failing":int(best[1])-int(best[0])}
-        return {"status":"no_match","verified":mtime}
+            return {"status": "no_dir"}
+        passed, total, mtime = read_tests(test_dir)
+        if passed is None and mtime is None:
+            return {"status": "no_report"}
+        if passed is None:
+            return {"status": "no_match", "verified": mtime}
+        return {"status": "ok", "passed": int(passed), "total": int(total), "verified": mtime,
+                "failing": int(total) - int(passed)}
 
     def _recommend(self, state_file: Path | None, test_dir: Path | None):
         state  = self._read_state(state_file)
@@ -172,7 +144,7 @@ class BmadStatus(ApiHandler):
         tests  = self._read_tests(test_dir)
         issues = []
         if skills["broken"]:
-            issues.append({"sev":"blocker","what":str(len(skills["broken"]))+" skill(s) missing",
+            issues.append({"sev":"blocker","what":str(len(skills["broken"]))+" module(s) missing",
                 "fix":"Verify BMAD plugin is installed and enabled"})
         if agents["broken"]:
             issues.append({"sev":"warn","what":str(len(agents["broken"]))+" agent(s) unhealthy",

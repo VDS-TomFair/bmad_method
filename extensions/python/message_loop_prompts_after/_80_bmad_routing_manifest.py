@@ -96,23 +96,35 @@ def _collect_routing_rows(active_modules: list | None) -> list[str]:
             for row in reader:
                 module = row.get("module", "").strip()
                 row_phase = row.get("phase", "").strip()
-                name = row.get("name", "").strip()
-                code = row.get("code", "").strip()
-                # module-help.csv uses 'agent'; bmad-help.csv uses 'agent-name'
-                agent_name = (
-                    row.get("agent-name", "").strip()
-                    or row.get("agent", "").strip()
+                # Support new 13-col format (display-name, menu-code, skill)
+                # and old format (name, code, agent-name/agent) — dual read
+                name = (
+                    row.get("display-name", "").strip()
+                    or row.get("name", "").strip()
                 )
-                # display name optional — use agent-display-name or agent-title or agent_name
+                code = (
+                    row.get("menu-code", "").strip()
+                    or row.get("code", "").strip()
+                )
+                description = row.get("description", "").strip()
+                # action = canonical skill name for skills_tool:load
+                # args = direct workflow file path fallback when action is empty
+                action = row.get("action", "").strip()
+                args = row.get("args", "").strip()
+                # New format uses 'agent'; old formats: 'skill', 'agent-name'
+                agent_name = (
+                    row.get("agent", "").strip()
+                    or row.get("skill", "").strip()
+                    or row.get("agent-name", "").strip()
+                )
+                # Agent display name — fallback to agent_name
                 agent_display = (
                     row.get("agent-display-name", "").strip()
                     or row.get("agent-title", "").strip()
                     or agent_name
                 )
 
-                # Skip rows without agent — these are standalone tools
-                # invoked directly by any agent, not routed through bmad-master
-                # (matches original design intent from official BMAD)
+                # Skip rows without agent — standalone tools invoked directly
                 if not agent_name:
                     continue
 
@@ -120,8 +132,11 @@ def _collect_routing_rows(active_modules: list | None) -> list[str]:
                 if active_modules and module not in active_modules:
                     continue
 
+                desc_suffix = f" — {description}" if description else ""
+                # skill: tells BMad Master which skill to load_tool; args: direct file fallback
+                skill_suffix = f" [skill:{action}]" if action else (f" [args:{args}]" if args else "")
                 routing_rows.append(
-                    f"`{code}` {name} [{module}/{row_phase}] → {agent_name} ({agent_display})"
+                    f"`{code}` {name} [{module}/{row_phase}] → {agent_name} ({agent_display}){skill_suffix}{desc_suffix}"
                 )
 
         except Exception:
@@ -157,6 +172,19 @@ class BmadRoutingManifest(Extension):
             phase = "ready"
             active_modules = None
             state_path = _resolve_state_file(self.agent)
+
+            # ── Not initialized: inject guidance, skip routing table ────────────
+            if not state_path:
+                loop_data.extras_temporary["bmad_not_initialized"] = (
+                    "# BMAD Project Status: NOT INITIALIZED\n"
+                    "This project has not been initialized with BMAD yet.\n"
+                    "The user must run `bmad init` before any BMAD workflows can begin.\n"
+                    "IMPORTANT: On the user's next message, respond by explaining that BMAD "
+                    "is not initialized for this project and instruct them to run `bmad init`. "
+                    "Do NOT show the workflow menu or attempt any routing."
+                )
+                return
+
             if state_path:
                 state = state_path.read_text(encoding="utf-8")
                 for line in state.splitlines():

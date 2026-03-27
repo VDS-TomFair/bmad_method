@@ -1,8 +1,8 @@
 # a0-bmad-method
 
-**BMAD Method Framework v6** integration for [Agent Zero](https://github.com/frdel/agent-zero).
+**BMAD Method Framework v6** integration for [Agent Zero](https://github.com/agent0ai/agent-zero), built on [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD).
 
-BMAD (Business Method for Agile Development) is a structured AI-first product development framework. This repo provides a full drop-in integration: 20 specialized agent personas, 5 global skills, and the complete workflow library — ready to use inside Agent Zero.
+BMAD (Business Method for Agile Development) is a structured AI-first product development framework. This repo provides a full drop-in integration: 20 specialized agent personas, 41 workflow skills, and the complete workflow library — ready to use inside Agent Zero.
 
 ---
 
@@ -11,7 +11,7 @@ BMAD (Business Method for Agile Development) is a structured AI-first product de
 | Path | Contents |
 |---|---|
 | `agents/bmad-*/` | 20 BMAD agent profiles, each with a complete prompt system (4 files for subordinates, 5 files for bmad-master) |
-| `skills/bmad-*/` | 5 BMAD skills (init, bmm, bmb, cis, tea) — installed globally, not per-project |
+| `skills/bmad-*/` | 41 workflow skills: `bmad-init` (module bootstrap) + 40 per-workflow thin SKILL.md wrappers — loaded on-demand via `skills_tool`, not per-project |
 
 ### Agent personas (20)
 
@@ -19,11 +19,17 @@ BMAD (Business Method for Agile Development) is a structured AI-first product de
 
 ### Skills
 
-- **bmad-init** — bootstrap script that sets up a BMAD workspace in any Agent Zero project
-- **bmad-bmm** — Business Method Module: PRD, architecture, epics, stories, dev, sprint workflows
-- **bmad-bmb** — Builder Module: create/edit/validate BMAD agents, workflows, and modules
-- **bmad-cis** — Creative Intelligence Suite: innovation strategy, design thinking, storytelling, problem solving
-- **bmad-tea** — Testing Excellence Accelerator: ATDD, test automation, CI integration, NFR assessment
+Skills are loaded on-demand via `skills_tool:load <skill-name>`. Each BMAD workflow is an independently loadable skill — 40 per-workflow thin wrappers plus `bmad-init`:
+
+- **bmad-init** — the only module-level skill; bootstraps a BMAD workspace in any Agent Zero project
+- **Per-workflow skills** — one SKILL.md per workflow directory under `skills/bmad-{module}/workflows/`. Load by workflow name:
+  - `skills_tool:load bmad-create-product-brief`
+  - `skills_tool:load bmad-create-architecture`
+  - `skills_tool:load bmad-dev-story`
+  - `skills_tool:load bmad-create-epics-and-stories`
+  - … and 36 more
+
+The four modules (BMM, BMB, TEA, CIS) are organizational containers — they group related workflows but are not loadable skills themselves. See [Modules](#modules).
 
 ---
 
@@ -64,7 +70,7 @@ This boundary keeps the agents lightweight, the skills composable, and project s
 | `agent.system.main.tips.md` | Standard Agent Zero operational guidance (tool use, file handling, problem-solving steps) plus BMAD-specific behavioral guidelines. |
 | `agent.system.main.communication_additions.md` | Agent-specific numbered workflow menu — the list of commands this agent can execute, routing rules, and menu handling logic. |
 
-### bmad-master — 6 files (superset)
+### bmad-master — 7 files (superset)
 
 All 4 files above, plus:
 
@@ -72,6 +78,7 @@ All 4 files above, plus:
 |---|---|
 | `agent.system.tool.response.md` | Rich output formatting rules — how bmad-master structures final responses, markdown conventions, and section layout. |
 | `fw.initial_message.md` | The greeting message displayed when the bmad-master profile is first activated in a new session. |
+| `fw.initial_message.bmad_not_initialized.md` | The alternate greeting shown when no BMAD workspace has been initialized in the current project. Prompts the user to run `bmad init`. |
 
 ---
 
@@ -121,29 +128,6 @@ Each agent's menu is defined in `communication_additions.md`. The file specifies
 
 ---
 
-## Installation
-
-This repo is an **Agent Zero plugin**. The plugin folder **must be named `bmad`** — the dashboard and extensions reference `/usr/plugins/bmad/` internally.
-
-### Option A — Clone directly into Agent Zero
-
-```bash
-git clone https://github.com/vanja-emichi/bmad_method.git /path/to/agent-zero/usr/plugins/bmad
-```
-
-### Option B — Copy from an existing clone
-
-```bash
-cp -r /path/to/a0-bmad-method /path/to/agent-zero/usr/plugins/bmad
-```
-
-> ⚠️ **The folder must be named `bmad`** — not `a0-bmad-method` or anything else.
-
-The `.toggle-1` file is included in the repo, so the plugin ships **pre-enabled**. Restart Agent Zero after installation — the **BMAD Method** plugin and dashboard icon will appear immediately.
-
-For detailed installation steps, verification, developer setup, and upgrade instructions: see [README-install.md](README-install.md).
-
-
 ## First Run
 
 Select the **BMad Master** profile in Agent Zero, then trigger the bootstrap skill:
@@ -170,7 +154,7 @@ The two instruction files are loaded automatically by Agent Zero and used by the
 
 ## Modules
 
-| Module | Skill | Purpose |
+| Module | Module ID | Purpose |
 |---|---|---|
 | **BMM** — Business Method Module | `bmad-bmm` | Full product lifecycle: discovery → planning → architecture → implementation |
 | **BMB** — Builder Module | `bmad-bmb` | Meta-module for creating and extending BMAD agents, workflows, and modules |
@@ -193,37 +177,15 @@ The dashboard is **read-only** — it observes agent state without writing to it
 
 ---
 
-## Memory Architecture (ARCH-006)
-
-Each BMAD agent maintains isolated persistent memory across sessions:
-
-- **Per-agent FAISS stores** — `.a0proj/memory/bmad-{name}/` — vector databases isolated by agent and project ID
-- **Constitutional knowledge layer** — `.a0proj/knowledge/main/bmad-{name}/` — static standards and seeds, preloaded into FAISS at session start via native A0 `agent_knowledge_subdir` mechanism
-- **Project knowledge** — `.a0proj/knowledge/main/` — shared FAISS-loaded documents available to all agents
-
-
----
-
 ## Extension Pipeline
 
-Two Python extensions hook into Agent Zero's lifecycle:
+One active Python extension hooks into Agent Zero's lifecycle:
 
 | Extension | Hook Point | Purpose |
 |---|---|---|
-| `_11_bmad_autobrief.py` | `agent_init` | Auto-generates project brief for BMad Master on fresh sessions |
 | `_80_bmad_routing_manifest.py` | `message_loop_prompts_after` | Dynamically builds routing manifest from `skills/*/module-help.csv` for BMad Master orchestration |
 
+> **Removed:** `_09_bmad_autobrief.py` (2026-03-27, ADR-012) — A0 natively auto-injects all `.a0proj/instructions/` files into every agent's system prompt. The autobrief extension was redundant.
+
 
 ---
-
-## Documentation
-
-- **Architecture Alignment Report v3.0** — canonical system architecture reference (internal dev doc, see `.a0proj/_bmad-output/planning-artifacts/` after `bmad init`)
-- [Detailed Install Guide](README-install.md) — installation, verification, upgrade, and developer setup
-- **Memory Architecture** — ARCH-006 FAISS-native reference (see `.a0proj/knowledge/main/memory-architecture.md` after `bmad init`)
----
-
-## Requirements
-
-- [Agent Zero](https://github.com/frdel/agent-zero) (latest stable release)
-- An LLM with large context window recommended (Claude Sonnet or better)

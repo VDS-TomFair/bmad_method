@@ -1,7 +1,7 @@
 name: bmad_method
 title: BMAD Method
 description: BMAD Method Framework for Agent Zero — full software development lifecycle with 20 specialist agents across 4 modules (BMM, BMB, TEA, CIS), 5 skills, project-scoped shared memory store (native _memory plugin), and an interactive status dashboard.
-version: 1.0.0
+version: 1.0.1
 settings_sections: []
 per_project_config: false
 per_agent_config: false

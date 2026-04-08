@@ -2,7 +2,10 @@ from helpers.api import ApiHandler, Request, Response
 import re, json
 from pathlib import Path
 from datetime import datetime
-from usr.plugins.bmad_method.helpers.bmad_status_core import (
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
+from helpers.bmad_status_core import (
     check_agents, check_modules, read_state, read_tests, SKILL_NAMES
 )
 

@@ -1,5 +1,5 @@
 ---
-name: testarch-atdd
+name: bmad-testarch-atdd
 description: Generate failing acceptance tests using TDD cycle. Use when user says 'lets write acceptance tests' or 'I want to do ATDD'
 web_bundle: true
 ---

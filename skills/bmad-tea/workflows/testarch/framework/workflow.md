@@ -1,5 +1,5 @@
 ---
-name: testarch-framework
+name: bmad-testarch-framework
 description: Initialize test framework with Playwright or Cypress. Use when user says 'lets setup test framework' or 'I want to initialize testing framework'
 web_bundle: true
 ---

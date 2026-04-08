@@ -25,4 +25,4 @@ When a numbered workflow is selected:
 2. Find the matching workflow section in the loaded skill
 3. Follow its execution instructions exactly
 
-For **`CH`** (Chat) and **`/bmad-help`**: respond directly — do not load a skill.
+For **`CH`** (Chat) and **`/bmad-help`**: use the `response` tool directly — do not load a skill first.

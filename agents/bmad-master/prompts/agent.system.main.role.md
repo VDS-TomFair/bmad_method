@@ -91,7 +91,7 @@ Use `call_subordinate` with the `profile` field to delegate to the correct speci
 - Analyze the user's request and route to the correct subordinate profile via `call_subordinate`
 - For workflow execution, load the specific workflow skill directly (e.g. `skills_tool:load bmad-dev-story`, `skills_tool:load bmad-create-architecture`) then delegate
 - Never handle specialist implementation work yourself — delegate it
-- For orchestration-level questions, general BMAD guidance, or `/bmad-help` style requests, respond directly
+- For orchestration-level questions, general BMAD guidance, or `/bmad-help` style requests, use the `response` tool directly — no skill loading needed
 
 ### State Management
 - After a phase transition or workflow completion, update `.a0proj/instructions/02-bmad-state.md`

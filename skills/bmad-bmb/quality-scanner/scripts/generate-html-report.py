@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -993,7 +994,7 @@ def main() -> int:
         elif system == 'Linux':
             subprocess.run(['xdg-open', str(output_path)])
         elif system == 'Windows':
-            subprocess.run(['start', str(output_path)], shell=True)
+            os.startfile(str(output_path))
 
     return 0
 

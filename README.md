@@ -6,6 +6,16 @@ BMAD Method brings a proven product development framework to Agent Zero. Instead
 
 ---
 
+## What's New in v1.0.4
+
+- **Party Mode Persona Guard** — FM-019 resolved: 8 prescriptive rules ensuring agents maintain distinct voices and never break character
+- **prfaq (Working Backwards) workflow** — Amazon Working Backwards methodology ported from upstream with 5-step architecture
+- **TEA extended knowledge** — 28 additional knowledge files for Murat (43 total), covering Pact, Playwright, NFR, and more
+- **BMM Phase 2 validation** — FM-006/007/008 CLOSED: PM + UX Designer routing verified end-to-end (6/6 PASS)
+- **5 consecutive zero-regression sprints** — Behavioral test suite: 69/69 PASS · Grade A+ (100/100)
+
+---
+
 ## What's New in v1.0.3
 
 - **Workflow sharding** — 38 step files across 6 BMM workflows, each with HALT compliance and resume capability

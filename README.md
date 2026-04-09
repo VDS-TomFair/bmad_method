@@ -6,30 +6,7 @@ BMAD Method brings a proven product development framework to Agent Zero. Instead
 
 ---
 
-## What's New in v1.0.4
-
-- **Party Mode Persona Guard** — FM-019 resolved: 8 prescriptive rules ensuring agents maintain distinct voices and never break character
-- **prfaq (Working Backwards) workflow** — Amazon Working Backwards methodology ported from upstream with 5-step architecture
-- **TEA extended knowledge** — 28 additional knowledge files for Murat (43 total), covering Pact, Playwright, NFR, and more
-- **BMM Phase 2 validation** — FM-006/007/008 CLOSED: PM + UX Designer routing verified end-to-end (6/6 PASS)
-- **5 consecutive zero-regression sprints** — Behavioral test suite: 69/69 PASS · Grade A+ (100/100)
-
----
-
-## What's New in v1.0.3
-
-- **Workflow sharding** — 38 step files across 6 BMM workflows, each with HALT compliance and resume capability
-- **Live artifact detection** — the routing extension scans the filesystem for existing artifacts; staleness warnings surface in EXTRAS when parent artifacts are newer than children
-- **Agent enrichment** — all 19 specialist agents updated with 7+ guiding principles and startup orientation
-- **TEA knowledge fragments** — 14 domain-specific knowledge files for Murat, dynamically loaded across all 9 TEA workflows
-- **CIS Presentation workflow** — Caravaggio (Presentation Expert) fully operational with complete CIS workflow coverage
-- **Document Lifecycle Framework** — [`docs/document-lifecycle.md`](./docs/document-lifecycle.md) defines authoring, review, and staleness rules for all project artifacts
-- **Behavioral test suite** — 54/54 PASS · Grade A (96/100) · 0 regressions
-
----
-
 ## Quick Start
-
 **1. Install the plugin**
 
 Install via the Agent Zero Plugin Hub, or clone directly into your Agent Zero plugins folder:
@@ -190,9 +167,29 @@ Test artifacts: `.a0proj/_bmad-output/test-artifacts/`
 **Upstream versions:** Core 6.2.2 · BMB 1.5.0 · TEA 1.9.1 · CIS 0.1.9
 
 See [CHANGELOG.md](./CHANGELOG.md) for full version history.
+## What's New
+
+### v1.0.4
+
+- **Party Mode Persona Guard** — 8 prescriptive rules ensuring agents maintain distinct voices and never break character
+- **prfaq (Working Backwards) workflow** — Amazon Working Backwards methodology ported with 5-step architecture
+- **TEA extended knowledge** — 28 additional knowledge files for Murat (43 total)
+- **BMM Phase 2 validation** — PM + UX Designer routing verified end-to-end
+- **5 consecutive zero-regression sprints** — 69/69 PASS · Grade A+ (100/100)
+
+### v1.0.3
+
+- **Workflow sharding** — 38 step files across 6 BMM workflows with HALT compliance and resume
+- **Live artifact detection** — filesystem scanning + staleness warnings in EXTRAS
+- **Agent enrichment** — all 19 agents with 7+ principles and startup orientation
+- **TEA knowledge fragments** — 14 domain-specific files, dynamically loaded in 9 workflows
+- **CIS Presentation workflow** — Caravaggio fully operational, complete CIS coverage
+- **Document Lifecycle Framework** — [`docs/document-lifecycle.md`](./docs/document-lifecycle.md)
+- **Behavioral test suite** — 54/54 PASS · Grade A (96/100)
+
+See [CHANGELOG.md](./CHANGELOG.md) for full version history.
 
 ---
-
 ## Links
 
 - [BMAD-METHOD Core](https://github.com/bmad-code-org/BMAD-METHOD)

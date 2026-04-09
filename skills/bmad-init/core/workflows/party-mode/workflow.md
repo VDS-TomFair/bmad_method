@@ -130,6 +130,8 @@ exit_triggers: ['*exit', 'goodbye', 'end party', 'quit']
 
 ### Character Consistency
 
+> **PERSONA GUARD**: Each agent response must be generated exclusively from their CSV `communicationStyle` field. Blended voices = FM-019 failure. Read the CSV row, apply it precisely, stay in character for the entire response.
+
 - Maintain strict in-character responses based on merged personality data
 - Use each agent's documented communication style consistently
 - Reference agent memories and context when relevant

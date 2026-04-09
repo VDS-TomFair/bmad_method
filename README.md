@@ -6,6 +6,18 @@ BMAD Method brings a proven product development framework to Agent Zero. Instead
 
 ---
 
+## What's New in v1.0.3
+
+- **Workflow sharding** — 38 step files across 6 BMM workflows, each with HALT compliance and resume capability
+- **Live artifact detection** — the routing extension scans the filesystem for existing artifacts; staleness warnings surface in EXTRAS when parent artifacts are newer than children
+- **Agent enrichment** — all 19 specialist agents updated with 7+ guiding principles and startup orientation
+- **TEA knowledge fragments** — 14 domain-specific knowledge files for Murat, dynamically loaded across all 9 TEA workflows
+- **CIS Presentation workflow** — Caravaggio (Presentation Expert) fully operational with complete CIS workflow coverage
+- **Document Lifecycle Framework** — [`docs/document-lifecycle.md`](./docs/document-lifecycle.md) defines authoring, review, and staleness rules for all project artifacts
+- **Behavioral test suite** — 54/54 PASS · Grade A (96/100) · 0 regressions
+
+---
+
 ## Quick Start
 
 **1. Install the plugin**
@@ -39,8 +51,7 @@ Tell BMad Master what you want to build. It routes you to the right specialist f
 | Agent personas | 20 | Specialist agents, each with a defined role and communication style |
 | Modules | 4 | BMM · BMB · TEA · CIS |
 | Workflow skills | 40+ | Bundled, phase-aware workflow definitions loaded on demand |
-| Routing extension | 1 | Phase-aware menu routing injected into every BMad Master session |
-| Status dashboard | 1 | Interactive WebUI panel showing project and sprint state |
+| Routing extension | 1 | Phase-aware routing with live artifact detection and staleness warnings |
 
 ---
 
@@ -153,6 +164,16 @@ The dashboard is read-only: it observes agent state without writing to it.
 
 ---
 
+## Quality
+
+The plugin ships with a behavioral test suite covering all routing, phase-transition, and specialist-handoff paths.
+
+**Latest results:** 54/54 PASS · Grade A (96/100) · 0 regressions
+
+Test artifacts: `.a0proj/_bmad-output/test-artifacts/`
+
+---
+
 ## Version
 
 **Plugin:** 1.0.3  
@@ -168,3 +189,4 @@ See [CHANGELOG.md](./CHANGELOG.md) for full version history.
 - [bmad-builder (BMB)](https://github.com/bmad-code-org/bmad-builder)
 - [bmad-method-test-architecture-enterprise (TEA)](https://github.com/bmad-code-org/bmad-method-test-architecture-enterprise)
 - [bmad-module-creative-intelligence-suite (CIS)](https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite)
+- [Document Lifecycle Framework](./docs/document-lifecycle.md)

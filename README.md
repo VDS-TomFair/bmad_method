@@ -143,9 +143,8 @@ See [CHANGELOG.md](./CHANGELOG.md) for full version history.
 
 ## Documentation
 
-- [Architecture Alignment Report v1.0.3](/.a0proj/_bmad-output/planning-artifacts/architecture-bmad-a0-alignment.md) — canonical system architecture reference
 - [Document Lifecycle Framework](./docs/document-lifecycle.md) — artifact staleness detection and consistency checks
-- [Memory Architecture](/.a0proj/knowledge/main/memory-architecture.md) — FAISS-native reference
+- [CHANGELOG.md](./CHANGELOG.md) — full version history
 
 ---
 

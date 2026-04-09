@@ -6,6 +6,42 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.5] — 2026-04-09
+
+### Validation Sprint — End-to-End Method Verification
+
+#### Workflow Validation (11 tests, 10 agents, all PASS)
+
+- **BP** (Mary — Brainstorm Project): Skill loaded, 8 steps, workflow.md found
+- **CP** (John — Create PRD): Skill loaded, 12 steps, workflow-create-prd.md found
+- **CA** (Winston — Create Architecture): Skill loaded, 9+1 steps
+- **CU** (Sally — Create UX): Skill loaded, 14 steps, template found
+- **CE** (John — Create Epics): Skill loaded, 4 steps, templates found
+- **QA** (Quinn — QA Automation): Skill loaded, 6 steps, instructions found
+- **TMT** (Murat — Teach Me Testing): Skill loaded, 15 steps, 43 knowledge fragments
+- **BS** (Carson — Brainstorming): CIS agent activated, 8 techniques available
+- **AE** (Advanced Elicitation): Core skill loaded, 30+ methods
+- **DG** (Distillator): Core task loaded, 4-stage architecture
+- **LW** (List Workflows): 42+ workflows discoverable, phase detection correct
+
+#### Bugs Found & Fixed
+
+- **Story 052 — CIS Routing Gap**: `_80_bmad_routing_manifest.py` excluded `cis` module from all phase module lists. Fixed by adding `cis` to all phases in `PHASE_MODULES` map.
+- **SKILL.md Format Standardization**: 21 SKILL.md files referenced `workflow.yaml` but actual execution used `instructions.md` (BMM/CIS) or `workflow.md` (TEA). All references standardized.
+
+#### autoresearch Milestones
+
+- **Formal LLM evaluation working**: `run_eval.py` now uses A0 native model routing
+- **Baseline**: Composite 7.775/10 → **Re-evaluation: 8.45/10** (+0.675)
+- **Phase A L1 rules**: 10 BMAD-specific behaviour rules applied
+
+#### Documentation
+
+- **README v1.0.5 rewrite**: Restored agent roster table with emojis, added badges, Skills Architecture section
+- Removed internal `.a0proj` links from README
+
+---
+
 ## [1.0.4] — 2026-04-09
 
 ### Sprint 4 — Process & Documentation (Stories 037–040)

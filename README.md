@@ -1,6 +1,6 @@
 # BMAD Method for Agent Zero
 
-[![Version](https://img.shields.io/badge/version-1.0.4-blue)]() [![License: MIT](https://img.shields.io/badge/license-MIT-green)]() [![Agent Zero](https://img.shields.io/badge/A0-compatible-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.0.5-blue)]() [![License: MIT](https://img.shields.io/badge/license-MIT-green)]() [![Agent Zero](https://img.shields.io/badge/A0-compatible-brightgreen)]()
 
 **Structured AI-assisted software development — from idea to shipped code.**
 

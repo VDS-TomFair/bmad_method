@@ -6,6 +6,30 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.4] — 2026-04-09
+
+### Sprint 4 — Process & Documentation (Stories 037–040)
+
+- **Party Mode Persona Guard (FM-019)**: 8 prescriptive rules added to all BMAD agents + PERSONA GUARD section added to `workflow.md` — prevents persona drift during multi-agent collaboration
+- **Upstream BMAD Sync Check**: Audited 5 suspected missing workflows; confirmed only `prfaq` was missing (ported in Sprint 5)
+- **README v1.0.3 update**: Added What's New section, quality metrics summary, document lifecycle link
+- **Architecture doc updated to v1.0.3**: 703 lines, 13 sections, semver-aligned with plugin version
+
+### Sprint 5 — Upstream Parity & Validation (Stories 041–044)
+
+- **prfaq (Working Backwards) workflow ported**: 5 step files + assets + agents + module-help.csv row added to `bmad-bmm`
+- **28 TEA extended knowledge files ported**: 43 total knowledge fragments now in `knowledge/bmad-test-architect/` (was 15)
+- **BMM Phase 2 Routing Validation**: 6/6 PASS — PM (John) + UX (Sally) end-to-end routing confirmed. FM-006/007/008 CLOSED.
+- **Behavioral test suite**: 60/60 PASS · Grade A+ (100/100) · zero regressions vs prior baseline
+
+### Sprint 6 — autoresearch & Housekeeping (Stories 045–047)
+
+- **autoresearch Phase A audit**: Root cause diagnosed — capture pipeline works correctly, optimizer loop never triggered due to insufficient conversation depth
+- **autoresearch per-agent profiles**: 20 config files verified DONE across all agent profiles
+- **State housekeeping**: 4 story files corrected (status + metadata), state inconsistencies in `02-bmad-state.md` resolved
+
+---
+
 ## [1.0.3] — 2026-04-09
 
 ### Major Improvements — BMAD Harness Quality Initiative

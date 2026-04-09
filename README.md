@@ -176,7 +176,7 @@ Test artifacts: `.a0proj/_bmad-output/test-artifacts/`
 
 ## Version
 
-**Plugin:** 1.0.3  
+**Plugin:** 1.0.4  
 **Upstream versions:** Core 6.2.2 · BMB 1.5.0 · TEA 1.9.1 · CIS 0.1.9
 
 See [CHANGELOG.md](./CHANGELOG.md) for full version history.

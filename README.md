@@ -2,7 +2,7 @@
 
 **Structured AI-assisted software development — from idea to shipped code.**
 
-BMAD Method brings a proven product development framework to Agent Zero. Instead of a single general-purpose agent, you get 20 specialist personas, each owning a specific phase of the development lifecycle. They coordinate through structured workflows, maintain project state, and hand off cleanly between phases.
+BMAD (Business Method for Agile Development) is a structured AI-first product development framework. This plugin provides a full drop-in integration: 20 specialized agent personas, 5 global skills, and the complete workflow library — ready to use inside Agent Zero.
 
 ---
 
@@ -32,18 +32,6 @@ Tell BMad Master what you want to build. It routes you to the right specialist f
 
 ---
 
-## What's Included
-
-| Component | Count | Description |
-|-----------|-------|-------------|
-| Agent personas | 20 | Specialist agents, each with a defined role and communication style |
-| Modules | 4 | BMM · BMB · TEA · CIS |
-| Workflow skills | 40+ | Bundled, phase-aware workflow definitions loaded on demand |
-| Routing extension | 1 | Phase-aware menu routing injected into every BMad Master session |
-| Status dashboard | 1 | Interactive WebUI panel showing project and sprint state |
-
----
-
 ## How It Works
 
 BMAD organizes software development into phases — Ideation → Planning → Architecture → Implementation → Testing. Each phase has one or more specialist agents who own it.
@@ -60,105 +48,104 @@ User → BMad Master → [routes to specialist] → artifact produced → state 
 
 ## Modules
 
-### BMM — Business Method Module
-*The full product development lifecycle.*
-
-Covers everything from initial idea to shipped stories: market research, product briefs, PRDs, UX design, architecture, sprint planning, story writing, implementation, and code review. Eight specialist agents, each owning their phase.
-
-**Upstream:** [BMAD-METHOD Core 6.2.2](https://github.com/bmad-code-org/BMAD-METHOD)
-
----
-
-### BMB — Builder Module
-*Build BMAD tooling: agents, workflows, and modules.*
-
-For teams that want to extend BMAD itself. Three specialists — Bond (agents), Morgan (modules), Wendy (workflows) — guide you through creating, editing, and validating BMAD components that follow all framework conventions.
-
-**Upstream:** [bmad-builder 1.5.0](https://github.com/bmad-code-org/bmad-builder)
-
----
-
-### TEA — Testing Excellence Accelerator
-*Enterprise-grade test architecture and automation.*
-
-Murat, the Master Test Architect, covers risk-based test planning, ATDD, API and E2E automation, CI/CD quality gates, and test framework setup across Playwright, Cypress, pytest, JUnit, and Go test.
-
-**Upstream:** [bmad-method-test-architecture-enterprise 1.9.1](https://github.com/bmad-code-org/bmad-method-test-architecture-enterprise)
-
----
-
-### CIS — Creative Intelligence Suite
-*Ideation, innovation, and strategic thinking.*
-
-Five specialists for the creative and strategic side of product work: brainstorming, design thinking, disruptive innovation, storytelling, and visual communication and presentations.
-
-**Upstream:** [bmad-module-creative-intelligence-suite 0.1.9](https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite)
+| Module | Skill | Purpose |
+|--------|-------|----------|
+| **BMM** — Business Method Module | `bmad-bmm` | Full product lifecycle: discovery → planning → architecture → implementation |
+| **BMB** — Builder Module | `bmad-bmb` | Meta-module for creating and extending BMAD agents, workflows, and modules |
+| **TEA** — Testing Excellence Accelerator | `bmad-tea` | Test architecture, ATDD, automation, CI, NFR assessment |
+| **CIS** — Creative Intelligence Suite | `bmad-cis` | Innovation strategy, design thinking, storytelling, structured problem solving |
 
 ---
 
 ## Agent Roster
 
-### BMM — Business Method Module
-
-| Persona | Name | Role |
-|---------|------|------|
-| Mary | Business Analyst | Market research, competitive analysis, product briefs |
-| John | Product Manager | PRD creation, requirements discovery, stakeholder alignment |
-| Sally | UX Designer | User research, interaction design, UX specifications |
-| Winston | Architect | System architecture, technical design decisions |
-| Bob | Scrum Master | Sprint planning, story preparation, agile ceremonies |
-| Amelia | Developer | Story implementation, TDD, code execution |
-| Barry | Quick Dev | Rapid solo development, minimal ceremony |
-| Quinn | QA Engineer | API and E2E test generation, coverage |
-
-### BMB — Builder Module
-
-| Persona | Name | Role |
-|---------|------|------|
-| Bond | Agent Builder | Create, edit, and validate BMAD agents |
-| Morgan | Module Builder | Create complete BMAD modules |
-| Wendy | Workflow Builder | Design, validate, and convert BMAD workflows |
-
-### TEA — Testing Excellence Accelerator
-
-| Persona | Name | Role |
-|---------|------|------|
-| Murat | Master Test Architect | Risk-based testing, ATDD, CI/CD quality gates |
-
-### CIS — Creative Intelligence Suite
-
-| Persona | Name | Role |
-|---------|------|------|
-| Carson | Brainstorming Coach | Creative facilitation, ideation techniques |
-| Maya | Design Thinking Maestro | Human-centered design, empathy mapping |
-| Victor | Innovation Oracle | Disruptive strategy, business model innovation |
-| Sophia | Master Storyteller | Narrative craft, brand and persuasive writing |
-| Caravaggio | Presentation Expert | Visual communication, slide decks, Excalidraw |
-
-### Cross-Module
-
-| Persona | Name | Role |
-|---------|------|------|
-| BMad Master | Orchestrator | Phase routing, workflow orchestration, project state |
-| Paige | Technical Writer | Documentation, Mermaid diagrams, OpenAPI specs |
-| Dr. Quinn | Problem Solver | TRIZ, systems thinking, root cause analysis |
+| Agent | Persona | Commands | Module |
+|-------|---------|----------|--------|
+| bmad-master | BMad Master 🧙 | `LT` `LW` `AE` `DG` `PM` | Core |
+| bmad-analyst | Mary 📊 | `BP` `MR` `DR` `TR` `CB` `WB` `DP` `GPC` | BMM |
+| bmad-pm | John 📋 | `CP` `VP` `EP` `CE` `IR` `CC` | BMM |
+| bmad-ux-designer | Sally 🎨 | `CU` | BMM |
+| bmad-architect | Winston 🏗️ | `CA` `IR` | BMM |
+| bmad-dev | Amelia 💻 | `DS` `CR` `CHK` | BMM |
+| bmad-qa | Quinn 🧪 | `QA` | BMM |
+| bmad-sm | Bob 🏃 | `SP` `CS` `VS` `SS` `ER` `CC` | BMM |
+| bmad-quick-dev | Barry 🚀 | `QS` `QD` `CR` | BMM |
+| bmad-tech-writer | Paige 📚 | `DP` `WD` `US` `MG` `VD` `EC` | BMM |
+| bmad-test-architect | Murat 🔬 | `TMT` `TF` `AT` `TA` `TD` `TRC` `NR` `CI` `RV` | TEA |
+| bmad-brainstorming-coach | Carson 🧠 | `BS` | CIS |
+| bmad-design-thinking | Maya 🎭 | `DT` | CIS |
+| bmad-innovation | Victor ⚡ | `IS` | CIS |
+| bmad-storyteller | Sophia 📖 | `ST` | CIS |
+| bmad-problem-solver | Dr. Quinn 🔬 | `PS` | CIS |
+| bmad-presentation | Caravaggio 🎨 | `SD` `EX` `PD` `CT` `IN` `VM` `CV` | CIS |
+| bmad-agent-builder | Bond 🤖 | `CA` `EA` `VA` | BMB |
+| bmad-workflow-builder | Wendy 🔄 | `CW` `EW` `VW` `MV` `RW` | BMB |
+| bmad-module-builder | Morgan 🏗️ | `PB` `CM` `EM` `VM` | BMB |
 
 ---
 
-## Status Dashboard
+## Prompt Architecture
 
-The plugin includes an interactive WebUI panel — accessible from the Agent Zero sidebar — that displays current project phase, sprint status, story progress, and recent decisions.
+Each BMAD agent is built from a clean 3-layer boundary:
 
-The dashboard is read-only: it observes agent state without writing to it.
+~~~
+┌─────────────────────────────────────────────────────────┐
+│  Agent Prompts  (WHO the agent is)                      │
+│  role.md · communication.md · tips.md ·                 │
+│  communication_additions.md                             │
+├─────────────────────────────────────────────────────────┤
+│  Skills  (WHAT to execute)                              │
+│  SKILL.md — workflow routing, paths, execution protocol │
+├─────────────────────────────────────────────────────────┤
+│  Project Instructions  (WHERE the project is)           │
+│  .a0proj/instructions/ — state, config, paths           │
+└─────────────────────────────────────────────────────────┘
+~~~
+
+**Agent prompts** define persona, communication style, and menu presentation.
+**Skills** are loaded on-demand and contain all workflow execution logic.
+**Project instructions** are written by `bmad init` and contain project-specific state and configuration.
+
+---
+
+## Extension Pipeline
+
+| Extension | Hook | Purpose |
+|-----------|------|----------|
+| `_80_bmad_routing_manifest.py` | `message_loop_prompts_after` | Dynamically builds routing manifest from `skills/*/module-help.csv`, filesystem artifact detection, and staleness warnings |
+
+---
+
+## Memory Architecture
+
+- **Project-level FAISS store** — `.a0proj/memory/` — single vector database shared by all agents (structural isolation)
+- **Knowledge preload** — `.a0proj/knowledge/main/` — recursive FAISS scan on agent init
+- **No per-agent stores** — project-level isolation with cross-agent recall by design
+
+---
+
+## Dashboard
+
+BMAD ships a live project status dashboard. After installation, the BMAD button appears in Agent Zero's sidebar.
+
+The dashboard is **read-only** — it observes agent state without writing to it.
 
 ---
 
 ## Version
 
-**Plugin:** 1.0.4  
+**Plugin:** 1.0.4
 **Upstream versions:** Core 6.2.2 · BMB 1.5.0 · TEA 1.9.1 · CIS 0.1.9
 
 See [CHANGELOG.md](./CHANGELOG.md) for full version history.
+
+---
+
+## Documentation
+
+- [Architecture Alignment Report v1.0.3](/.a0proj/_bmad-output/planning-artifacts/architecture-bmad-a0-alignment.md) — canonical system architecture reference
+- [Document Lifecycle Framework](./docs/document-lifecycle.md) — artifact staleness detection and consistency checks
+- [Memory Architecture](/.a0proj/knowledge/main/memory-architecture.md) — FAISS-native reference
 
 ---
 
@@ -168,4 +155,10 @@ See [CHANGELOG.md](./CHANGELOG.md) for full version history.
 - [bmad-builder (BMB)](https://github.com/bmad-code-org/bmad-builder)
 - [bmad-method-test-architecture-enterprise (TEA)](https://github.com/bmad-code-org/bmad-method-test-architecture-enterprise)
 - [bmad-module-creative-intelligence-suite (CIS)](https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite)
-- [Document Lifecycle Framework](./docs/document-lifecycle.md)
+
+---
+
+## Requirements
+
+- [Agent Zero](https://github.com/frdel/agent-zero) (latest stable release)
+- An LLM with large context window recommended (Claude Sonnet or better)

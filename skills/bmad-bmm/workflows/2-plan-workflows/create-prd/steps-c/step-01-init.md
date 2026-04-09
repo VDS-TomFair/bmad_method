@@ -189,3 +189,10 @@ ONLY WHEN [C continue option] is selected and [frontmatter properly updated with
 - Proceeding without user selecting 'C' (Continue)
 
 **Master Rule:** Skipping steps, optimizing sequences, or not following exact instructions is FORBIDDEN and constitutes SYSTEM FAILURE.
+
+---
+## ✅ Step Complete
+
+Append `step-01-init` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

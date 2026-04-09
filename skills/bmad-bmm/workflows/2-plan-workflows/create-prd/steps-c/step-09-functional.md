@@ -229,3 +229,10 @@ Emphasize to user: "This FR list is now binding. Any feature not listed here wil
 After user selects 'C' and content is saved to document, load {nextStepFile} to define non-functional requirements.
 
 Remember: Do NOT proceed to step-10 until user explicitly selects 'C' from the A/P/C menu and content is saved!
+
+---
+## ✅ Step Complete
+
+Append `step-09-functional` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

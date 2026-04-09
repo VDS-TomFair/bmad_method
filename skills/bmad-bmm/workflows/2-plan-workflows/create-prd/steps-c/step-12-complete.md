@@ -140,3 +140,10 @@ echo "State written: $STATE_FILE"
 Valid phase values: `ready` | `1-analysis` | `2-planning` | `3-solutioning` | `4-implementation` | `bmb` | `cis`
 
 **Congratulations on completing the Product Requirements Document for {{project_name}}!** 🎉
+
+---
+## ✅ Step Complete
+
+Append `step-12-complete` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

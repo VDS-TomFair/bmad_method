@@ -1,0 +1,23 @@
+# Presentation Workflow Configuration
+name: "presentation"
+description: 'Design compelling visual presentations and slide decks. Use when the user says "help me create a presentation" or "design a slide deck" or "create a pitch deck"'
+
+# Critical variables load from config_source
+config_source: "{project-root}/skills/bmad-cis/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Context can be provided via data attribute when invoking
+# Example: data="{path}/brand-info.md" provides brand/content context
+
+# Module path and component files
+installed_path: "{project-root}/skills/bmad-cis/workflows/presentation"
+template: "{installed_path}/template.md"
+instructions: "{installed_path}/instructions.md"
+
+# Output configuration
+default_output_file: "{output_folder}/presentation-{{date}}.md"
+
+standalone: true

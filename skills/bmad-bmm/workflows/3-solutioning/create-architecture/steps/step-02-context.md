@@ -222,3 +222,10 @@ When user selects 'C', append the content directly to the document using the str
 After user selects 'C' and content is saved to document, load `{project-root}/skills/bmad-bmm/workflows/3-solutioning/create-architecture/steps/step-03-starter.md` to evaluate starter template options.
 
 Remember: Do NOT proceed to step-03 until user explicitly selects 'C' from the A/P/C menu and content is saved!
+
+---
+## ✅ Step Complete
+
+Append `step-02-context` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

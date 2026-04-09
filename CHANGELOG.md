@@ -6,6 +6,52 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.3] — 2026-04-09
+
+### Major Improvements — BMAD Harness Quality Initiative
+
+Comprehensive system-wide improvement based on DeepWiki upstream analysis (4 BMAD repos) and A0 native audit. 25 failure modes identified and addressed across orchestration, workflow execution, specialist agents, and module infrastructure.
+
+#### 🚨 Critical Fixes
+
+- **FM-012 FIXED**: All 10 workflow instruction files referenced `workflow.xml` (non-existent) — fixed to `workflow.md`. The workflow execution engine now loads correctly in all BMM and TEA workflows for the first time.
+- **FM-021 FIXED**: `_80_bmad_routing_manifest.py` now scans the filesystem for actual artifact existence using `output-location` + `outputs` columns from module-help.csv. Phase detection is now filesystem-based, not state-file-dependent. 15 unit tests added.
+- **FM-023 FIXED**: `output-location` and `outputs` columns populated for all `required=true` rows in `skills/bmad-bmm/module-help.csv`. Phase gate artifact detection now works correctly.
+
+#### 🔧 Workflow Improvements
+
+- **Sharding**: 6 monolithic workflow instruction files (8–60KB each) sharded into 38 focused step files across dev-story, create-story, sprint-planning, sprint-status, correct-course, retrospective. Each step = one logical task + one HALT.
+- **dev-story granularity**: 6 step files refined to 10 single-phase step files (step-01 through step-10).
+- **stepsCompleted tracking**: Resume capability added to 4 key workflows (Create PRD, Create Architecture, Dev Story, Sprint Planning) — 26 files updated with Resume Check blocks and Step Complete markers.
+- **FM-015 FIXED**: workflow.yaml config variables (`{communication_language}`, `{user_skill_level}`, `{user_name}`) confirmed unresolved by A0 natively. Mitigated by adding Workflow Variable Resolution table to `01-bmad-config.md`.
+
+#### 🤖 Agent Quality
+
+- **FM-017 FIXED**: All 19 agents enriched with 7+ action-oriented principles, precise communication style, and (for BMM agents) startup orientation instruction to read project state on activation. Zero compliance violations on Bond validation pass.
+- **FM-016 FIXED**: Murat (bmad-test-architect) now has 14 core-tier knowledge fragments preloaded via FAISS (`.a0proj/knowledge/bmad-test-architect/`) and dynamic fragment loading in all 9 TEA workflow entry steps.
+- `skills/bmad-tea/testarch/SKILL.md` wrapper created — testarch skill now directly loadable.
+
+#### 📦 Module & Skills
+
+- **CIS alignment**: Presentation workflow created for Caravaggio (`skills/bmad-cis/workflows/presentation/` — 4 files). All 6 CIS agents now routable via `LW`. CIS README updated.
+- **FM-024**: Document Lifecycle Framework implemented — artifact relationship DAG, staleness detection (mtime-based, live in `_80` EXTRAS), `consistency-check.md` task, `docs/document-lifecycle.md` framework guide.
+- **FM-022**: TEA SKILL.md wrapper created.
+
+#### 🤖 autoresearch
+
+- autoresearch plugin initialized for BMAD project. Per-project workspace created.
+- System-wide optimization strategy v2.0 written (25 failure modes, 5 layers, all 19 profiles).
+- 20 per-agent config files created — each profile has targeted cascade levels and failure mode focus.
+
+#### ✅ Quality
+
+- Behavioral test suite re-run: **54/54 PASS · Grade A (96/100) · 0 regressions** vs prior baseline.
+- Test score improvement: B (89) → A (96) (+7 points).
+- `tests/test_extension_80.py` added: 15 automated unit tests for routing extension.
+
+---
+
+
 ## [1.0.2] — 2026-04-08
 
 ### Upstream Source Updates

@@ -224,3 +224,10 @@ Skip this step and load `{nextStepFile}` if:
 After user selects 'C' and content is saved to document (or step is skipped), load `{nextStepFile}`.
 
 Remember: Do NOT proceed to step-07 until user explicitly selects 'C' from the A/P/C menu (or confirms step skip)!
+
+---
+## ✅ Step Complete
+
+Append `step-06-innovation` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

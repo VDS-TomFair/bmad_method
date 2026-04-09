@@ -6,6 +6,43 @@ knowledgeIndex: '{project-root}/skills/bmad-tea/testarch/tea-index.csv'
 outputFile: '{test_artifacts}/test-review.md'
 ---
 
+## Knowledge Loading
+
+Before proceeding, load the following knowledge fragments relevant to this workflow.
+
+**Core fragments (always load):**
+- `fixture-architecture` → `skills/bmad-tea/testarch/knowledge/fixture-architecture.md`
+- `network-first` → `skills/bmad-tea/testarch/knowledge/network-first.md`
+- `data-factories` → `skills/bmad-tea/testarch/knowledge/data-factories.md`
+- `risk-governance` → `skills/bmad-tea/testarch/knowledge/risk-governance.md`
+- `probability-impact` → `skills/bmad-tea/testarch/knowledge/probability-impact.md`
+- `test-quality` → `skills/bmad-tea/testarch/knowledge/test-quality.md`
+- `test-levels` → `skills/bmad-tea/testarch/knowledge/test-levels.md`
+- `test-priorities-matrix` → `skills/bmad-tea/testarch/knowledge/test-priorities-matrix.md`
+- `test-healing-patterns` → `skills/bmad-tea/testarch/knowledge/test-healing-patterns.md`
+- `selector-resilience` → `skills/bmad-tea/testarch/knowledge/selector-resilience.md`
+- `overview` → `skills/bmad-tea/testarch/knowledge/overview.md`
+- `api-request` → `skills/bmad-tea/testarch/knowledge/api-request.md`
+- `auth-session` → `skills/bmad-tea/testarch/knowledge/auth-session.md`
+- `playwright-cli` → `skills/bmad-tea/testarch/knowledge/playwright-cli.md`
+
+**Extended fragments (load if relevant to user context):**
+- `component-tdd` → `skills/bmad-tea/testarch/knowledge/component-tdd.md`
+- `playwright-config` → `skills/bmad-tea/testarch/knowledge/playwright-config.md`
+- `ci-burn-in` → `skills/bmad-tea/testarch/knowledge/ci-burn-in.md`
+- `selective-testing` → `skills/bmad-tea/testarch/knowledge/selective-testing.md`
+- `error-handling` → `skills/bmad-tea/testarch/knowledge/error-handling.md`
+- `network-recorder` → `skills/bmad-tea/testarch/knowledge/network-recorder.md`
+- `timing-debugging` → `skills/bmad-tea/testarch/knowledge/timing-debugging.md`
+- `nfr-criteria` → `skills/bmad-tea/testarch/knowledge/nfr-criteria.md`
+- `adr-quality-readiness-checklist` → `skills/bmad-tea/testarch/knowledge/adr-quality-readiness-checklist.md`
+
+Fragment definitions are in: `skills/bmad-tea/testarch/tea-index.csv`
+
+---
+
+
+
 # Step 1: Load Context & Knowledge Base
 
 ## STEP GOAL

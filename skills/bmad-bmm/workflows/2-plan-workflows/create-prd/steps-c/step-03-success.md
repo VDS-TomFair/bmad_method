@@ -224,3 +224,10 @@ If working in regulated domains (healthcare, fintech, govtech):
 After user selects 'C' and content is saved to document, load `{project-root}/skills/bmad-bmm/workflows/2-plan-workflows/create-prd/steps-c/step-04-journeys.md` to map user journeys.
 
 Remember: Do NOT proceed to step-04 until user explicitly selects 'C' from the A/P/C menu and content is saved!
+
+---
+## ✅ Step Complete
+
+Append `step-03-success` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

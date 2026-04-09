@@ -5,6 +5,23 @@ nextStepFile: './step-02-generate-pipeline.md'
 outputFile: '{test_artifacts}/ci-pipeline-progress.md'
 ---
 
+## Knowledge Loading
+
+Before proceeding, load the following knowledge fragments relevant to this workflow.
+
+**Core fragments (always load):**
+- `ci-burn-in` → `skills/bmad-tea/testarch/knowledge/ci-burn-in.md`
+- `selective-testing` → `skills/bmad-tea/testarch/knowledge/selective-testing.md`
+
+**Extended fragments (load if relevant to user context):**
+- `playwright-config` → `skills/bmad-tea/testarch/knowledge/playwright-config.md`
+
+Fragment definitions are in: `skills/bmad-tea/testarch/tea-index.csv`
+
+---
+
+
+
 # Step 1: Preflight Checks
 
 ## STEP GOAL

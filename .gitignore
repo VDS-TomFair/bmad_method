@@ -7,3 +7,5 @@
 
 # Plugin disabled state — keep enabled (.toggle-1) committed, ignore disabled marker
 .toggle-0
+# autoresearch runtime files — do not commit
+.a0proj/autoresearch/

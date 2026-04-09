@@ -171,3 +171,10 @@ Valid step files to load:
 - `{project-root}/skills/bmad-bmm/workflows/3-solutioning/create-architecture/steps/step-08-complete.md`
 
 Remember: The goal is smooth, transparent resumption that respects the work already done while giving the user control over how to proceed.
+
+---
+## ✅ Step Complete
+
+Append `step-01b-continue` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

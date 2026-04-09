@@ -6,6 +6,23 @@ knowledgeIndex: '{project-root}/skills/bmad-tea/testarch/tea-index.csv'
 outputFile: '{test_artifacts}/nfr-assessment.md'
 ---
 
+## Knowledge Loading
+
+Before proceeding, load the following knowledge fragments relevant to this workflow.
+
+**Core fragments (always load):**
+- `ci-burn-in` → `skills/bmad-tea/testarch/knowledge/ci-burn-in.md`
+
+**Extended fragments (load if relevant to user context):**
+- `selective-testing` → `skills/bmad-tea/testarch/knowledge/selective-testing.md`
+- `nfr-criteria` → `skills/bmad-tea/testarch/knowledge/nfr-criteria.md`
+
+Fragment definitions are in: `skills/bmad-tea/testarch/tea-index.csv`
+
+---
+
+
+
 # Step 1: Load Context & Knowledge Base
 
 ## STEP GOAL

@@ -5,6 +5,24 @@ nextStepFile: './step-02-select-framework.md'
 outputFile: '{test_artifacts}/framework-setup-progress.md'
 ---
 
+## Knowledge Loading
+
+Before proceeding, load the following knowledge fragments relevant to this workflow.
+
+**Core fragments (always load):**
+- `fixture-architecture` → `skills/bmad-tea/testarch/knowledge/fixture-architecture.md`
+- `network-first` → `skills/bmad-tea/testarch/knowledge/network-first.md`
+- `playwright-config` → `skills/bmad-tea/testarch/knowledge/playwright-config.md`
+
+**Extended fragments (load if relevant to user context):**
+- `component-tdd` → `skills/bmad-tea/testarch/knowledge/component-tdd.md`
+
+Fragment definitions are in: `skills/bmad-tea/testarch/tea-index.csv`
+
+---
+
+
+
 # Step 1: Preflight Checks
 
 ## STEP GOAL

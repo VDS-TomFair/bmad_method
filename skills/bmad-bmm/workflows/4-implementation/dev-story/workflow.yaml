@@ -18,3 +18,16 @@ story_file: "" # Explicit story path; auto-discovered if empty
 implementation_artifacts: "{config_source}:implementation_artifacts"
 sprint_status: "{implementation_artifacts}/sprint-status.yaml"
 project_context: "**/project-context.md"
+
+# Output Artifact Frontmatter (AC-06)
+# stepsCompleted tracking is written to the story file being implemented, NOT to this definition.
+# Story files should include the following frontmatter block (initialized when story is created):
+#
+# ---
+# workflow: dev-story
+# stepsCompleted: []
+# startedAt: ""
+# lastUpdatedAt: ""
+# ---
+#
+# Each completed step appends its step-id to stepsCompleted and updates lastUpdatedAt.

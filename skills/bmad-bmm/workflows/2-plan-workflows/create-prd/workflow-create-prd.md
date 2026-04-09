@@ -61,3 +61,20 @@ Load and read full config from {main_config} and resolve:
 "**Create Mode: Creating a new PRD from scratch.**"
 
 Read fully and follow: `{nextStep}` (steps-c/step-01-init.md)
+
+## Output Artifact Frontmatter
+
+> **Note (AC-06):** `stepsCompleted` tracking is written to the OUTPUT ARTIFACT (`{planning_artifacts}/prd.md`), NOT to this workflow definition file.
+> The output document should begin with the following YAML frontmatter block, initialized by step-01:
+>
+> ~~~yaml
+> ---
+> workflow: create-prd
+> stepsCompleted: []
+> startedAt: ""
+> lastUpdatedAt: ""
+> inputDocuments: []
+> ---
+> ~~~
+>
+> Each step appends its step-id to `stepsCompleted` and updates `lastUpdatedAt` before proceeding.

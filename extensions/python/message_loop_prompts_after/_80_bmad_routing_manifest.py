@@ -20,6 +20,10 @@ from agent import LoopData
 _PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 _SKILLS_DIR = _PLUGIN_ROOT / "skills"
 _BMAD_CONFIG_DIR = _PLUGIN_ROOT / "skills" / "bmad-init" / "_config"
+
+# Module-level alias cache — populated once per config file path (AC-06)
+_alias_cache: dict = {}
+
 BMAD_MASTER_PROFILE = "bmad-master"
 
 # Skill directory name → module code used in module-help.csv
@@ -145,6 +149,190 @@ def _collect_routing_rows(active_modules: list | None) -> list[str]:
     return routing_rows
 
 
+
+# ── Artifact completion detection helpers (AC-01 through AC-06) ──────────────
+
+def _parse_alias_map(config_path: Path) -> dict:
+    """Parse 01-bmad-config.md Path Conventions table.
+    Returns alias_key (without braces) → resolved absolute path string.
+    AC-01: alias resolution. AC-06: cached by config file path.
+    """
+    global _alias_cache
+    cache_key = str(config_path)
+    if cache_key in _alias_cache:
+        return _alias_cache[cache_key]
+
+    alias_map: dict = {}
+    try:
+        for line in config_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line.startswith("|"):
+                continue
+            parts = [p.strip() for p in line.split("|")]
+            # Expected: | `{alias}` | /resolved/path/ |
+            if len(parts) < 4:
+                continue
+            alias_raw = parts[1].strip("`")  # `{planning_artifacts}` → {planning_artifacts}
+            path_raw = parts[2].strip().strip("`")  # strip markdown code-span backticks
+            if alias_raw.startswith("{") and alias_raw.endswith("}"):
+                alias_key = alias_raw[1:-1]  # strip braces → planning_artifacts
+                if path_raw and not path_raw.startswith("-"):
+                    alias_map[alias_key] = path_raw
+    except Exception:
+        pass
+
+    _alias_cache[cache_key] = alias_map
+    return alias_map
+
+
+def _resolve_dir(location_raw: str, alias_map: dict) -> "Path | None":
+    """Resolve output-location alias → absolute Path.
+    Handles pipe-separated values (uses first segment).
+    AC-02, AC-05: returns None if alias missing (graceful degradation).
+    """
+    location = location_raw.split("|")[0].strip()
+    if not location:
+        return None
+    resolved = alias_map.get(location)
+    return Path(resolved) if resolved else None
+
+
+def _scan_artifact_existence(csv_files: list, alias_map: dict) -> dict:
+    """Scan filesystem for required phase-gating artifacts.
+    AC-02, AC-03: glob output dirs, return phase → (found: bool, note: str).
+    Phase is complete if ANY required=true artifact for that phase is found.
+    AC-06: uses Path.glob() for performance.
+    """
+    phase_map: dict = {
+        "1-analysis": (False, "no required artifact found"),
+        "2-planning": (False, "no required artifact found"),
+        "3-solutioning": (False, "no required artifact found"),
+        "4-implementation": (False, "no required artifact found"),
+    }
+    for csv_path in csv_files:
+        try:
+            content = csv_path.read_text(encoding="utf-8")
+            reader = csv.DictReader(io.StringIO(content))
+            for row in reader:
+                # AC-03: only required=true rows gate phase completion
+                if row.get("required", "").strip().lower() != "true":
+                    continue
+                row_phase = row.get("phase", "").strip()
+                # Map phase value to bucket by prefix ("1-", "2-", etc.)
+                bucket = next((k for k in phase_map if row_phase.startswith(k[:2])), None)
+                if not bucket:
+                    continue
+                if phase_map[bucket][0]:
+                    continue  # AC-03: already found for this bucket — skip
+                output_location = row.get("output-location", "").strip()
+                if not output_location:
+                    continue
+                # AC-05: skip row if alias cannot be resolved
+                resolved_dir = _resolve_dir(output_location, alias_map)
+                if not resolved_dir or not resolved_dir.exists():
+                    continue
+                # AC-02: glob for artifact
+                pattern = row.get("outputs", "").strip()
+                if pattern and pattern != "*":
+                    matches = list(resolved_dir.glob(pattern))  # AC-06: Path.glob()
+                else:
+                    matches = list(resolved_dir.glob("*.md"))
+                if matches:
+                    phase_map[bucket] = (True, matches[0].name)
+        except Exception:
+            continue  # AC-05: never raise
+    return phase_map
+
+
+def _build_completed_phases_text(phase_map: dict) -> str:
+    """Format phase completion map as readable EXTRAS section.
+    AC-04: one line per phase, bool + parenthetical note.
+    """
+    lines = ["## Completed Phases (filesystem scan)"]
+    for phase, (found, note) in phase_map.items():
+        status = "true" if found else "false"
+        lines.append(f"{phase}: {status}  ({note})")
+    return "\n".join(lines)
+
+
+def _build_staleness_warnings(alias_map: dict) -> str:
+    """Compare mtime of parent→child artifact pairs and return staleness warning lines.
+    Appended to the BMAD routing manifest in EXTRAS as advisory-only information.
+    Graceful degradation: missing files or alias errors are silently skipped.
+    Never raises — must not block routing under any circumstances.
+    """
+    warnings = []
+    try:
+        planning_raw = alias_map.get("planning_artifacts")
+        implementation_raw = alias_map.get("implementation_artifacts")
+        if not planning_raw or not implementation_raw:
+            return ""
+
+        planning_path = Path(planning_raw)
+        implementation_path = Path(implementation_raw)
+
+        # ── Locate PRD ────────────────────────────────────────────────────────
+        prd_file = None
+        prd_direct = planning_path / "prd.md"
+        if prd_direct.exists():
+            prd_file = prd_direct
+        else:
+            prd_candidates = [
+                f for f in planning_path.glob("prd-*.md")
+                if "validation" not in f.name and "status" not in f.name
+            ]
+            if prd_candidates:
+                prd_file = max(prd_candidates, key=lambda f: f.stat().st_mtime)
+
+        # ── Locate Architecture doc ───────────────────────────────────────────
+        arch_file = None
+        arch_candidates = list(planning_path.glob("architecture-*.md"))
+        if arch_candidates:
+            arch_file = max(arch_candidates, key=lambda f: f.stat().st_mtime)
+
+        # ── Locate Sprint Plan ────────────────────────────────────────────────
+        sprint_file = None
+        sprint_candidates = list(implementation_path.glob("sprint-plan*.md"))
+        if sprint_candidates:
+            sprint_file = max(sprint_candidates, key=lambda f: f.stat().st_mtime)
+
+        # ── Rule 1: PRD newer than Architecture ───────────────────────────────
+        if prd_file and arch_file:
+            if prd_file.stat().st_mtime > arch_file.stat().st_mtime:
+                warnings.append(
+                    f"\u26a0\ufe0f Architecture may be stale "
+                    f"\u2014 PRD ({prd_file.name}) was updated after architecture ({arch_file.name})"
+                )
+
+        # ── Rule 2: Architecture newer than Sprint Plan ───────────────────────
+        if arch_file and sprint_file:
+            if arch_file.stat().st_mtime > sprint_file.stat().st_mtime:
+                warnings.append(
+                    f"\u26a0\ufe0f Sprint plan may be stale "
+                    f"\u2014 Architecture ({arch_file.name}) was updated after sprint plan ({sprint_file.name})"
+                )
+
+        # ── Rule 3: PRD newer than Sprint Plan (independent of arch) ──────────
+        if prd_file and sprint_file:
+            if prd_file.stat().st_mtime > sprint_file.stat().st_mtime:
+                # Only emit if Rule 2 did not already cover it
+                arch_covers = (
+                    arch_file is not None
+                    and arch_file.stat().st_mtime > sprint_file.stat().st_mtime
+                )
+                if not arch_covers:
+                    warnings.append(
+                        f"\u26a0\ufe0f Sprint plan may be stale "
+                        f"\u2014 PRD ({prd_file.name}) was updated after sprint plan ({sprint_file.name})"
+                    )
+
+    except Exception:
+        pass  # Never block routing
+
+    if not warnings:
+        return ""
+    return "\n\n## Artifact Staleness Warnings\n" + "\n".join(warnings)
+
 class BmadRoutingManifest(Extension):
     """
     Injects compact BMAD routing manifest into bmad-master context.
@@ -212,6 +400,23 @@ class BmadRoutingManifest(Extension):
                 f"Multiple matches → show list, ask user to pick. Never route from memory.\n\n"
                 f"{routing_table}"
             )
+
+            # ── Artifact completion detection (AC-01 through AC-06) ────────────
+            try:
+                config_path = state_path.parent / "01-bmad-config.md"  # AC-01
+                if config_path.exists():
+                    alias_map = _parse_alias_map(config_path)  # AC-06: cached
+                    csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))  # AC-06
+                    phase_map = _scan_artifact_existence(csv_files, alias_map)  # AC-02, AC-03
+                    completed_text = _build_completed_phases_text(phase_map)  # AC-04
+                    manifest_prompt += f"\n\n{completed_text}"
+                    staleness_text = _build_staleness_warnings(alias_map)
+                    if staleness_text:
+                        manifest_prompt += staleness_text
+                else:
+                    manifest_prompt += "\n\n## Completed Phases (filesystem scan)\ncompleted_phases: unavailable (config not found)"  # AC-05
+            except Exception:
+                manifest_prompt += "\n\n## Completed Phases (filesystem scan)\ncompleted_phases: unavailable (scan error)"  # AC-05
 
             loop_data.extras_temporary["bmad_routing_manifest"] = manifest_prompt
 

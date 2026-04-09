@@ -45,3 +45,16 @@ input_file_patterns:
 
 # Output configuration
 default_output_file: "{status_file}"
+
+# Output Artifact Frontmatter (AC-06)
+# stepsCompleted tracking is written to the OUTPUT ARTIFACT (sprint-status.yaml), NOT to this definition.
+# The sprint-status.yaml should begin with the following YAML frontmatter block:
+#
+# ---
+# workflow: sprint-planning
+# stepsCompleted: []
+# startedAt: ""
+# lastUpdatedAt: ""
+# ---
+#
+# Each completed step appends its step-id to stepsCompleted and updates lastUpdatedAt.

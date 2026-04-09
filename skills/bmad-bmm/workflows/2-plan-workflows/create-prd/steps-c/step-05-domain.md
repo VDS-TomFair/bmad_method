@@ -205,3 +205,10 @@ ONLY WHEN [C continue option] is selected and [content saved or skipped], will y
 - Proceeding without user validation
 
 **Master Rule:** This step is OPTIONAL for simple domains. For complex domains, focus on compliance, constraints, and domain patterns. Natural conversation, not checklists.
+
+---
+## ✅ Step Complete
+
+Append `step-05-domain` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

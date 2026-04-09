@@ -152,3 +152,10 @@ ONLY WHEN [C continue option] is selected and [stepsCompleted updated], will you
 ❌ **CRITICAL**: Proceeding with 'C' without fully reading and understanding the next step file
 
 **Master Rule:** This step is vision discovery only. No content generation, no document writing. Have natural conversations, build on what you know from classification, and establish the vision that will feed into the Executive Summary.
+
+---
+## ✅ Step Complete
+
+Append `step-02b-vision` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

@@ -357,3 +357,10 @@ When user selects 'C', append the content directly to the document using the str
 After user selects 'C' and content is saved to document, load `{project-root}/skills/bmad-bmm/workflows/3-solutioning/create-architecture/steps/step-08-complete.md` to complete the workflow and provide implementation guidance.
 
 Remember: Do NOT proceed to step-08 until user explicitly selects 'C' from the A/P/C menu and content is saved!
+
+---
+## ✅ Step Complete
+
+Append `step-07-validation` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

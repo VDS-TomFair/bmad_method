@@ -222,3 +222,10 @@ ONLY WHEN [C continue option] is selected and [classification saved to frontmatt
 - Proceeding without user selecting 'C'
 
 **Master Rule:** This is classification and understanding only. No content generation yet. Build on what the user already has. Have natural conversations, don't follow scripts.
+
+---
+## ✅ Step Complete
+
+Append `step-02-discovery` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

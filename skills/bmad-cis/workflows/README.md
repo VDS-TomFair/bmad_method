@@ -1,6 +1,6 @@
 # CIS Workflows
 
-Five interactive workflows facilitating creative and strategic processes through curated technique libraries and structured facilitation.
+Six interactive workflows facilitating creative, strategic, and visual communication processes through curated technique libraries and structured facilitation.
 
 ## Table of Contents
 
@@ -11,7 +11,7 @@ Five interactive workflows facilitating creative and strategic processes through
 
 ## Workflow Overview
 
-### [Brainstorming](./brainstorming)
+### [Brainstorming](../../../skills/bmad-init/core/workflows/brainstorming)
 
 **Purpose:** Interactive ideation using 36 techniques across 7 categories
 
@@ -20,6 +20,8 @@ Five interactive workflows facilitating creative and strategic processes through
 **Techniques:** Collaborative, structured, creative, deep, theatrical, wild, introspective
 
 **Selection Modes:** User-selected, AI-recommended, random, or progressive
+
+**Note:** Brainstorming is a shared CORE workflow (used by multiple modules). Owned by `skills/bmad-init/core/workflows/brainstorming/` and routed via `bmad-brainstorming` skill. Carson (bmad-brainstorming-coach) is the CIS agent facilitating this workflow.
 
 ### [Design Thinking](./design-thinking)
 
@@ -40,6 +42,16 @@ Five interactive workflows facilitating creative and strategic processes through
 **Focus:** Sustainable competitive advantage over features
 
 **Output:** Strategic innovation roadmap
+
+### [Presentation](./presentation)
+
+**Purpose:** Design compelling presentations and slide decks using visual storytelling frameworks
+
+**Structures:** Problem-Agitate-Solve, Hero's Journey, Pyramid Principle, Framework, Before-After-Bridge, Vision Cast, and 3 more
+
+**Focus:** Audience psychology, visual hierarchy, and narrative-driven design
+
+**Output:** Complete presentation spec with slide-by-slide breakdown, visual design system, speaker notes, and production checklist
 
 ### [Problem Solving](./problem-solving)
 
@@ -79,6 +91,7 @@ All workflows share:
 workflow brainstorming
 workflow design-thinking
 workflow innovation-strategy
+workflow presentation
 workflow problem-solving
 workflow storytelling
 ```
@@ -108,15 +121,33 @@ Edit `/skills/bmad-cis/config.yaml`:
 
 ## Workflow Structure
 
-Each workflow contains:
+Each CIS-owned workflow contains:
 
 ```
 workflow-name/
 ├── workflow.yaml      # Configuration
 ├── instructions.md    # Facilitation guide
-├── techniques.csv     # Method library
-└── README.md         # Documentation
+├── template.md        # Output document template
+└── SKILL.md           # Thin skill wrapper
 ```
+
+Some workflows additionally contain:
+```
+├── techniques.csv     # Method library (brainstorming, storytelling)
+├── story-types.csv    # Framework library (storytelling)
+└── README.md          # Workflow-specific documentation
+```
+
+## Agent → Workflow Mapping
+
+| Agent | Menu Code | Workflow | Owned By |
+|-------|-----------|----------|----------|
+| Carson (brainstorming-coach) | BS | brainstorming/workflow.md | bmad-init/core |
+| Maya (design-thinking-coach) | DT | design-thinking/workflow.yaml | bmad-cis |
+| Victor (innovation-strategist) | IS | innovation-strategy/workflow.yaml | bmad-cis |
+| Caravaggio (presentation) | PR | presentation/workflow.yaml | bmad-cis |
+| Dr. Quinn (creative-problem-solver) | PS | problem-solving/workflow.yaml | bmad-cis |
+| Sophia (storyteller) | ST | storytelling/workflow.yaml | bmad-cis |
 
 ## Best Practices
 

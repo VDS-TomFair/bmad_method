@@ -6,6 +6,24 @@ nextStepFile: './step-02-identify-targets.md'
 knowledgeIndex: '{project-root}/skills/bmad-tea/testarch/tea-index.csv'
 ---
 
+## Knowledge Loading
+
+Before proceeding, load the following knowledge fragments relevant to this workflow.
+
+**Core fragments (always load):**
+- `fixture-architecture` → `skills/bmad-tea/testarch/knowledge/fixture-architecture.md`
+- `network-first` → `skills/bmad-tea/testarch/knowledge/network-first.md`
+- `data-factories` → `skills/bmad-tea/testarch/knowledge/data-factories.md`
+
+**Extended fragments (load if relevant to user context):**
+- `api-testing-patterns` → `skills/bmad-tea/testarch/knowledge/api-testing-patterns.md`
+
+Fragment definitions are in: `skills/bmad-tea/testarch/tea-index.csv`
+
+---
+
+
+
 # Step 1: Preflight & Context Loading
 
 ## STEP GOAL

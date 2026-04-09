@@ -47,3 +47,20 @@ Load config from `{project-root}/skills/bmad-bmm/config.yaml` and resolve:
 Read fully and follow: `{project-root}/skills/bmad-bmm/workflows/3-solutioning/create-architecture/steps/step-01-init.md` to begin the workflow.
 
 **Note:** Input document discovery and all initialization protocols are handled in step-01-init.md.
+
+## Output Artifact Frontmatter
+
+> **Note (AC-06):** `stepsCompleted` tracking is written to the OUTPUT ARTIFACT (`{planning_artifacts}/architecture.md`), NOT to this workflow definition file.
+> The output document should begin with the following YAML frontmatter block, initialized by step-01:
+>
+> ~~~yaml
+> ---
+> workflow: create-architecture
+> stepsCompleted: []
+> startedAt: ""
+> lastUpdatedAt: ""
+> inputDocuments: []
+> ---
+> ~~~
+>
+> Each step appends its step-id to `stepsCompleted` and updates `lastUpdatedAt` before proceeding.

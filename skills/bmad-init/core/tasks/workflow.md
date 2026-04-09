@@ -70,7 +70,7 @@
       - `action xml tag → Perform the action`
       - `check if="condition" xml tag → Conditional block wrapping actions (requires closing </check>)`
       - `ask xml tag → Prompt user and WAIT for response`
-      - `invoke-workflow xml tag → Execute another workflow with given inputs and the workflow.xml runner`
+      - `invoke-workflow xml tag → Execute another workflow with given inputs and the workflow.md runner`
       - `invoke-task xml tag → Execute specified task`
       - `invoke-protocol name="protocol_name" xml tag → Execute reusable protocol from protocols section`
       - `goto step="x" → Jump to specified step`
@@ -86,7 +86,7 @@
           [a] Advanced Elicitation, [c] Continue, [p] Party-Mode, [y] YOLO the rest of this document only. WAIT for response.
 
               **If response** = `a`:
-                  - **Action:** Start the advanced elicitation workflow {project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.xml
+                  - **Action:** Start the advanced elicitation workflow {project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md
 
               **If response** = `c`:
                   - **Action:** Continue to next step
@@ -230,7 +230,7 @@ _Smart file discovery and loading based on input_file_patterns_
 
 • This is the complete workflow execution engine
       • You MUST Follow instructions exactly as written
-      • The workflow execution engine is governed by: {project-root}/skills/bmad-init/core/tasks/workflow.xml
+      • The workflow execution engine is governed by: {project-root}/skills/bmad-init/core/tasks/workflow.md
       • You MUST have already loaded and processed: {installed_path}/workflow.yaml
       • This workflow uses INTENT-DRIVEN PLANNING - adapt organically to product type and context
       • YOU ARE FACILITATING A CONVERSATION With a user to produce a final document step by step. The whole process is meant to be

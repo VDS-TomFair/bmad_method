@@ -1,3 +1,14 @@
+## Resume Check
+
+Before starting: read the `stepsCompleted` array in this workflow's output document frontmatter (`{planning_artifacts}/architecture.md`).
+- If empty or document does not exist → this is a fresh run. Set `startedAt` to current ISO timestamp. Continue.
+- If non-empty → this workflow was previously interrupted.
+  - List completed steps to the user: "Steps already completed: [list]"
+  - Ask: "Resume from the next step, or start over?"
+  - HALT and await user response before proceeding.
+
+---
+
 # Step 1: Architecture Workflow Initialization
 
 ## MANDATORY EXECUTION RULES (READ FIRST):
@@ -97,6 +108,20 @@ Before proceeding, verify we have the essential inputs:
 
 Copy the template from `{installed_path}/architecture-decision-template.md` to `{planning_artifacts}/architecture.md`
 
+**After copying the template, prepend the following YAML frontmatter block to the output document as the FIRST action:**
+
+~~~yaml
+---
+workflow: create-architecture
+stepsCompleted: []
+startedAt: "<current ISO timestamp>"
+lastUpdatedAt: "<current ISO timestamp>"
+inputDocuments: []
+---
+~~~
+
+This frontmatter enables mid-workflow resume capability. The `stepsCompleted` array will be updated as each step completes.
+
 #### D. Complete Initialization and Report
 
 Complete setup and report to user:
@@ -151,3 +176,10 @@ Ready to begin architectural decision making. Do you have any other documents yo
 After user selects [C] to continue, only after ensuring all the template output has been created, then load `{project-root}/skills/bmad-bmm/workflows/3-solutioning/create-architecture/steps/step-02-context.md` to analyze the project context and begin architectural decision making.
 
 Remember: Do NOT proceed to step-02 until user explicitly selects [C] from the menu and setup is confirmed!
+
+---
+## ✅ Step Complete
+
+Append `step-01-init` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

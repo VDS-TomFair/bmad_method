@@ -8,6 +8,32 @@ progressFile: '{test_artifacts}/teaching-progress/{user_name}-tea-progress.yaml'
 progressTemplate: '../templates/progress-template.yaml'
 ---
 
+## Knowledge Loading
+
+Before proceeding, load the following knowledge fragments relevant to this workflow.
+
+**Core fragments (always load):**
+- `fixture-architecture` → `skills/bmad-tea/testarch/knowledge/fixture-architecture.md`
+- `network-first` → `skills/bmad-tea/testarch/knowledge/network-first.md`
+- `data-factories` → `skills/bmad-tea/testarch/knowledge/data-factories.md`
+- `risk-governance` → `skills/bmad-tea/testarch/knowledge/risk-governance.md`
+- `probability-impact` → `skills/bmad-tea/testarch/knowledge/probability-impact.md`
+- `test-quality` → `skills/bmad-tea/testarch/knowledge/test-quality.md`
+- `test-levels-framework` → `skills/bmad-tea/testarch/knowledge/test-levels-framework.md`
+- `test-priorities-matrix` → `skills/bmad-tea/testarch/knowledge/test-priorities-matrix.md`
+- `test-healing-patterns` → `skills/bmad-tea/testarch/knowledge/test-healing-patterns.md`
+- `selector-resilience` → `skills/bmad-tea/testarch/knowledge/selector-resilience.md`
+- `overview` → `skills/bmad-tea/testarch/knowledge/overview.md`
+- `api-request` → `skills/bmad-tea/testarch/knowledge/api-request.md`
+- `auth-session` → `skills/bmad-tea/testarch/knowledge/auth-session.md`
+- `playwright-cli` → `skills/bmad-tea/testarch/knowledge/playwright-cli.md`
+
+Fragment definitions are in: `skills/bmad-tea/testarch/tea-index.csv`
+
+---
+
+
+
 # Step 1: Initialize TEA Academy
 
 ## STEP GOAL:

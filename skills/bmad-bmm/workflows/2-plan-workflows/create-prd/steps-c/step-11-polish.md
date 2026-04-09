@@ -215,3 +215,10 @@ When user selects 'C', replace the entire document content with the polished ver
 After user selects 'C' and polished document is saved, load `{project-root}/skills/bmad-bmm/workflows/2-plan-workflows/create-prd/steps-c/step-12-complete.md` to complete the workflow.
 
 Remember: Do NOT proceed to step-12 until user explicitly selects 'C' from the A/P/C menu and polished document is saved!
+
+---
+## ✅ Step Complete
+
+Append `step-11-polish` to the `stepsCompleted` array in this document's frontmatter.
+Update `lastUpdatedAt` with current ISO timestamp.
+Then HALT and await user instruction before proceeding to the next step.

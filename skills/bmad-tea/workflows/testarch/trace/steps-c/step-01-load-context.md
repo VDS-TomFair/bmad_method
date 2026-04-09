@@ -6,6 +6,19 @@ knowledgeIndex: '{project-root}/skills/bmad-tea/testarch/tea-index.csv'
 outputFile: '{test_artifacts}/traceability-report.md'
 ---
 
+## Knowledge Loading
+
+Before proceeding, load the following knowledge fragments relevant to this workflow.
+
+**Core fragments (always load):**
+- `selective-testing` → `skills/bmad-tea/testarch/knowledge/selective-testing.md`
+
+Fragment definitions are in: `skills/bmad-tea/testarch/tea-index.csv`
+
+---
+
+
+
 # Step 1: Load Context & Knowledge Base
 
 ## STEP GOAL

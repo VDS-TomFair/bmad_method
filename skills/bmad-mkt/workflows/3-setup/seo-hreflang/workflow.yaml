@@ -1,0 +1,29 @@
+---
+name: seo-hreflang
+agent: content-channels-lead
+phase: 3-setup
+source: "seo-hreflang (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-hreflang-{date}.md"
+---
+
+# SEO Hreflang Workflow
+
+## Overview
+Implement hreflang tags for international SEO with proper language/region codes, validation, and cross-domain handling.
+
+## Content Coverage
+- Hreflang tag implementation and validation
+- Language and region code selection
+- Cross-domain and subdomain handling
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-hreflang-{date}.md` containing:
+- Hreflang implementation guide with examples
+- Language and region code matrix
+- Validation checklist and testing procedures
+- Error handling and common issues resolution

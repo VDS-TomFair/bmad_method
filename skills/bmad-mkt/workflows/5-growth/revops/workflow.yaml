@@ -1,0 +1,29 @@
+---
+name: revops
+agent: growth-engineer
+phase: 5-growth
+source: "revops (marketingskills repo)"
+output: "{project-root}/_bmad-output/revops-{date}.md"
+---
+
+# RevOps Workflow
+
+## Overview
+Optimize revenue operations using frameworks, lead scoring, and CRM integration.
+
+## Content Coverage
+- Revenue operations frameworks and methodologies
+- Lead lifecycle and scoring models
+- CRM and marketing automation integration
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/revops-{date}.md` containing:
+- RevOps strategy framework
+- Lead scoring and routing models
+- CRM integration and data flow
+- Success metrics and monitoring

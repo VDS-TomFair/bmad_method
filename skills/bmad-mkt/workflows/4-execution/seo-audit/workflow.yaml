@@ -1,0 +1,29 @@
+---
+name: seo-audit
+agent: content-channels-lead
+phase: 4-execution
+source: "seo-audit (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-audit-{date}.md"
+---
+
+# SEO Audit Workflow
+
+## Overview
+Conduct comprehensive SEO audits using frameworks, technical issue identification, and content optimization opportunities.
+
+## Content Coverage
+- SEO audit frameworks and checklists
+- Technical SEO issues identification
+- Content quality and optimization opportunities
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-audit-{date}.md` containing:
+- SEO audit report with findings and severity
+- Technical SEO issues with prioritized fixes
+- Content quality assessment and recommendations
+- Competitor analysis and gap identification

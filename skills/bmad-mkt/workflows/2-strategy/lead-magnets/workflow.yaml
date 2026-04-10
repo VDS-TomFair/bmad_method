@@ -1,0 +1,30 @@
+---
+name: lead-magnets
+agent: marketing-strategist
+phase: 2-strategy
+source: "lead-magnets (marketingskills repo)"
+output: "{project-root}/_bmad-output/lead-magnets-{date}.md"
+---
+
+# Lead Magnets Workflow
+
+## Overview
+Create high-conversion lead magnets aligned with ICP pain points and integrated with email/CMS workflows.
+
+## Content Coverage
+- Lead magnet types and formats
+- ICP alignment and pain point mapping
+- Content creation and distribution strategy
+- Lead capture and nurturing integration
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/lead-magnets-{date}.md` containing:
+- Lead magnet ideas with formats and topics
+- ICP alignment scoring for each idea
+- Distribution channels and CTAs
+- Integration points with email and CRM

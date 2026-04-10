@@ -1,0 +1,29 @@
+---
+name: signup-flow-cro
+agent: content-channels-lead
+phase: 4-execution
+source: "signup-flow-cro (marketingskills repo)"
+output: "{project-root}/_bmad-output/signup-flow-cro-{date}.md"
+---
+
+# Signup Flow CRO Workflow
+
+## Overview
+Optimize signup flows using frameworks, form design, and friction reduction techniques.
+
+## Content Coverage
+- Signup flow optimization frameworks
+- Form design and field optimization
+- User experience and friction reduction
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/signup-flow-cro-{date}.md` containing:
+- Signup flow analysis with friction points
+- Form optimization recommendations
+- A/B testing hypotheses and metrics
+- Implementation guide and monitoring

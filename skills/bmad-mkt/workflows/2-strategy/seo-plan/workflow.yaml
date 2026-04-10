@@ -1,0 +1,30 @@
+---
+name: seo-plan
+agent: content-channels-lead
+phase: 2-strategy
+source: "seo-plan (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-plan-{date}.md"
+---
+
+# SEO Plan Workflow
+
+## Overview
+Develop a comprehensive SEO strategy using keyword research, content planning, and technical optimization to improve organic visibility.
+
+## Content Coverage
+- Keyword research and analysis
+- Content gap analysis and topic clusters
+- SEO audit findings integration
+- Technical SEO requirements
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-plan-{date}.md` containing:
+- SEO keyword strategy with primary and secondary keywords
+- Content plan with topic clusters and pillar pages
+- Technical SEO requirements and implementation plan
+- Success metrics and KPI definitions

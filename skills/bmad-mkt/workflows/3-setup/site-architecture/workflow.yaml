@@ -1,0 +1,29 @@
+---
+name: site-architecture
+agent: content-channels-lead
+phase: 3-setup
+source: "site-architecture (marketingskills repo)"
+output: "{project-root}/_bmad-output/site-architecture-{date}.md"
+---
+
+# Site Architecture Workflow
+
+## Overview
+Design page hierarchy, URL structure, and internal linking strategy to optimize SEO and user experience.
+
+## Content Coverage
+- Page hierarchy and URL structure
+- Internal linking strategy
+- Content type mapping
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/site-architecture-{date}.md` containing:
+- Site map with page hierarchy
+- URL structure guidelines
+- Internal linking patterns
+- Content type assignments

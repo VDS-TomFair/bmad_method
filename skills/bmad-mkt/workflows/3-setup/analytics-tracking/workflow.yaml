@@ -1,0 +1,29 @@
+---
+name: analytics-tracking
+agent: content-channels-lead
+phase: 3-setup
+source: "analytics-tracking (marketingskills repo)"
+output: "{project-root}/_bmad-output/analytics-tracking-{date}.md"
+---
+
+# Analytics Tracking Workflow
+
+## Overview
+Implement and configure GA4 with event tracking, conversion measurement, and validation to drive data-informed decisions.
+
+## Content Coverage
+- GA4 implementation and configuration
+- Event tracking setup and validation
+- Conversion tracking and funnel measurement
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/analytics-tracking-{date}.md` containing:
+- GA4 property setup instructions
+- Event taxonomy and tracking plan
+- Conversion funnel definition
+- Implementation validation checklist

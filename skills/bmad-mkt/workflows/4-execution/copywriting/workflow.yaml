@@ -1,0 +1,29 @@
+---
+name: copywriting
+agent: content-channels-lead
+phase: 4-execution
+source: "copywriting (marketingskills repo)"
+output: "{project-root}/_bmad-output/copywriting-{date}.md"
+---
+
+# Copywriting Workflow
+
+## Overview
+Create compelling marketing copy for key pages using frameworks, audience insights, and value propositions.
+
+## Content Coverage
+- Copywriting frameworks and techniques
+- Audience messaging and value proposition
+- Content structure and flow
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/copywriting-{date}.md` containing:
+- Copy for key pages (homepage, product, pricing)
+- Value proposition statements
+- Call-to-action recommendations
+- Tone of voice guidelines

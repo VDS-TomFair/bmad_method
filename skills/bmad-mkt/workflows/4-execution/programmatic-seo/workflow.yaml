@@ -1,0 +1,29 @@
+---
+name: programmatic-seo
+agent: content-channels-lead
+phase: 4-execution
+source: "programmatic-seo (marketingskills repo)"
+output: "{project-root}/_bmad-output/programmatic-seo-{date}.md"
+---
+
+# Programmatic SEO Workflow
+
+## Overview
+Implement programmatic SEO using frameworks, data-driven generation, and template engines.
+
+## Content Coverage
+- Programmatic SEO frameworks and templates
+- Data-driven page generation strategies
+- Template engine implementation
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/programmatic-seo-{date}.md` containing:
+- Programmatic SEO strategy framework
+- Template designs and data structures
+- Implementation guide and deployment steps
+- Performance metrics and optimization approaches

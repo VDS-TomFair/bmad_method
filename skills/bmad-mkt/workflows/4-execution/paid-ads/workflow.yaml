@@ -1,0 +1,29 @@
+---
+name: paid-ads
+agent: content-channels-lead
+phase: 4-execution
+source: "paid-ads (marketingskills repo)"
+output: "{project-root}/_bmad-output/paid-ads-{date}.md"
+---
+
+# Paid Ads Workflow
+
+## Overview
+Create effective paid advertising campaigns using platform strategies, audience targeting, and campaign structures.
+
+## Content Coverage
+- Paid advertising platform strategies
+- Audience targeting and segmentation
+- Campaign structure and bidding strategies
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/paid-ads-{date}.md` containing:
+- Paid ads campaign structure with ad groups
+- Audience targeting criteria and segments
+- Bidding strategy recommendations
+- Budget allocation and performance metrics

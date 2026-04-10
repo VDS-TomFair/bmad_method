@@ -1,0 +1,29 @@
+---
+name: copy-editing
+agent: content-channels-lead
+phase: 4-execution
+source: "copy-editing (marketingskills repo)"
+output: "{project-root}/_bmad-output/copy-editing-{date}.md"
+---
+
+# Copy Editing Workflow
+
+## Overview
+Edit and improve marketing copy for consistency, grammar, and brand voice using frameworks and style guides.
+
+## Content Coverage
+- Copy editing frameworks and checklists
+- Style guide adherence and brand voice consistency
+- Grammar, spelling, and readability improvements
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/copy-editing-{date}.md` containing:
+- Edited copy with tracked changes
+- Style guide compliance report
+- Readability score improvements
+- Brand voice consistency assessment

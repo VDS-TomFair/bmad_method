@@ -1,0 +1,30 @@
+---
+name: content-strategy
+agent: marketing-strategist
+phase: 2-strategy
+source: "content-strategy (marketingskills repo)"
+output: "{project-root}/_bmad-output/content-strategy-{date}.md"
+---
+
+# Content Strategy Workflow
+
+## Overview
+Develop a comprehensive content strategy using topic clusters, pillar pages, and editorial calendars to drive organic growth.
+
+## Content Coverage
+- Content audit methodology
+- Topic cluster and pillar content strategy
+- Editorial calendar framework
+- Content governance and workflow
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/content-strategy-{date}.md` containing:
+- Topic cluster map (pillar + subtopic pages)
+- Content types and formats recommended
+- Publishing frequency and cadence
+- Content workflow and approval process

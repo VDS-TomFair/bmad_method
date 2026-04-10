@@ -1,0 +1,27 @@
+---
+name: marketing-psychology
+agent: marketing-strategist
+phase: 1-discovery
+source: "marketing-psychology (marketingskills repo)"
+output: "{project-root}/_bmad-output/marketing-psychology-{date}.md"
+---
+
+# Marketing Psychology Workflow
+
+## Overview
+Apply behavioral science principles to marketing decisions using cognitive biases, persuasion principles, and mental models.
+
+## Content Coverage
+- Cognitive biases (anchoring, loss aversion, social proof, scarcity)
+- Persuasion principles (Cialdini's 6: reciprocity, commitment, social proof, authority, liking, scarcity)
+- Mental models for buying decisions (loss aversion, default bias, decoy effect)
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Marketing Context
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Marketing Foundations
+
+## Final Output
+`{project-root}/_bmad-output/marketing-psychology-{date}.md` containing:
+- ≥5 specific psychological principles
+- For each principle: description + how it applies to THIS product + implementation suggestion

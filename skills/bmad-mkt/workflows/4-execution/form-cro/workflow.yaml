@@ -1,0 +1,29 @@
+---
+name: form-cro
+agent: content-channels-lead
+phase: 4-execution
+source: "form-cro (marketingskills repo)"
+output: "{project-root}/_bmad-output/form-cro-{date}.md"
+---
+
+# Form CRO Workflow
+
+## Overview
+Optimize forms using frameworks, field design, and conversion rate analysis techniques.
+
+## Content Coverage
+- Form optimization frameworks and checklists
+- Field design and user experience
+- Conversion rate analysis and testing
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/form-cro-{date}.md` containing:
+- Form analysis with friction points
+- Field optimization recommendations
+- A/B testing hypotheses and metrics
+- Implementation guide and monitoring

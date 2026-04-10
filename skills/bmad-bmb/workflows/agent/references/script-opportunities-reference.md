@@ -1,6 +1,6 @@
 # Quality Scan Script Opportunities — Reference Guide
 
-**Reference: `./references/script-standards.md` for script creation guidelines.**
+**Reference: `./script-standards.md` for script creation guidelines.**
 
 This document identifies deterministic operations that should be offloaded from the LLM into scripts for quality validation of BMad agents.
 
@@ -57,7 +57,7 @@ Beyond obvious validation, consider:
 
 ### Your Toolbox
 
-**Python is the default** for all script logic (cross-platform: macOS, Linux, Windows/WSL). See `./references/script-standards.md` for full rationale.
+**Python is the default** for all script logic (cross-platform: macOS, Linux, Windows/WSL). See `./script-standards.md` for full rationale.
 
 - **Python:** Standard library (`json`, `pathlib`, `re`, `argparse`, `collections`, `difflib`, `ast`, `csv`, `xml`, etc.) plus PEP 723 inline-declared dependencies (`tiktoken`, `jsonschema`, `pyyaml`, etc.)
 - **Safe shell commands:** `git`, `gh`, `uv run`, `npm`/`npx`/`pnpm`, `mkdir -p` (invocation only, not logic)

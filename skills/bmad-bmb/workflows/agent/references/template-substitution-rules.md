@@ -50,8 +50,8 @@ These replace the legacy memory/headless conditionals for the new agent type sys
 
 The builder selects the appropriate SKILL.md template based on agent type:
 
-- **Stateless agent:** Use `./assets/SKILL-template.md` (full identity, no Three Laws/Sacred Truth)
-- **Memory/autonomous agent:** Use `./assets/SKILL-template-bootloader.md` (lean bootloader with Three Laws, Sacred Truth, 3-path activation)
+- **Stateless agent:** Use `../assets/SKILL-template.md` (full identity, no Three Laws/Sacred Truth)
+- **Memory/autonomous agent:** Use `../assets/SKILL-template-bootloader.md` (lean bootloader with Three Laws, Sacred Truth, 3-path activation)
 
 ## Beyond the Template
 

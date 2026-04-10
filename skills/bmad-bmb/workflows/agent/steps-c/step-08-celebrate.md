@@ -4,7 +4,7 @@ description: 'Celebrate completion and guide next steps for using the agent'
 
 # File References
 thisStepFile: ./step-08-celebrate.md
-workflowFile: ../workflow.md
+workflowFile: ../workflow-create-agent.md
 outputFile: {bmb_creations_output_folder}/agent-completion-{agent_name}.md
 
 # Task References

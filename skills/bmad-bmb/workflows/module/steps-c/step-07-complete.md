@@ -5,7 +5,7 @@ description: 'Finalize, offer to run validation'
 buildTrackingFile: '{bmb_creations_output_folder}/modules/module-build-{module_code}.md'
 targetLocation: '{build_tracking_targetLocation}'
 moduleHelpGenerateWorkflow: '../module-help-generate.md'
-validationWorkflow: '../steps-v/step-01-validate.md'
+validationWorkflow: '../steps-v/step-01-load-target.md'
 moduleHelpCsvFile: '{build_tracking_targetLocation}/module-help.csv'
 ---
 

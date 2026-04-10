@@ -41,13 +41,13 @@ SKILL.md stays focused. Detail goes where it belongs.
 
 Two parts: `[5-8 word summary]. [Use when user says 'X' or 'Y'.]`
 
-Default to conservative triggering. See `./references/standard-fields.md` for full format.
+Default to conservative triggering. See `./standard-fields.md` for full format.
 
 ## 6. Path Construction
 
 Use `{project-root}` for any project-scope path. Use `./` for skill-internal paths. Config variables used directly — they already contain `{project-root}`.
 
-See `./references/standard-fields.md` for correct/incorrect patterns.
+See `./standard-fields.md` for correct/incorrect patterns.
 
 ## 7. Token Efficiency
 

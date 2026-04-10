@@ -23,10 +23,10 @@ This is an **opinionated, advisory scan**. Findings are suggestions, not errors.
 Check if this is a memory agent (look for `./assets/` with template files, or Three Laws / Sacred Truth in SKILL.md). Memory agents distribute persona across multiple files:
 
 - **Identity seed** in SKILL.md (2-3 sentence personality DNA, not a formal `## Identity` section)
-- **Communication style** in `./assets/PERSONA-template.md`
-- **Values and principles** in `./assets/CREED-template.md`
-- **Capability routing** in `./assets/CAPABILITIES-template.md`
-- **Domain expertise** in `./assets/BOND-template.md` (what the agent discovers about its owner)
+- **Communication style** in `../assets/PERSONA-template.md`
+- **Values and principles** in `../assets/CREED-template.md`
+- **Capability routing** in `../assets/CAPABILITIES-template.md`
+- **Domain expertise** in `../assets/BOND-template.md` (what the agent discovers about its owner)
 
 For persona-capability alignment, read BOTH the bootloader SKILL.md AND the sanctum templates in `./assets/`. The persona is distributed, not concentrated in SKILL.md.
 

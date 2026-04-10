@@ -41,7 +41,7 @@ The goal is to conversationally gather enough to cover Phase 2 and 3 naturally. 
 
 ### Agent Type Detection
 
-After understanding who the agent is and what it does, determine the agent type. Load `./references/agent-type-guidance.md` for decision framework. Surface these as natural questions, not a menu:
+After understanding who the agent is and what it does, determine the agent type. Load `./agent-type-guidance.md` for decision framework. Surface these as natural questions, not a menu:
 
 1. **"Does this agent need to remember between sessions?"** No = stateless agent. Yes = memory agent.
 2. **"Does this agent operate autonomously — checking in, maintaining things, creating value when no one's watching?"** If yes, include PULSE (making it an autonomous agent).
@@ -65,7 +65,7 @@ Early check: internal capabilities only, external skills, both, or unclear?
 
 **Script Opportunity Discovery** (active probing — do not skip):
 
-Identify deterministic operations that should be scripts. Load `./references/script-opportunities-reference.md` for guidance. Confirm the script-vs-prompt plan with the user before proceeding. If any scripts require external dependencies (anything beyond Python's standard library), explicitly list each dependency and get user approval — dependencies add install-time cost and require `uv` to be available.
+Identify deterministic operations that should be scripts. Load `./script-opportunities-reference.md` for guidance. Confirm the script-vs-prompt plan with the user before proceeding. If any scripts require external dependencies (anything beyond Python's standard library), explicitly list each dependency and get user approval — dependencies add install-time cost and require `uv` to be available.
 
 **Evolvable Capabilities (memory agents only):**
 
@@ -77,7 +77,7 @@ This is separate from the built-in capabilities you're designing now. Evolvable 
 
 ## Phase 3: Gather Requirements
 
-Gather through conversation: identity, capabilities, activation modes, memory needs, access boundaries. Refer to `./references/standard-fields.md` for conventions.
+Gather through conversation: identity, capabilities, activation modes, memory needs, access boundaries. Refer to `./standard-fields.md` for conventions.
 
 Key structural context:
 
@@ -97,11 +97,11 @@ Gather these additional requirements through conversation. These seed the sanctu
 
 **Identity seed** — condensed to 2-3 sentences for the bootloader SKILL.md. This is the agent's personality DNA: the essence that expands into PERSONA.md during First Breath. Not a full bio — just the core personality.
 
-**Species-level mission** — domain-specific purpose statement. Load `./references/mission-writing-guidance.md` for guidance and examples. The mission must be specific to this agent type ("Catch the bugs the author's familiarity makes invisible") not generic ("Assist your owner").
+**Species-level mission** — domain-specific purpose statement. Load `./mission-writing-guidance.md` for guidance and examples. The mission must be specific to this agent type ("Catch the bugs the author's familiarity makes invisible") not generic ("Assist your owner").
 
 **CREED seeds** — these go into CREED-template.md with real content, not empty placeholders:
 
-- **Core values** (3-5): Domain-specific operational values, not platitudes. Load `./references/standing-order-guidance.md` for context.
+- **Core values** (3-5): Domain-specific operational values, not platitudes. Load `./standing-order-guidance.md` for context.
 - **Standing orders**: Surprise-and-delight and self-improvement are defaults — adapt each to the agent's domain with concrete examples. Discover any domain-specific standing orders by asking: "Is there something this agent should always be watching for across every interaction?"
 - **Philosophy**: The agent's approach to its domain. Not steps — principles. How does this agent think about its work?
 - **Boundaries**: Behavioral guardrails — what the agent must always do or never do.
@@ -110,7 +110,7 @@ Gather these additional requirements through conversation. These seed the sanctu
 
 **BOND territories** — what should the agent discover about its owner during First Breath and ongoing sessions? These become the domain-specific sections of BOND-template.md. Examples: "How They Think Creatively", "Their Codebase and Languages", "Their Writing Style".
 
-**First Breath territories** — domain-specific discovery areas beyond the universal ones. Load `./references/first-breath-adaptation-guidance.md` for guidance. Ask: "What does this agent need to learn about its owner that a generic assistant wouldn't?"
+**First Breath territories** — domain-specific discovery areas beyond the universal ones. Load `./first-breath-adaptation-guidance.md` for guidance. Ask: "What does this agent need to learn about its owner that a generic assistant wouldn't?"
 
 **PULSE behaviors (if autonomous):**
 
@@ -145,7 +145,7 @@ Watch especially for:
 
 **Memory agent pruning checks (apply in addition to the above):**
 
-Load `./references/sample-capability-prompt.md` as a quality reference for capability prompt review.
+Load `./sample-capability-prompt.md` as a quality reference for capability prompt review.
 
 - **Bootloader weight:** Is SKILL.md lean (~30 lines of content)? It should contain ONLY identity seed, Three Laws, Sacred Truth, mission, and activation routing. If it has communication style, detailed principles, capability menus, or session close, move that content to sanctum templates.
 - **Species-level mission specificity:** Is the mission specific to this agent type? "Assist your owner" fails. It should be something only this type of agent would say.
@@ -157,17 +157,17 @@ Load `./references/sample-capability-prompt.md` as a quality reference for capab
 
 **Load these before building:**
 
-- `./references/standard-fields.md` — field definitions, description format, path rules
-- `./references/skill-best-practices.md` — outcome-driven authoring, patterns, anti-patterns
-- `./references/quality-dimensions.md` — build quality checklist
+- `./standard-fields.md` — field definitions, description format, path rules
+- `./skill-best-practices.md` — outcome-driven authoring, patterns, anti-patterns
+- `./quality-dimensions.md` — build quality checklist
 
-Build the agent using templates from `./assets/` and rules from `./references/template-substitution-rules.md`. Output to `{bmad_builder_output_folder}`.
+Build the agent using templates from `./assets/` and rules from `./template-substitution-rules.md`. Output to `{bmad_builder_output_folder}`.
 
 **Capability prompts are outcome-driven:** Each `./references/{capability}.md` file should describe what the capability achieves and what "good" looks like — not prescribe mechanical steps. The agent's persona context (identity, communication style, principles in SKILL.md) informs how each capability is executed. Don't repeat that context in every capability prompt.
 
 ### Stateless Agent Output
 
-Use `./assets/SKILL-template.md` (the full identity template). No Three Laws, no Sacred Truth, no sanctum files. Include the species-level mission in the Overview section.
+Use `../assets/SKILL-template.md` (the full identity template). No Three Laws, no Sacred Truth, no sanctum files. Include the species-level mission in the Overview section.
 
 ```
 {skill-name}/
@@ -181,14 +181,14 @@ Use `./assets/SKILL-template.md` (the full identity template). No Three Laws, no
 ### Memory Agent Output
 
 Load these samples before generating memory agent files:
-- `./references/sample-first-breath.md` — quality bar for first-breath.md
-- `./references/sample-memory-guidance.md` — quality bar for memory-guidance.md
-- `./references/sample-capability-prompt.md` — quality bar for capability prompts
+- `./sample-first-breath.md` — quality bar for first-breath.md
+- `./sample-memory-guidance.md` — quality bar for memory-guidance.md
+- `./sample-capability-prompt.md` — quality bar for capability prompts
 - `./references/sample-init-sanctum.py` — structure reference for init script
 
-{if-evolvable}Also load `./references/sample-capability-authoring.md` for capability-authoring.md quality reference.{/if-evolvable}
+{if-evolvable}Also load `./sample-capability-authoring.md` for capability-authoring.md quality reference.{/if-evolvable}
 
-Use `./assets/SKILL-template-bootloader.md` for the lean bootloader. Generate the full sanctum architecture:
+Use `../assets/SKILL-template-bootloader.md` for the lean bootloader. Generate the full sanctum architecture:
 
 ```
 {skill-name}/
@@ -220,8 +220,8 @@ Use `./assets/SKILL-template-bootloader.md` for the lean bootloader. Generate th
 - **CAPABILITIES-template.md**: Built-in capability table pre-filled. Evolvable sections included only if evolvable capabilities enabled.
 
 **Generate first-breath.md** from the appropriate template:
-- Calibration-style: Use `./assets/first-breath-template.md`. Fill in identity-nature, owner-discovery-territories, mission context, pulse explanation (if autonomous), example-learned-capabilities (if evolvable).
-- Configuration-style: Use `./assets/first-breath-config-template.md`. Fill in config-discovery-questions (3-7 domain-specific questions).
+- Calibration-style: Use `../assets/first-breath-template.md`. Fill in identity-nature, owner-discovery-territories, mission context, pulse explanation (if autonomous), example-learned-capabilities (if evolvable).
+- Configuration-style: Use `../assets/first-breath-config-template.md`. Fill in config-discovery-questions (3-7 domain-specific questions).
 
 **Parameterize init-sanctum.py** from `./assets/init-sanctum-template.py`:
 - Set `SKILL_NAME` to the agent's skill name
@@ -245,7 +245,7 @@ Use `./assets/SKILL-template-bootloader.md` for the lean bootloader. Generate th
 2. `--headless` → load PULSE.md from sanctum, execute, exit
 3. Normal → batch-load sanctum files (PERSONA, CREED, BOND, MEMORY, CAPABILITIES), become yourself, greet owner
 
-**If the built agent includes scripts**, also load `./references/script-standards.md` — ensures PEP 723 metadata, correct shebangs, and `uv run` invocation from the start.
+**If the built agent includes scripts**, also load `./script-standards.md` — ensures PEP 723 metadata, correct shebangs, and `uv run` invocation from the start.
 
 **Lint gate** — after building, validate and auto-fix:
 

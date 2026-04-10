@@ -33,13 +33,13 @@ SKILL.md stays focused. Detail goes where it belongs.
 
 Two parts: `[5-8 word summary]. [Use when user says 'X' or 'Y'.]`
 
-Default to conservative triggering. See `./references/standard-fields.md` for full format and examples.
+Default to conservative triggering. See `./standard-fields.md` for full format and examples.
 
 ## 5. Path Construction
 
 Only use `{project-root}` for `_bmad` paths. Config variables used directly — they already contain `{project-root}`.
 
-See `./references/standard-fields.md` for correct/incorrect patterns.
+See `./standard-fields.md` for correct/incorrect patterns.
 
 ## 6. Token Efficiency
 

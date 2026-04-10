@@ -3,7 +3,7 @@ name: validate-module
 description: Run compliance check on BMAD modules against best practices
 web_bundle: true
 installed_path: '{project-root}/skills/bmad-bmb/workflows/module'
-validateWorkflow: './steps-v/step-01-validate.md'
+validateWorkflow: './steps-v/step-01-load-target.md'
 ---
 
 # Validate Module

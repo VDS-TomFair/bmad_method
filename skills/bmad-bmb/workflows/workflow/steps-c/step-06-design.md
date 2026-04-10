@@ -78,7 +78,7 @@ When designing, you will load these data standards as needed (ideally within sub
 - {workflowChainingStandards} - How workflows connect in sequences
 - {trimodalWorkflowStructure} - Tri-modal workflow patterns (if applicable)
 
-Example [Workflow.md](../workflow.md) for reference of a perfect workflow.md with some complex options (not all workflows will offer multiple next step options like this one - most will just auto route right to a step 1 file)
+Example [Workflow.md](../workflow-create-workflow.md) for reference of a perfect workflow.md with some complex options (not all workflows will offer multiple next step options like this one - most will just auto route right to a step 1 file)
 
 ## MANDATORY SEQUENCE
 

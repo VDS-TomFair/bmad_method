@@ -1,0 +1,30 @@
+---
+name: churn-prevention
+agent: growth-engineer
+phase: 6-retention
+source: "churn-prevention (marketingskills repo)"
+output: "{project-root}/_bmad-output/churn-prevention-{date}.md"
+---
+
+# Churn Prevention Workflow
+
+## Overview
+Reduce both voluntary and involuntary churn through cancel flow design, dynamic save offers, proactive retention signals, and dunning strategies.
+
+## Content Coverage
+- Cancel flow design (exit surveys, dynamic save offers, UI patterns)
+- Churn prediction and proactive retention (risk signals, health scores, interventions)
+- Involuntary churn: payment recovery (dunning stack, smart retries, email sequences)
+- Metrics, measurement, and A/B testing
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/churn-prevention-{date}.md` containing:
+- Cancel flow design with exit survey and save offer mapping
+- Health score model with risk signals
+- Dunning email sequence and payment recovery plan
+- Churn metrics dashboard with targets

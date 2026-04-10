@@ -1,0 +1,32 @@
+---
+name: growth-audit
+agent: growth-engineer
+phase: orchestration
+source: "Original (no upstream source)"
+output: "{project-root}/_bmad-output/growth-audit-{date}.md"
+---
+
+# Growth Audit Orchestration
+
+## Overview
+Conduct a full-funnel growth audit analyzing traffic, conversion, retention, and revenue metrics to identify the highest-leverage optimization opportunities.
+
+## Content Coverage
+- Full funnel analysis (visit → signup → activate → convert → retain → expand)
+- Channel performance comparison across organic, paid, email, and social
+- Conversion rate analysis at each funnel stage
+- Cohort analysis for retention and churn patterns
+- Prioritized optimization roadmap with ICE scoring
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/growth-audit-{date}.md` containing:
+- Full funnel analysis with conversion rates at each stage
+- Channel performance comparison with ROI metrics
+- Cohort retention analysis with drop-off patterns
+- Prioritized optimization roadmap (ICE-scored hypotheses)
+- Next experiment recommendations with sample sizes

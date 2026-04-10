@@ -1,0 +1,32 @@
+---
+name: campaign-sprint
+agent: content-manager
+phase: orchestration
+source: "Original (no upstream source)"
+output: "{project-root}/_bmad-output/campaign-sprint-{date}.md"
+---
+
+# Campaign Sprint Orchestration
+
+## Overview
+Execute a time-boxed, multi-channel campaign sprint — from brief to published assets to performance review — in a structured 1-2 week format.
+
+## Content Coverage
+- Campaign brief development (objective, audience, messaging, channels)
+- Asset creation across channels (copy, ads, emails, social posts)
+- Launch checklist and sequencing plan
+- Performance tracking dashboard
+- Sprint retrospective with results and learnings
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/campaign-sprint-{date}.md` containing:
+- Campaign brief with objectives, audience, and messaging
+- Channel-by-channel asset plan with deadlines
+- Launch checklist and sequencing timeline
+- Performance tracking dashboard template
+- Sprint retrospective template with results and learnings

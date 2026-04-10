@@ -1,0 +1,33 @@
+---
+name: gtm-planning
+agent: marketing-strategist
+phase: orchestration
+source: "Original (no upstream source)"
+output: "{project-root}/_bmad-output/gtm-plan-{date}.md"
+---
+
+# Go-To-Market Planning Orchestration
+
+## Overview
+Orchestrate a complete go-to-market plan coordinating positioning, content, growth, and sales into a unified launch strategy with clear ownership and timelines.
+
+## Content Coverage
+- GTM strategy alignment across agents and channels
+- Launch timeline with milestones and dependencies
+- Cross-agent responsibility assignment
+- Channel coordination and budget allocation
+- Success metrics and feedback loops
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+4. `{project-root}/_bmad-output/planning-artifacts/architecture-*.md` — Technical architecture
+
+## Final Output
+`{project-root}/_bmad-output/gtm-plan-{date}.md` containing:
+- GTM strategy with positioning and channel selection
+- Launch timeline with milestones and RACI
+- Cross-agent coordination plan with ownership
+- Budget allocation and resource plan
+- Success metrics with targets and review cadence

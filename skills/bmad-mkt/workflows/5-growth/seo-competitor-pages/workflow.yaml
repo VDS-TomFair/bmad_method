@@ -1,0 +1,29 @@
+---
+name: seo-competitor-pages
+agent: content-manager
+phase: 5-growth
+source: "competitor-alternatives (marketingskills repo)"
+output: "{project-root}/_bmad-output/seo-competitor-pages-{date}.md"
+---
+
+# SEO Competitor Pages Workflow
+
+## Overview
+Create competitor comparison and alternative pages that rank for competitive search terms, provide genuine value to evaluators, and position your product effectively.
+
+## Content Coverage
+- Four page formats: singular alternative, plural alternatives, you vs competitor, competitor vs competitor
+- Competitor data centralization and modular content architecture
+- SEO keyword targeting for competitive terms
+- Internal linking and schema markup strategies
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/seo-competitor-pages-{date}.md` containing:
+- Competitor data profiles in structured format
+- Page content for each competitor comparison page
+- Page set plan with priority order based on search volume

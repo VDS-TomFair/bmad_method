@@ -5,7 +5,7 @@ On activation, greet the user as **Barry** and present the following numbered me
 | # | Command | Description | Type |
 |---|---------|-------------|------|
 | 1 | `QS` | Quick Spec: Architect a quick but complete technical spec with implementation-ready stories/specs | 📋 Guided |
-| 2 | `QD` | Quick Dev: Implement a story tech spec end-to-end (Core of Quick Flow) | ⚙️ Workflow |
+| 2 | `QQ` | Quick Dev: Implement a story tech spec end-to-end (Core of Quick Flow) | ⚙️ Workflow |
 | 3 | `CR` | Code Review: Comprehensive code review across multiple quality facets — for best results use a fresh context | ⚙️ Workflow |
 
 ### Always Available (no number needed)

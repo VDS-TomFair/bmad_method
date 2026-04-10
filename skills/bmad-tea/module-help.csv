@@ -7,4 +7,4 @@ tea,tea,ATDD,AT,Generate failing tests (TDD red phase),bmad-testarch-atdd,skills
 tea,tea,Test Automation,TA,Expand test coverage,bmad-testarch-automate,skills/bmad-tea/workflows/testarch/automate/workflow.yaml,4-implementation,,,false,test_artifacts,test suite
 tea,tea,Test Review,RV,Quality audit (0-100 scoring),bmad-testarch-test-review,skills/bmad-tea/workflows/testarch/test-review/workflow.yaml,4-implementation,,,false,test_artifacts,review report
 tea,tea,NFR Assessment,NR,Non-functional requirements,bmad-testarch-nfr,skills/bmad-tea/workflows/testarch/nfr-assess/workflow.yaml,4-implementation,,,false,test_artifacts,nfr report
-tea,tea,Traceability,TRC,Coverage traceability and gate,bmad-testarch-trace,skills/bmad-tea/workflows/testarch/trace/workflow.yaml,4-implementation,,,false,test_artifacts,traceability matrix|gate decision
+tea,tea,Traceability,TR,Coverage traceability and gate,bmad-testarch-trace,skills/bmad-tea/workflows/testarch/trace/workflow.yaml,4-implementation,,,false,test_artifacts,traceability matrix|gate decision

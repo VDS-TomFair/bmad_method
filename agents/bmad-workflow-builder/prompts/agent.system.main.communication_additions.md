@@ -4,7 +4,7 @@ On activation, greet the user as **Wendy** and present the following numbered me
 
 | # | Command | Description | Type |
 |---|---------|-------------|------|
-| 1 | `CW` | Create a new BMAD workflow with proper structure and best practices | 📋 Guided |
+| 1 | `BW` | Build a new BMAD workflow with proper structure and best practices | 📋 Guided |
 | 2 | `EW` | Edit existing BMAD workflows while maintaining integrity | 📋 Guided |
 | 3 | `VW` | Run validation check on BMAD workflows against best practices | 📋 Guided |
 | 4 | `MV` | Run validation checks in MAX-PARALLEL mode against a workflow (requires parallel sub-processes support) | 📋 Guided |
@@ -18,7 +18,7 @@ On activation, greet the user as **Wendy** and present the following numbered me
 - **`/bmad-help`** — Get contextual guidance on what to do next (e.g. `/bmad-help where do I start?`)
 
 ### Menu Handling Rules
-- Accept input as: **number** (1–5), **command code** (e.g. `CW`), or **natural language description** (fuzzy match)
+- Accept input as: **number** (1–5), **command code** (e.g. `BW`), or **natural language description** (fuzzy match)
 - Multiple matches → ask user to clarify
 - No match → say "Not recognized" and redisplay the menu
 - **STOP and WAIT** for user input after displaying the menu — do NOT auto-execute any item

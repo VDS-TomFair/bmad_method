@@ -49,7 +49,7 @@ You must fully embody this agent's persona and follow all activation instruction
   <menu>
     <item cmd="MH or fuzzy match on menu or help">[MH] Redisplay Menu Help</item>
     <item cmd="CH or fuzzy match on chat">[CH] Chat with the Agent about anything</item>
-    <item cmd="CW or fuzzy match on create-workflow" exec="{project-root}/skills/bmad-bmb/workflows/workflow/workflow-create-workflow.md">[CW] Create a new BMAD workflow with proper structure and best practices</item>
+    <item cmd="BW or fuzzy match on build-workflow" exec="{project-root}/skills/bmad-bmb/workflows/workflow/workflow-create-workflow.md">[BW] Create a new BMAD workflow with proper structure and best practices</item>
     <item cmd="EW or fuzzy match on edit-workflow" exec="{project-root}/skills/bmad-bmb/workflows/workflow/workflow-edit-workflow.md">[EW] Edit existing BMAD workflows while maintaining integrity</item>
     <item cmd="VW or fuzzy match on validate-workflow" exec="{project-root}/skills/bmad-bmb/workflows/workflow/workflow-validate-workflow.md">[VW] Run validation check on BMAD workflows against best practices</item>
     <item cmd="MV or fuzzy match on validate-max-parallel-workflow" exec="{project-root}/skills/bmad-bmb/workflows/workflow/workflow-validate-max-parallel-workflow.md">[MV] Run validation checks in MAX-PARALLEL mode against a workflow (requires a tool that supports Parallel Sub-Processes)</item>

@@ -60,7 +60,7 @@ You must fully embody this agent's persona and follow all activation instruction
     <item cmd="MH or fuzzy match on menu or help">[MH] Redisplay Menu Help</item>
     <item cmd="CH or fuzzy match on chat">[CH] Chat with the Agent about anything</item>
     <item cmd="QS or fuzzy match on quick-spec" exec="{project-root}/skills/bmad-bmm/workflows/bmad-quick-flow/quick-spec/workflow.md">[QS] Quick Spec: Architect a quick but complete technical spec with implementation-ready stories/specs</item>
-    <item cmd="QD or fuzzy match on quick-dev" workflow="{project-root}/skills/bmad-bmm/workflows/bmad-quick-flow/quick-dev/workflow.md">[QD] Quick-flow Develop: Implement a story tech spec end-to-end (Core of Quick Flow)</item>
+    <item cmd="QQ or fuzzy match on quick-dev" workflow="{project-root}/skills/bmad-bmm/workflows/bmad-quick-flow/quick-dev/workflow.md">[QQ] Quick-flow Develop: Implement a story tech spec end-to-end (Core of Quick Flow)</item>
     <item cmd="CR or fuzzy match on code-review" workflow="{project-root}/skills/bmad-bmm/workflows/4-implementation/code-review/workflow.yaml">[CR] Code Review: Initiate a comprehensive code review across multiple quality facets. For best results, use a fresh context and a different quality LLM if available</item>
     <item cmd="PM or fuzzy match on party-mode" exec="{project-root}/skills/bmad-init/core/workflows/party-mode/workflow.md">[PM] Start Party Mode</item>
     <item cmd="DA or fuzzy match on exit, leave, goodbye or dismiss agent">[DA] Dismiss Agent</item>

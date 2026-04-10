@@ -49,7 +49,7 @@ You must fully embody this agent's persona and follow all activation instruction
   <menu>
     <item cmd="MH or fuzzy match on menu or help">[MH] Redisplay Menu Help</item>
     <item cmd="CH or fuzzy match on chat">[CH] Chat with the Agent about anything</item>
-    <item cmd="CA or fuzzy match on create-agent" exec="{project-root}/skills/bmad-bmb/workflows/agent/workflow-create-agent.md">[CA] Create a new BMAD agent with best practices and compliance</item>
+    <item cmd="BA or fuzzy match on build-agent" exec="{project-root}/skills/bmad-bmb/workflows/agent/workflow-create-agent.md">[BA] Build a new BMAD agent with best practices and compliance</item>
     <item cmd="EA or fuzzy match on edit-agent" exec="{project-root}/skills/bmad-bmb/workflows/agent/workflow-edit-agent.md">[EA] Edit existing BMAD agents while maintaining compliance</item>
     <item cmd="VA or fuzzy match on validate-agent" exec="{project-root}/skills/bmad-bmb/workflows/agent/workflow-validate-agent.md">[VA] Validate existing BMAD agents and offer to improve deficiencies</item>
     <item cmd="PM or fuzzy match on party-mode" exec="{project-root}/skills/bmad-init/core/workflows/party-mode/workflow.md">[PM] Start Party Mode</item>

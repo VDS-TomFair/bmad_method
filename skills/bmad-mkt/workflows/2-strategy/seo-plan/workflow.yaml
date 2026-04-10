@@ -1,6 +1,6 @@
 ---
 name: seo-plan
-agent: content-channels-lead
+agent: content-manager
 phase: 2-strategy
 source: "seo-plan (marketingskills repo)"
 output: "{project-root}/_bmad-output/seo-plan-{date}.md"

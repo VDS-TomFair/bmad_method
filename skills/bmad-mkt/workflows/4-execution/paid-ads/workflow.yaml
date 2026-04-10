@@ -1,6 +1,6 @@
 ---
 name: paid-ads
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "paid-ads (marketingskills repo)"
 output: "{project-root}/_bmad-output/paid-ads-{date}.md"

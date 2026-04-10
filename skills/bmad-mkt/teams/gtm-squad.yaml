@@ -5,7 +5,7 @@ bundle:
   description: Cross-functional Go-to-Market Team — Marketing strategy, content, growth, product, and architecture for end-to-end GTM execution
 agents:
   - marketing-strategist
-  - content-channels-lead
+  - content-manager
   - growth-engineer
   - bmad-pm
   - bmad-architect

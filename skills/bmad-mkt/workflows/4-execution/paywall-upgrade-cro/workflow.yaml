@@ -1,6 +1,6 @@
 ---
 name: paywall-upgrade-cro
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "paywall-upgrade-cro (marketingskills repo)"
 output: "{project-root}/_bmad-output/paywall-upgrade-cro-{date}.md"

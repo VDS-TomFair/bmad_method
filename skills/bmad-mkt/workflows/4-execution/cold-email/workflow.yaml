@@ -1,6 +1,6 @@
 ---
 name: cold-email
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "cold-email (marketingskills repo)"
 output: "{project-root}/_bmad-output/cold-email-{date}.md"

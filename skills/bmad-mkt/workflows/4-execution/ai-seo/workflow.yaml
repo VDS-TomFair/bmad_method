@@ -1,6 +1,6 @@
 ---
 name: ai-seo
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "ai-seo (marketingskills repo)"
 output: "{project-root}/_bmad-output/ai-seo-{date}.md"

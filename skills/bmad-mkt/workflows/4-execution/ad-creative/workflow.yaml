@@ -1,6 +1,6 @@
 ---
 name: ad-creative
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "ad-creative (marketingskills repo)"
 output: "{project-root}/_bmad-output/ad-creative-{date}.md"

@@ -1,6 +1,6 @@
 ---
 name: seo-page
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "seo-page (marketingskills repo)"
 output: "{project-root}/_bmad-output/seo-page-{date}.md"

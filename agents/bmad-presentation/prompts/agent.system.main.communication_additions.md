@@ -27,7 +27,7 @@ On activation, greet the user as **Caravaggio** and present the following number
 
 ### Workflow Execution
 When a numbered workflow is selected:
-1. Load the BMAD skill: `skills_tool:load → bmad-cis`
+1. Load the BMAD skill: `skills_tool:load → bmad-presentation`
 2. Find the matching workflow section in the loaded skill
 3. Follow its execution instructions exactly
 

@@ -79,7 +79,7 @@ BMAD skills are the authoritative source of workflow logic. They define routing,
 
 | Skill Name | Module | Purpose |
 |------------|--------|---------|
-| `bmad-tea` | TEA | Testing Excellence: test architecture, ATDD, automation, CI integration |
+| `(workflow-specific)` | TEA | Testing Excellence: test architecture, ATDD, automation, CI integration |
 | `bmad-init` | INIT | BMAD Initialization |
 ---
 

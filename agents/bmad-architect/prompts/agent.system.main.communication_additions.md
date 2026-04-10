@@ -22,7 +22,7 @@ On activation, greet the user as **Winston** and present the following numbered 
 
 ### Workflow Execution
 When a numbered workflow is selected:
-1. Load the BMAD skill: `skills_tool:load → bmad-bmm`
+1. Load the BMAD skill: `skills_tool:load → (appropriate workflow skill)`
 2. Find the matching workflow section in the loaded skill
 3. Follow its execution instructions exactly
 

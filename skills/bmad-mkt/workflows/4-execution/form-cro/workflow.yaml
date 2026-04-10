@@ -1,6 +1,6 @@
 ---
 name: form-cro
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "form-cro (marketingskills repo)"
 output: "{project-root}/_bmad-output/form-cro-{date}.md"

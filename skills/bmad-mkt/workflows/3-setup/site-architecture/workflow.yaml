@@ -1,6 +1,6 @@
 ---
 name: site-architecture
-agent: content-channels-lead
+agent: content-manager
 phase: 3-setup
 source: "site-architecture (marketingskills repo)"
 output: "{project-root}/_bmad-output/site-architecture-{date}.md"

@@ -79,7 +79,7 @@ BMAD skills are the authoritative source of workflow logic. They define routing,
 
 | Skill Name | Module | Purpose |
 |------------|--------|---------|
-| `bmad-bmm` | BMM | Full software development lifecycle — product brief through implementation |
+| `(workflow-specific)` | BMM | Per-workflow skills — load the correct one for your task (e.g. bmad-dev-story, bmad-create-prd) |
 | `bmad-init` | INIT | BMAD Initialization |
 ---
 

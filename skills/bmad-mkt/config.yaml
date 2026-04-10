@@ -26,7 +26,7 @@ phases:
 # BMK specialist agents
 agents:
   - marketing-strategist
-  - content-channels-lead
+  - content-manager
   - growth-engineer
 
 # Teams

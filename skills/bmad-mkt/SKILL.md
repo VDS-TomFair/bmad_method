@@ -289,43 +289,43 @@ Use these short codes or fuzzy phrases to activate BMK specialist agents directl
 | `MP` | market-positioning | marketing-strategist | Define competitive positioning and ICP |
 | `MY` | marketing-psychology | marketing-strategist | Apply behavioral science to marketing |
 | `PS` | pricing-strategy | marketing-strategist | Design pricing models and packaging |
-| `CS` | content-strategy | content-channels-lead | Plan content and editorial calendar |
+| `CS` | content-strategy | content-manager | Plan content and editorial calendar |
 | `LS` | launch-strategy | marketing-strategist | Plan product launches |
-| `LM` | lead-magnets | content-channels-lead | Design lead generation content |
+| `LM` | lead-magnets | content-manager | Design lead generation content |
 | `MI` | marketing-ideas | marketing-strategist | Brainstorm growth tactics |
-| `SP` | seo-plan | content-channels-lead | Develop SEO strategy and roadmap |
-| `AT` | analytics-tracking | content-channels-lead | Set up GA4 and event tracking |
-| `SA` | site-architecture | content-channels-lead | Plan site structure and URLs |
-| `ST` | seo-technical | content-channels-lead | Audit technical SEO |
-| `SM` | seo-sitemap | content-channels-lead | Generate XML sitemaps |
-| `SH` | seo-hreflang | content-channels-lead | Implement international SEO |
-| `CW` | copywriting | content-channels-lead | Write marketing page copy |
-| `CE` | copy-editing | content-channels-lead | Edit existing marketing copy |
-| `ES` | email-sequence | content-channels-lead | Create drip and nurture sequences |
-| `CL` | cold-email | content-channels-lead | Write B2B outreach emails |
-| `SC` | social-content | content-channels-lead | Create social media content |
-| `PA` | paid-ads | content-channels-lead | Plan paid advertising campaigns |
-| `AC` | ad-creative | content-channels-lead | Generate ad headlines and variations |
-| `AU` | seo-audit | content-channels-lead | Run comprehensive SEO audits |
-| `AI` | ai-seo | content-channels-lead | Optimize for AI search engines |
-| `PG` | seo-page | content-channels-lead | Analyze single-page SEO |
-| `CN` | seo-content | content-channels-lead | Audit content quality and E-E-A-T |
-| `IM` | seo-images | content-channels-lead | Optimize images for SEO |
-| `SS` | seo-schema | content-channels-lead | Generate schema markup |
-| `GE` | seo-geo | content-channels-lead | Optimize for AI Overviews |
-| `PR` | programmatic-seo | content-channels-lead | Build pages at scale |
-| `SF` | signup-flow | content-channels-lead | Optimize signup and trial flows |
-| `FC` | form-cro | content-channels-lead | Optimize lead capture forms |
-| `OC` | onboarding-cro | content-channels-lead | Improve user activation |
-| `PC` | popup-cro | content-channels-lead | Optimize conversion popups |
-| `PU` | paywall-upgrade | content-channels-lead | Design upgrade screens |
+| `SP` | seo-plan | content-manager | Develop SEO strategy and roadmap |
+| `AT` | analytics-tracking | content-manager | Set up GA4 and event tracking |
+| `SA` | site-architecture | content-manager | Plan site structure and URLs |
+| `ST` | seo-technical | content-manager | Audit technical SEO |
+| `SM` | seo-sitemap | content-manager | Generate XML sitemaps |
+| `SH` | seo-hreflang | content-manager | Implement international SEO |
+| `CW` | copywriting | content-manager | Write marketing page copy |
+| `CE` | copy-editing | content-manager | Edit existing marketing copy |
+| `ES` | email-sequence | content-manager | Create drip and nurture sequences |
+| `CL` | cold-email | content-manager | Write B2B outreach emails |
+| `SC` | social-content | content-manager | Create social media content |
+| `PA` | paid-ads | content-manager | Plan paid advertising campaigns |
+| `AC` | ad-creative | content-manager | Generate ad headlines and variations |
+| `AU` | seo-audit | content-manager | Run comprehensive SEO audits |
+| `AI` | ai-seo | content-manager | Optimize for AI search engines |
+| `PG` | seo-page | content-manager | Analyze single-page SEO |
+| `CN` | seo-content | content-manager | Audit content quality and E-E-A-T |
+| `IM` | seo-images | content-manager | Optimize images for SEO |
+| `SS` | seo-schema | content-manager | Generate schema markup |
+| `GE` | seo-geo | content-manager | Optimize for AI Overviews |
+| `PR` | programmatic-seo | content-manager | Build pages at scale |
+| `SF` | signup-flow | content-manager | Optimize signup and trial flows |
+| `FC` | form-cro | content-manager | Optimize lead capture forms |
+| `OC` | onboarding-cro | content-manager | Improve user activation |
+| `PC` | popup-cro | content-manager | Optimize conversion popups |
+| `PU` | paywall-upgrade | content-manager | Design upgrade screens |
 | `CR` | page-cro | growth-engineer | Optimize conversion pages |
 | `AB` | ab-test | growth-engineer | Design A/B and multivariate tests |
 | `RP` | referral | growth-engineer | Build referral programs |
 | `FT` | free-tool | growth-engineer | Design marketing tools |
 | `RV` | revops | growth-engineer | Improve revenue operations |
 | `SE` | sales-enablement | growth-engineer | Create sales collateral |
-| `CP` | competitor-pages | content-channels-lead | Build SEO competitor pages |
+| `CP` | competitor-pages | content-manager | Build SEO competitor pages |
 | `CH` | churn | growth-engineer | Prevent user cancellation |
 | `GP` | gtm-planning | marketing-strategist | Orchestrate go-to-market |
 | `CM` | campaign-sprint | growth-engineer | Execute campaign sprints |

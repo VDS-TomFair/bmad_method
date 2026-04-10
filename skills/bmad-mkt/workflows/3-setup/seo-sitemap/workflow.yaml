@@ -1,6 +1,6 @@
 ---
 name: seo-sitemap
-agent: content-channels-lead
+agent: content-manager
 phase: 3-setup
 source: "seo-sitemap (marketingskills repo)"
 output: "{project-root}/_bmad-output/seo-sitemap-{date}.md"

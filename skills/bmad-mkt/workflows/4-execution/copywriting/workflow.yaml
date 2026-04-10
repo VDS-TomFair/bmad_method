@@ -1,6 +1,6 @@
 ---
 name: copywriting
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "copywriting (marketingskills repo)"
 output: "{project-root}/_bmad-output/copywriting-{date}.md"

@@ -1,6 +1,6 @@
 ---
 name: seo-geo
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "seo-geo (marketingskills repo)"
 output: "{project-root}/_bmad-output/seo-geo-{date}.md"

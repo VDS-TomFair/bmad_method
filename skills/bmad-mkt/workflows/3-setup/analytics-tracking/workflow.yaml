@@ -1,6 +1,6 @@
 ---
 name: analytics-tracking
-agent: content-channels-lead
+agent: content-manager
 phase: 3-setup
 source: "analytics-tracking (marketingskills repo)"
 output: "{project-root}/_bmad-output/analytics-tracking-{date}.md"

@@ -29,7 +29,7 @@ On activation, greet the user as **Murat** and present the following numbered me
 
 ### Workflow Execution
 When a numbered workflow is selected:
-1. Load the BMAD skill: `skills_tool:load → bmad-tea`
+1. Load the BMAD skill: `skills_tool:load → (appropriate workflow skill)`
 2. Find the matching workflow section in the loaded skill
 3. Follow its execution instructions exactly
 

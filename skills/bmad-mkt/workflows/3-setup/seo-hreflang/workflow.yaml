@@ -1,6 +1,6 @@
 ---
 name: seo-hreflang
-agent: content-channels-lead
+agent: content-manager
 phase: 3-setup
 source: "seo-hreflang (marketingskills repo)"
 output: "{project-root}/_bmad-output/seo-hreflang-{date}.md"

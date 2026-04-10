@@ -16,4 +16,4 @@ context: |
   Use the **memory_save** tool to save decisions, preferences, and important notes. Keep entries concise and descriptive.
 
   ### Sidecar Write-Back — Optional
-  For significant decisions, also append to a file in `.a0proj/knowledge/bmad-content-channels/` using `text_editor:patch`.
+  For significant decisions, also append to a file in `.a0proj/knowledge/bmad-content-manager/` using `text_editor:patch`.

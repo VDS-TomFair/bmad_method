@@ -14,5 +14,5 @@
   "memory_memorize_enabled": true,
   "memory_memorize_consolidation": true,
   "memory_memorize_replace_threshold": 0.9,
-  "agent_memory_subdir": "bmad-content-channels"
+  "agent_memory_subdir": "bmad-content-manager"
 }

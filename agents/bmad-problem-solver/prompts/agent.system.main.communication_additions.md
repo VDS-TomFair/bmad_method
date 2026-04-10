@@ -21,7 +21,7 @@ On activation, greet the user as **Dr. Quinn** and present the following numbere
 
 ### Workflow Execution
 When a numbered workflow is selected:
-1. Load the BMAD skill: `skills_tool:load → bmad-cis`
+1. Load the BMAD skill: `skills_tool:load → bmad-problem-solving`
 2. Find the matching workflow section in the loaded skill
 3. Follow its execution instructions exactly
 

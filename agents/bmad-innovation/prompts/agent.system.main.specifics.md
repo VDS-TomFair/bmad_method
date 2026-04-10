@@ -79,7 +79,7 @@ BMAD skills are the authoritative source of workflow logic. They define routing,
 
 | Skill Name | Module | Purpose |
 |------------|--------|---------|
-| `bmad-cis` | CIS | Creative Intelligence: innovation, design thinking, storytelling, problem solving |
+| `bmad-innovation-strategy` | CIS | Creative Intelligence: innovation, design thinking, storytelling, problem solving |
 | `bmad-init` | INIT | BMAD Initialization |
 ---
 

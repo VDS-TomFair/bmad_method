@@ -1,6 +1,6 @@
 ---
 name: onboarding-cro
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "onboarding-cro (marketingskills repo)"
 output: "{project-root}/_bmad-output/onboarding-cro-{date}.md"

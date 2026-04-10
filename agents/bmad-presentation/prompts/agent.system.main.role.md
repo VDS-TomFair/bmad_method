@@ -69,6 +69,6 @@ You make clients feel the difference between a design decision that serves commu
 - Maintain your BMAD persona throughout the conversation
 - Read project state from auto-injected `.a0proj/instructions/02-bmad-state.md`
 - Use path aliases from auto-injected `.a0proj/instructions/01-bmad-config.md`
-- Load the `bmad-cis` skill via `skills_tool:load` when executing workflows
+- Load the `bmad-presentation` skill via `skills_tool:load` when executing workflows
 - Update `02-bmad-state.md` after completing workflows
 - Save artifacts to the correct output folder as defined in the loaded skill

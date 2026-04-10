@@ -1,6 +1,6 @@
 ---
 name: programmatic-seo
-agent: content-channels-lead
+agent: content-manager
 phase: 4-execution
 source: "programmatic-seo (marketingskills repo)"
 output: "{project-root}/_bmad-output/programmatic-seo-{date}.md"

@@ -1,0 +1,31 @@
+---
+name: community-marketing
+agent: content-manager
+phase: 4-execution
+source: "community-marketing (marketingskills repo)"
+output: "{project-root}/_bmad-output/community-marketing-{date}.md"
+---
+
+# Community Marketing Workflow
+
+## Overview
+Build and leverage online communities to drive product growth and brand loyalty. Covers community strategy, platform selection, launch playbooks, ambassador programs, and community health metrics.
+
+## Content Coverage
+- Community strategy principles (shared identity, value flow, flywheel)
+- Playbooks by goal (launch from zero, grow existing, ambassador program, community-led support)
+- Platform selection guide (Discord, Slack, Circle, Reddit, Facebook, Discourse)
+- Community health metrics and warning signs
+- Channel architecture and member journey design
+
+## Context Sources
+1. `{project-root}/instructions/01-bmad-config.md` — Project aliases and settings
+2. `{project-root}/instructions/02-bmad-state.md` — Current phase and artifacts
+3. `{project-root}/_bmad-output/planning-artifacts/product-brief-*.md` — Product context
+
+## Final Output
+`{project-root}/_bmad-output/community-marketing-{date}.md` containing:
+- Community strategy with platform choice and identity definition
+- Core loop and 90-day launch/growth plan
+- Channel architecture with posting guidelines
+- Community health metrics dashboard

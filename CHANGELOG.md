@@ -5,6 +5,31 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.1.0] — 2026-04-11
+
+### BMK Marketing Module — New Module
+
+#### Added
+
+- **BMK Marketing Module** (`skills/bmad-mkt/`) — 46 workflows across 7 categories: discovery, strategy, setup, execution, growth, retention, and orchestration
+- **3 new specialist agents:**
+  - `bmad-marketing-strategist` (Elara) — market positioning, competitive analysis, go-to-market planning, customer research
+  - `bmad-content-manager` (Mia) — content marketing, SEO, editorial planning, multi-channel distribution, campaign management
+  - `bmad-growth-engineer` (Kai) — CRO, A/B testing, analytics, revenue operations, churn prevention
+- **6 module skill** — `bmad-mkt` skill with full workflow library, module-help.csv routing, and config
+- **Validation:** All 46 module-help.csv entries validated with zero broken references — see `skills/bmad-mkt/VALIDATION-REPORT.md`
+
+#### Changed
+
+- **Agent count:** 20 → 23 specialized agents
+- **Skill count:** 5 → 6 global skills
+- **Version bumped:** 1.0.8 → 1.1.0 (minor version — new module capability)
+
+#### Notes
+
+- BMK is a default-install module. To exclude, remove `skills/bmad-mkt/` and the 3 agent directories (`agents/bmad-marketing-strategist/`, `agents/bmad-content-manager/`, `agents/bmad-growth-engineer/`)
+
+---
 
 ## [1.0.8] — 2026-04-10
 

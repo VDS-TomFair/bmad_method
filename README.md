@@ -1,10 +1,10 @@
 # BMAD Method for Agent Zero
 
-[![Version](https://img.shields.io/badge/version-1.0.8-blue)]() [![License: MIT](https://img.shields.io/badge/license-MIT-green)]() [![Agent Zero](https://img.shields.io/badge/A0-compatible-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-1.1.0-blue)]() [![License: MIT](https://img.shields.io/badge/license-MIT-green)]() [![Agent Zero](https://img.shields.io/badge/A0-compatible-brightgreen)]()
 
 **Structured AI-assisted software development — from idea to shipped code.**
 
-BMAD (Business Method for Agile Development) is a structured AI-first product development framework. This plugin provides a full drop-in Agent Zero integration: 20 specialized agent personas, 5 global skills, and the complete workflow library.
+BMAD (Business Method for Agile Development) is a structured AI-first product development framework. This plugin provides a full drop-in Agent Zero integration: 23 specialized agent personas, 6 global skills, and the complete workflow library.
 
 ---
 
@@ -52,6 +52,9 @@ User → BMad Master → [routes to specialist] → artifact produced → state 
 | **BMB** — Builder Module | `bmad-bmb` | Meta-module for creating and extending BMAD agents, workflows, and modules |
 | **TEA** — Testing Excellence Accelerator | `bmad-tea` | Test architecture, ATDD, automation, CI, NFR assessment |
 | **CIS** — Creative Intelligence Suite | `bmad-cis` | Innovation strategy, design thinking, storytelling, structured problem solving |
+| **BMK** — Marketing Module | `bmad-mkt` | Market strategy, content marketing, growth engineering, community, and analytics |
+
+> **Note:** BMK is a default-install module. To exclude it, remove `skills/bmad-mkt/` and the 3 agent directories (`agents/bmad-marketing-strategist/`, `agents/bmad-content-manager/`, `agents/bmad-growth-engineer/`).
 
 ---
 
@@ -79,6 +82,9 @@ User → BMad Master → [routes to specialist] → artifact produced → state 
 | bmad-agent-builder | Bond 🤖 | `BA` `EA` `VA` `VS` `VF` | BMB |
 | bmad-workflow-builder | Wendy 🔄 | `BW` `EW` `VW` `MV` `RW` `CW` | BMB |
 | bmad-module-builder | Morgan 🏗️ | `PB` `CM` `EM` `VM` `IM` | BMB |
+| bmad-marketing-strategist | Elara 📈 | `MP` `MY` `MPS` `MCS` `LS` `LM` `MI` `GP` `CRE` | BMK |
+| bmad-content-manager | Mia ✍️ | `MSP` `MAT` `SA` `MST` `SM` `SH` `MCW` `MCE` `MES` `CL` `SC` `PA` `AC` `AU` `AI` `PG` `CN` `IM` `MSS` `GE` `MPR` `SF` `FC` `OC` `PC` `PU` `MCP` `MCM` `CMM` | BMK |
+| bmad-growth-engineer | Kai 📊 | `MCR` `AB` `RP` `FT` `RO` `SE` `CH` `GA` | BMK |
 
 ---
 
@@ -148,9 +154,9 @@ BMAD ships a live project status dashboard. After installation, the BMAD button 
 
 ## Version
 
-**Plugin:** 1.0.8 | **Upstream:** Core 6.2.2 · BMB 1.5.0 · TEA 1.9.1 · CIS 0.1.9
+**Plugin:** 1.1.0 | **Upstream:** Core 6.2.2 · BMB 1.5.0 · TEA 1.9.1 · CIS 0.1.9 · BMK 1.0.0
 
-**Upstream parity: ~98%** — full coverage across BMM, BMB, TEA, CIS modules. Only BMGD (game dev) module deferred. Verified against [bmad-code-org/BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD).
+**Upstream parity: ~98%** — full coverage across BMM, BMB, TEA, CIS, BMK modules. Only BMGD (game dev) module deferred. Verified against [bmad-code-org/BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD).
 
 See [CHANGELOG.md](./CHANGELOG.md) for full version history.
 
@@ -168,6 +174,7 @@ See [CHANGELOG.md](./CHANGELOG.md) for full version history.
 - [BMAD-METHOD Core](https://github.com/bmad-code-org/BMAD-METHOD)
 - [bmad-builder (BMB)](https://github.com/bmad-code-org/bmad-builder)
 - [bmad-method-test-architecture-enterprise (TEA)](https://github.com/bmad-code-org/bmad-method-test-architecture-enterprise)
+- [bmad-marketing (BMK)](https://github.com/bmad-code-org/bmad-marketing)
 - [bmad-module-creative-intelligence-suite (CIS)](https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite)
 
 ---

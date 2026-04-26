@@ -100,31 +100,19 @@ def _collect_routing_rows(active_modules: list | None, csv_files: list | None = 
             for row in reader:
                 module = row.get("module", "").strip()
                 row_phase = row.get("phase", "").strip()
-                # Support new 13-col format (display-name, menu-code, skill)
-                # and old format (name, code, agent-name/agent) — dual read
-                name = (
-                    row.get("display-name", "").strip()
-                    or row.get("name", "").strip()
-                )
-                code = (
-                    row.get("menu-code", "").strip()
-                    or row.get("code", "").strip()
-                )
+                # All CSVs use unified 13-col schema (display-name, menu-code, skill)
+                name = row.get("display-name", "").strip()
+                code = row.get("menu-code", "").strip()
                 description = row.get("description", "").strip()
                 # action = canonical skill name for skills_tool:load
                 # args = direct workflow file path fallback when action is empty
                 action = row.get("action", "").strip()
                 args = row.get("args", "").strip()
-                # New format uses 'agent'; old formats: 'skill', 'agent-name'
-                agent_name = (
-                    row.get("agent", "").strip()
-                    or row.get("skill", "").strip()
-                    or row.get("agent-name", "").strip()
-                )
+                # agent column maps to profile name for call_subordinate
+                agent_name = row.get("skill", "").strip()
                 # Agent display name — fallback to agent_name
                 agent_display = (
                     row.get("agent-display-name", "").strip()
-                    or row.get("agent-title", "").strip()
                     or agent_name
                 )
 

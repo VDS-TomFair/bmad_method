@@ -1,6 +1,13 @@
 ---
 name: bmad-bmb-setup
 description: Sets up BMad Builder module in a project. Use when the user requests to 'install bmb module', 'configure BMad Builder', or 'setup BMad Builder'.
+trigger_patterns:
+  - /bmad-bmb-setup
+  - /setup-builder
+  - /SB
+  - setup builder module
+  - install bmad builder
+  - configure bmad builder
 ---
 
 # Module Setup

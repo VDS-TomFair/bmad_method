@@ -20,8 +20,8 @@ check_agents  = _core_mod.check_agents
 check_modules = _core_mod.check_modules
 read_tests    = _core_mod.read_tests
 SKILL_NAMES   = _core_mod.SKILL_NAMES
-
-# --- Dynamic path resolution ---
+AGENT_NAMES   = _core_mod.AGENT_NAMES
+PHASE_ACTIONS = _core_mod.PHASE_ACTIONS
 # All paths are resolved at runtime from CLI args or self-discovery.
 # No hardcoded absolute paths.
 
@@ -62,42 +62,6 @@ def _resolve_project_root(project_path_arg: str | None) -> Path | None:
 NOW          = datetime.now().strftime("%Y-%m-%d %H:%M")
 DIV          = "\u2501" * 45
 
-AGENT_NAMES = {
-    "bmad-master":              "BMad Master",
-    "bmad-analyst":             "Mary (Analyst)",
-    "bmad-pm":                  "John (PM)",
-    "bmad-architect":           "Winston (Architect)",
-    "bmad-dev":                 "Amelia (Dev)",
-    "bmad-qa":                  "Quinn (QA)",
-    "bmad-sm":                  "Bob (Scrum Master)",
-    "bmad-tech-writer":         "Paige (Tech Writer)",
-    "bmad-ux-designer":         "Sally (UX)",
-    "bmad-quick-dev":           "Barry (Quick Dev)",
-    "bmad-agent-builder":       "Bond (Agent Builder)",
-    "bmad-workflow-builder":    "Wendy (Workflow Builder)",
-    "bmad-module-builder":      "Morgan (Module Builder)",
-    "bmad-test-architect":      "Murat (Test Architect)",
-    "bmad-brainstorming-coach": "Carson (Brainstorming)",
-    "bmad-problem-solver":      "Dr. Quinn (Problem Solver)",
-    "bmad-design-thinking":     "Maya (Design Thinking)",
-    "bmad-innovation":          "Victor (Innovation)",
-    "bmad-storyteller":         "Sophia (Storyteller)",
-    "bmad-presentation":        "Caravaggio (Presentation)",
-}
-
-PHASE_ACTIONS = {
-    "ready":   ("Start a new workflow",
-                "Type LW to list workflows, or describe what you want to build"),
-    "1":       ("Continue Phase 1 Analysis",
-                "Ask Mary (Analyst) to continue research or finalize product brief"),
-    "2":       ("Continue Phase 2 Planning",
-                "Ask John (PM) to continue PRD, or Sally (UX) for UX design"),
-    "3":       ("Continue Phase 3 Solutioning",
-                "Ask Winston (Architect) to finalize the architecture document"),
-    "4":       ("Continue Phase 4 Implementation",
-                "Ask Bob (SM) for sprint planning or Amelia (Dev) for next story"),
-    "unknown": ("Initialize BMAD", "Run: bmad init"),
-}
 
 
 def wwn(what, why, nxt, indent="   "):

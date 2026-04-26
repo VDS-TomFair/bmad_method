@@ -38,22 +38,19 @@ _alias_cache: dict = {}
 
 BMAD_MASTER_PROFILE = "bmad-master"
 
-# Skill directory name → module code used in module-help.csv
-SKILL_TO_MODULE = {
-    "bmad-init": "core",
-    "bmad-bmm": "bmm",
-    "bmad-bmb": "bmb",
-    "bmad-cis": "cis",
-    "bmad-tea": "tea",
-}
 
-# Phase → relevant modules map
+# Canonical phase bucket keys — single source of truth for phase-bucket dicts
+PHASE_BUCKETS = ["1-analysis", "2-planning", "3-solutioning", "4-implementation"]
+
+# Phase → relevant modules map (derived from PHASE_BUCKETS)
 PHASE_MODULES = {
     "ready":            ["core", "bmm", "bmb", "tea", "cis"],
-    "1-analysis":       ["core", "bmm", "cis"],
-    "2-planning":       ["core", "bmm", "cis"],
-    "3-solutioning":    ["core", "bmm", "tea", "cis"],
-    "4-implementation": ["core", "bmm", "tea", "cis"],
+    **{PHASE_BUCKETS[i]: v for i, v in enumerate([
+        ["core", "bmm", "cis"],       # 1-analysis
+        ["core", "bmm", "cis"],       # 2-planning
+        ["core", "bmm", "tea", "cis"], # 3-solutioning
+        ["core", "bmm", "tea", "cis"], # 4-implementation
+    ])},
     "bmb":              ["core", "bmb"],
     "cis":              ["core", "cis"],
 }
@@ -198,12 +195,7 @@ def _scan_artifact_existence(csv_files: list, alias_map: dict) -> dict:
     Phase is complete if ANY required=true artifact for that phase is found.
     AC-06: uses Path.glob() for performance.
     """
-    phase_map: dict = {
-        "1-analysis": (False, "no required artifact found"),
-        "2-planning": (False, "no required artifact found"),
-        "3-solutioning": (False, "no required artifact found"),
-        "4-implementation": (False, "no required artifact found"),
-    }
+    phase_map: dict = {k: (False, "no required artifact found") for k in PHASE_BUCKETS}
     for csv_path in csv_files:
         try:
             content = csv_path.read_text(encoding="utf-8")

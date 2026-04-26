@@ -2,6 +2,13 @@
 name: bmad-distillator
 description: Lossless LLM-optimized compression of source documents. Use when the user requests to 'distill documents' or 'create a distillate'.
 argument-hint: "[to create provide input paths] [--validate distillate-path to confirm distillate is lossless and optimized]"
+trigger_patterns:
+  - /bmad-distillator
+  - /distill
+  - /DG
+  - distill documents
+  - compress documents
+  - create distillate
 ---
 
 # Distillator: A Document Distillation Engine

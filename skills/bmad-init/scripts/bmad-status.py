@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """BMAD Framework Status Dashboard v0.5 - Dynamic path resolution + WHAT/WHY/NEXT."""
-import argparse, re, sys, json, os, logging
+import argparse, sys, os, logging
 from datetime import datetime
 from pathlib import Path
 import importlib.util as _ilu

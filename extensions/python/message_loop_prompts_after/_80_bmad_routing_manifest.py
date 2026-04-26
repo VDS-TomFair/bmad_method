@@ -23,6 +23,8 @@ log = logging.getLogger(__name__)
 
 # Dynamic path resolution — works regardless of install method (plugin, symlink, dev)
 _PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+_SKILLS_DIR = _PLUGIN_ROOT / "skills"
+_BMAD_CONFIG_DIR = _PLUGIN_ROOT / "skills" / "bmad-init" / "_config"
 
 # Load shared state parser via importlib to avoid name collision with A0's 'helpers' package
 _core_path = str(_PLUGIN_ROOT / "helpers" / "bmad_status_core.py")

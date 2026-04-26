@@ -1,3 +1,13 @@
+---
+name: bmad-testarch
+trigger_patterns:
+  - /bmad-testarch
+  - /tea
+  - test architect
+  - testing module
+  - tea testing
+---
+
 name: bmad-testarch
 description: TEA Test Architect — Murat's knowledge base and workflows
 version: 1.0.0

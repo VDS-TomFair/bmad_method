@@ -97,7 +97,6 @@ def _collect_routing_rows(active_modules: list | None, csv_files: list | None = 
         csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
 
     for csv_path in csv_files:
-        skill_name = csv_path.parent.name
 
         try:
             content = _read_csv_cached(csv_path)

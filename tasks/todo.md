@@ -37,15 +37,15 @@
 
 ## Phase D — UX Surface
 
-- [ ] D1: Create `prompts/bmad.methodology.shared.md` (S) — Activation Protocol + Thinking Framework sections shared across all 20 agents
-- [ ] D2: Audit all 20 `main.specifics.md` to determine shared fragment scope (S) — OQ-D2 resolved: 7 sections byte-identical across 19 non-master agents; findings confirmed; target: `agents/_shared/prompts/bmad-agent-shared.md`
-- [ ] D3: Update 19 non-master `main.specifics.md` to use shared include (L) — OQ-D3 confirmed: `{{ include "bmad-agent-shared.md" }}` works; replace 7 shared sections; bmad-master excluded
-- [ ] D4: Remove static 19-agent table from `bmad-master/role.md` (XS) — Replace with routing guidance prose referencing `{{agent_profiles}}`
-- [ ] D5: Fix `_recommend()` caching in `api/_bmad_status.py` (S) — Accept pre-computed state/agents/skills/tests; no double I/O per refresh
-- [ ] D6: Dashboard error display (S) — Decide error UI strategy; ensure `x-text` only, store-gated; no `x-html`
-- [ ] D7: `project-context.md` stub in `bmad-init.sh` (XS) — Idempotent empty file creation at `$A0PROJ/knowledge/main/project-context.md`
-- [ ] D8: Party mode — solo implementation (M) — 8 ACs (AC-PM-01–08): roster display, agent selection, communicationStyle per agent, named-agent addressing, graceful exit, rotation, language config; document divergence from upstream (no subagent spawning, no `--model` flag)
-- [ ] D9: Plugin audit via `a0-review-plugin` (S) — Run audit; fix any Critical findings; save output to `docs/plugin-audit-v1.1.md`; depends on D4, D5, D6, D7, D8
+- [x] D1: Create `prompts/bmad.methodology.shared.md` (S) — Activation Protocol + Thinking Framework sections shared across all 20 agents
+- [x] D2: Audit all 20 `main.specifics.md` to determine shared fragment scope (S) — OQ-D2 resolved: 7 sections byte-identical across 19 non-master agents; findings confirmed; target: `agents/_shared/prompts/bmad-agent-shared.md`
+- [x] D3: Update 19 non-master `main.specifics.md` to use shared include (L) — OQ-D3 confirmed: `{{ include "bmad-agent-shared.md" }}` works; replace 7 shared sections; bmad-master excluded
+- [x] D4: Remove static 19-agent table from `bmad-master/role.md` (XS) — Replace with routing guidance prose referencing `{{agent_profiles}}`
+- [x] D5: Fix `_recommend()` caching in `api/_bmad_status.py` (S) — Accept pre-computed state/agents/skills/tests; no double I/O per refresh
+- [x] D6: Dashboard error display (S) — Decide error UI strategy; ensure `x-text` only, store-gated; no `x-html`
+- [x] D7: `project-context.md` stub in `bmad-init.sh` (XS) — Idempotent empty file creation at `$A0PROJ/knowledge/main/project-context.md`
+- [x] D8: Party mode — solo implementation (M) — 8 ACs (AC-PM-01–08): roster display, agent selection, communicationStyle per agent, named-agent addressing, graceful exit, rotation, language config; document divergence from upstream (no subagent spawning, no `--model` flag)
+- [x] D9: Plugin audit via `a0-review-plugin` (S) — Run audit; fix any Critical findings; save output to `docs/plugin-audit-v1.1.md`; depends on D4, D5, D6, D7, D8
 
 ## Checkpoints
 

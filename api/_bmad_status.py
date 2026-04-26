@@ -70,15 +70,20 @@ class BmadStatus(ApiHandler):
             state_file   = (project_root / ".a0proj/instructions/02-bmad-state.md") if project_root else None
             test_dir     = (project_root / ".a0proj/_bmad-output/test-artifacts")    if project_root else None
 
+            state  = self._read_state(state_file)
+            agents = self._check_agents()
+            skills = self._check_skills()
+            tests  = self._read_tests(test_dir)
+
             return {
                 "success":        True,
                 "generated":      datetime.now().strftime("%Y-%m-%d %H:%M"),
                 "project":        str(project_root) if project_root else None,
-                "state":          self._read_state(state_file),
-                "agents":         self._check_agents(),
-                "skills":         self._check_skills(),
-                "tests":          self._read_tests(test_dir),
-                "recommendation": self._recommend(state_file, test_dir),
+                "state":          state,
+                "agents":         agents,
+                "skills":         skills,
+                "tests":          tests,
+                "recommendation": self._recommend(state, agents, skills, tests),
             }
         except Exception as e:
             return {"success": False, "error": str(e)}
@@ -110,11 +115,7 @@ class BmadStatus(ApiHandler):
         return {"status": "ok", "passed": int(passed), "total": int(total), "verified": mtime,
                 "failing": int(total) - int(passed)}
 
-    def _recommend(self, state_file: Path | None, test_dir: Path | None):
-        state  = self._read_state(state_file)
-        agents = self._check_agents()
-        skills = self._check_skills()
-        tests  = self._read_tests(test_dir)
+    def _recommend(self, state: dict, agents: dict, skills: dict, tests: dict):
         issues = []
         if skills["broken"]:
             issues.append({"sev":"blocker","what":str(len(skills["broken"]))+" module(s) missing",

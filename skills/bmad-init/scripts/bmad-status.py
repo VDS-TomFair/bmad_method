@@ -3,7 +3,21 @@
 import argparse, re, sys, json
 from datetime import datetime
 from pathlib import Path
-from bmad_status_core import read_state, check_agents, check_modules, read_tests, SKILL_NAMES
+import importlib.util as _ilu
+
+# Load shared state parser from helpers/ — single source of truth
+_core_path = str(Path(__file__).resolve().parents[3] / "helpers" / "bmad_status_core.py")
+_spec = _ilu.spec_from_file_location("bmad_status_core", _core_path)
+if _spec is None:
+    print(f"ERROR: Cannot load bmad_status_core from {_core_path}", file=sys.stderr)
+    sys.exit(1)
+_core_mod = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(_core_mod)
+read_state    = _core_mod.read_state
+check_agents  = _core_mod.check_agents
+check_modules = _core_mod.check_modules
+read_tests    = _core_mod.read_tests
+SKILL_NAMES   = _core_mod.SKILL_NAMES
 
 # --- Dynamic path resolution ---
 # All paths are resolved at runtime from CLI args or self-discovery.

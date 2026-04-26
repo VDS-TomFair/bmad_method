@@ -8,9 +8,17 @@ Exported:
     check_modules(skills_dir) -> (ok_list, broken_list)
     read_tests(test_dir)  -> (passed_str|None, total_str|None, mtime_str|None)
 """
+import logging
 import re
 from datetime import datetime
 from pathlib import Path
+
+log = logging.getLogger(__name__)
+
+# Compiled regexes — MULTILINE for ^$ per-line, IGNORECASE for case-insensitive matching
+_PHASE_RE = re.compile(r"^[-\s]*Phase:\s*(.+)$", re.MULTILINE | re.IGNORECASE)
+_ARTIFACT_RE = re.compile(r"^[-\s]*Active Artifact:\s*(.+)$", re.MULTILINE | re.IGNORECASE)
+_ISSUE_RE = re.compile(r"(ARCH-|DEFECT-)\d+.*PENDING", re.IGNORECASE)
 
 SKILL_NAMES = ["bmad-init", "bmad-bmm", "bmad-bmb", "bmad-tea", "bmad-cis"]
 
@@ -24,13 +32,13 @@ def read_state(state_file: Path):
     if not state_file.exists():
         return {"phase": "unknown", "artifact": "none", "issues": []}
     text = state_file.read_text(encoding="utf-8")
-    phase    = re.search(r"Phase:\s*(.+)", text)
-    artifact = re.search(r"Active Artifact:\s*(.+)", text)
+    phase_match    = _PHASE_RE.search(text)
+    artifact_match = _ARTIFACT_RE.search(text)
     issues   = [l.strip().lstrip("-# ") for l in text.splitlines()
-                if re.search(r"(ARCH-|DEFECT-)\d+", l) and "PENDING" in l]
+                if _ISSUE_RE.search(l)]
     return {
-        "phase":    phase.group(1).strip()    if phase    else "unknown",
-        "artifact": artifact.group(1).strip() if artifact else "none",
+        "phase":    phase_match.group(1).strip().lower()    if phase_match    else "unknown",
+        "artifact": artifact_match.group(1).strip() if artifact_match else "none",
         "issues":   issues
     }
 

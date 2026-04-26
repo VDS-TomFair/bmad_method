@@ -14,6 +14,7 @@ import io
 import logging
 import traceback
 from pathlib import Path
+import importlib.util as _ilu
 from helpers.extension import Extension
 from helpers import files
 from agent import LoopData
@@ -22,8 +23,15 @@ log = logging.getLogger(__name__)
 
 # Dynamic path resolution — works regardless of install method (plugin, symlink, dev)
 _PLUGIN_ROOT = Path(__file__).resolve().parents[3]
-_SKILLS_DIR = _PLUGIN_ROOT / "skills"
-_BMAD_CONFIG_DIR = _PLUGIN_ROOT / "skills" / "bmad-init" / "_config"
+
+# Load shared state parser via importlib to avoid name collision with A0's 'helpers' package
+_core_path = str(_PLUGIN_ROOT / "helpers" / "bmad_status_core.py")
+_spec = _ilu.spec_from_file_location("bmad_status_core", _core_path)
+if _spec is None:
+    raise ImportError(f"Cannot load bmad_status_core from {_core_path}")
+_core_mod = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(_core_mod)
+_read_state = _core_mod.read_state
 
 # Module-level alias cache — populated once per config file path (AC-06)
 _alias_cache: dict = {}
@@ -378,12 +386,9 @@ class BmadRoutingManifest(Extension):
                 return
 
             if state_path:
-                state = state_path.read_text(encoding="utf-8")
-                for line in state.splitlines():
-                    if line.strip().startswith("- Phase:"):
-                        phase = line.split(":", 1)[1].strip().lower()
-                        active_modules = PHASE_MODULES.get(phase)
-                        break
+                state_result = _read_state(state_path)
+                phase = state_result["phase"]
+                active_modules = PHASE_MODULES.get(phase)
 
             # Collect routing rows from all module-help.csv files
             routing_rows = _collect_routing_rows(active_modules)

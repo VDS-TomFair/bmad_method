@@ -15,6 +15,9 @@ mkdir -p "$A0PROJ/knowledge/fragments"
 mkdir -p "$A0PROJ/knowledge/solutions"
 mkdir -p "$A0PROJ/instructions"
 
+# Create project-context.md stub (no-clobber — preserves user content on re-init)
+touch "$A0PROJ/knowledge/main/project-context.md"
+
 # Seed BMAD framework knowledge into project (idempotent — no-clobber preserves user edits)
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SEED_DIR="$SCRIPT_DIR/../seed-knowledge"

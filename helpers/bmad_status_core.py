@@ -110,10 +110,9 @@ def read_tests(test_dir: Path):
     text    = latest.read_text(encoding="utf-8")
     matches = re.findall(r"(\d+)\s+of\s+(\d+)[^\n]*PASS", text)
     if not matches:
-        import re as _re
-        m_pass = _re.search(r"PASS:\s*(\d+)", text)
-        m_partial = _re.search(r"PARTIAL:\s*(\d+)", text)
-        m_fail = _re.search(r"FAIL:\s*(\d+)", text)
+        m_pass = re.search(r"PASS:\s*(\d+)", text)
+        m_partial = re.search(r"PARTIAL:\s*(\d+)", text)
+        m_fail = re.search(r"FAIL:\s*(\d+)", text)
         if m_pass:
             passed = int(m_pass.group(1))
             partial = int(m_partial.group(1)) if m_partial else 0

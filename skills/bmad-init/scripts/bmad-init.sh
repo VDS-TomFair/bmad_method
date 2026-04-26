@@ -19,10 +19,14 @@ mkdir -p "$A0PROJ/instructions"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SEED_DIR="$SCRIPT_DIR/../seed-knowledge"
 if [ -d "$SEED_DIR" ]; then
-  cp -rn "$SEED_DIR/." "$A0PROJ/knowledge/main/"
+  if command -v rsync &>/dev/null; then
+    rsync -a --ignore-existing "$SEED_DIR/." "$A0PROJ/knowledge/main/"
+  else
+    cp -Rn "$SEED_DIR/." "$A0PROJ/knowledge/main/"
+  fi
   echo "BMAD seed knowledge copied to project knowledge base."
 else
-  echo "Warning: seed-knowledge directory not found at $SEED_DIR — skipping knowledge seed."
+  echo "Warning: seed-knowledge directory not found at $SEED_DIR — skipping knowledge seed." >&2
 fi
 
 # Write 01-bmad-config.md (only if not already present — immutable config)

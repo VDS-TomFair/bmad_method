@@ -32,8 +32,8 @@ export const store = createStore("bmadDashboard", {
             this.data = json;
             this.lastRefresh = new Date().toLocaleTimeString();
         } catch (e) {
+            this.error = e.message;
             toastFrontendError(e.message, "BMAD Method");
-        } finally {
             this.loading = false;
         }
     },

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """BMAD Framework Status Dashboard v0.5 - Dynamic path resolution + WHAT/WHY/NEXT."""
-import argparse, re, sys, json
+import argparse, re, sys, json, os, logging
 from datetime import datetime
 from pathlib import Path
 import importlib.util as _ilu
+
+log = logging.getLogger(__name__)
 
 # Load shared state parser from helpers/ — single source of truth
 _core_path = str(Path(__file__).resolve().parents[3] / "helpers" / "bmad_status_core.py")
@@ -38,19 +40,22 @@ def _resolve_project_root(project_path_arg: str | None) -> Path | None:
             return p
         return None
 
-    # Fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
-    projects_dir = Path("/a0/usr/projects")
-    if projects_dir.exists():
-        candidates = []
-        for proj in projects_dir.iterdir():
-            if not proj.is_dir():
-                continue
-            state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
-            if state.exists():
-                candidates.append((state.stat().st_mtime, proj))
-        if candidates:
-            candidates.sort(reverse=True)
-            return candidates[0][1]
+    # Dev-only fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
+    # Gated behind BMAD_DEV_MODE env var — not for production use
+    if os.environ.get("BMAD_DEV_MODE"):
+        projects_dir = Path("/a0/usr/projects")
+        if projects_dir.exists():
+            candidates = []
+            for proj in projects_dir.iterdir():
+                if not proj.is_dir():
+                    continue
+                state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
+                if state.exists():
+                    candidates.append((state.stat().st_mtime, proj))
+            if candidates:
+                candidates.sort(reverse=True)
+                log.warning("BMAD_DEV_MODE: using cross-project mtime fallback → %s", candidates[0][1])
+                return candidates[0][1]
     return None
 
 

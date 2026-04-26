@@ -33,7 +33,6 @@ def _resolve_project_root(ctxid: str | None) -> Path | None:
     Resolution order:
     1. Active context → project name → project folder (correct A0-aware method)
     2. Dev/symlink fallback: walk up from plugin dir looking for .a0proj
-    3. Production fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
     """
     # Stage 1: resolve from active A0 context (the right way)
     if ctxid:
@@ -50,26 +49,12 @@ def _resolve_project_root(ctxid: str | None) -> Path | None:
                     else:
                         return None  # project exists but no bmad init — show not_initialized
         except Exception:
-            pass  # fall through to fallbacks
+            pass  # fall through to fallback
 
     # Stage 2: dev/symlink mode — .a0proj is an ancestor of the real file location
     for parent in [_PLUGIN_ROOT, *_PLUGIN_ROOT.parents]:
         if (parent / ".a0proj").exists():
             return parent
-
-    # Stage 3: production fallback — scan user projects for most-recently-modified BMAD state
-    projects_dir = Path("/a0/usr/projects")
-    if projects_dir.exists():
-        candidates = []
-        for proj in projects_dir.iterdir():
-            if not proj.is_dir():
-                continue
-            state = proj / ".a0proj/instructions/02-bmad-state.md"
-            if state.exists():
-                candidates.append((state.stat().st_mtime, proj))
-        if candidates:
-            candidates.sort(reverse=True)
-            return candidates[0][1]
 
     return None  # no BMAD project found
 

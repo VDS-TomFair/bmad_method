@@ -72,23 +72,6 @@ def _resolve_state_file(agent) -> Path | None:
     except Exception:
         pass
 
-    # Fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
-    try:
-        projects_dir = Path("/a0/usr/projects")
-        if projects_dir.exists():
-            candidates = []
-            for proj in projects_dir.iterdir():
-                if not proj.is_dir():
-                    continue
-                state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
-                if state.exists():
-                    candidates.append((state.stat().st_mtime, state))
-            if candidates:
-                candidates.sort(reverse=True)
-                return candidates[0][1]
-    except Exception:
-        pass
-
     return None
 
 

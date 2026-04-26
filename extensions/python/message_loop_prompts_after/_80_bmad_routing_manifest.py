@@ -11,10 +11,14 @@ for bmad-master to use on every message loop.
 
 import csv
 import io
+import logging
+import traceback
 from pathlib import Path
 from helpers.extension import Extension
 from helpers import files
 from agent import LoopData
+
+log = logging.getLogger(__name__)
 
 # Dynamic path resolution — works regardless of install method (plugin, symlink, dev)
 _PLUGIN_ROOT = Path(__file__).resolve().parents[3]
@@ -327,7 +331,7 @@ def _build_staleness_warnings(alias_map: dict) -> str:
                     )
 
     except Exception:
-        pass  # Never block routing
+        log.warning("BMAD routing: staleness check failed: %s", traceback.format_exc())
 
     if not warnings:
         return ""
@@ -421,4 +425,4 @@ class BmadRoutingManifest(Extension):
             loop_data.extras_temporary["bmad_routing_manifest"] = manifest_prompt
 
         except Exception:
-            pass
+            log.warning("BMAD routing: execute failed: %s", traceback.format_exc())

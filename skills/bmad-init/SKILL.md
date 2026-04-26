@@ -5,6 +5,10 @@ version: "1.0.0"
 author: "BMAD"
 tags: ["bmad", "init", "bootstrap", "orchestrator", "help"]
 trigger_patterns:
+  - "/bmad"
+  - "/bmad-init"
+  - "/bmad-help"
+  - "/bmad-status"
   - "initialize bmad"
   - "bmad init"
   - "init bmad"

@@ -36,8 +36,18 @@ _spec.loader.exec_module(_core_mod)
 _read_state = _core_mod.read_state
 
 # Module-level caches — keyed by (path_str, mtime_ns) for auto-invalidation on file change
+_MAX_CACHE_ENTRIES = 128
 _alias_cache: dict = {}
 _csv_cache: dict = {}
+
+
+def _evict_if_full(cache: dict) -> None:
+    """Remove oldest entries when cache exceeds _MAX_CACHE_ENTRIES."""
+    if len(cache) > _MAX_CACHE_ENTRIES:
+        # Remove oldest half (FIFO eviction — good enough for mtime-keyed caches)
+        keys_to_remove = list(cache.keys())[:len(cache) // 2]
+        for k in keys_to_remove:
+            del cache[k]
 
 BMAD_MASTER_PROFILE = "bmad-master"
 
@@ -66,6 +76,7 @@ def _read_csv_cached(csv_path: Path) -> str:
     cache_key = (str(csv_path), mtime_ns)
     if cache_key not in _csv_cache:
         _csv_cache[cache_key] = csv_path.read_text(encoding="utf-8")
+        _evict_if_full(_csv_cache)
     return _csv_cache[cache_key]
 
 
@@ -179,6 +190,7 @@ def _parse_alias_map(config_path: Path) -> dict:
         pass
 
     _alias_cache[cache_key] = alias_map
+    _evict_if_full(_alias_cache)
     return alias_map
 
 

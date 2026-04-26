@@ -26,14 +26,14 @@
 
 ## Phase C — Routing Consolidation
 
-- [ ] C0: Migrate `skills/bmad-init/core/module-help.csv` to upstream 13-col schema (S) — Sole CSV on old schema; migrate before C1 removes dual-read; no dependencies
-- [ ] C1: Align remaining 4 `module-help.csv` files to upstream 13-column schema (L) — Depends on C0; normalize columns; remove old-name fallbacks from routing extension
-- [ ] C2: Add `trigger_patterns` to all `bmad-bmm` workflow SKILL.md files (L) — ~20 files; slash-style + natural-language triggers; no `bmad:` block
-- [ ] C3: Add `trigger_patterns` to all `bmad-cis` workflow SKILL.md files (M) — ~5 files; same pattern as C2
-- [ ] C4: Add `trigger_patterns` to all `bmad-tea` workflow SKILL.md files (M) — ~9 files; same pattern as C2
-- [ ] C5: Add `trigger_patterns` to all `bmad-bmb` workflow SKILL.md files (M) — ~5 files; same pattern as C2
-- [ ] C6: Add `trigger_patterns` to `bmad-init/core` workflow SKILL.md files (S) — ~3 files; same pattern as C2
-- [ ] C7: Verify routing + discoverability, expand tests (S) — VPS A2A smoke tests; pytest for CSV schema + trigger_patterns coverage
+- [x] C0: Migrate `skills/bmad-init/core/module-help.csv` to upstream 13-col schema (S) — Sole CSV on old schema; migrate before C1 removes dual-read; no dependencies
+- [x] C1: Align remaining 4 `module-help.csv` files to upstream 13-column schema (L) — Depends on C0; normalize columns; remove old-name fallbacks from routing extension
+- [x] C2: Add `trigger_patterns` to all `bmad-bmm` workflow SKILL.md files (L) — ~20 files; slash-style + natural-language triggers; no `bmad:` block
+- [x] C3: Add `trigger_patterns` to all `bmad-cis` workflow SKILL.md files (M) — ~5 files; same pattern as C2
+- [x] C4: Add `trigger_patterns` to all `bmad-tea` workflow SKILL.md files (M) — ~9 files; same pattern as C2
+- [x] C5: Add `trigger_patterns` to all `bmad-bmb` workflow SKILL.md files (M) — ~5 files; same pattern as C2
+- [x] C6: Add `trigger_patterns` to `bmad-init/core` workflow SKILL.md files (S) — ~3 files; same pattern as C2
+- [x] C7: Verify routing + discoverability, expand tests (S) — VPS A2A smoke tests; pytest for CSV schema + trigger_patterns coverage
 
 ## Phase D — UX Surface
 

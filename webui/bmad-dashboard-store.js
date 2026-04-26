@@ -31,6 +31,7 @@ export const store = createStore("bmadDashboard", {
             if (!json.success) throw new Error(json.error || "Unknown error");
             this.data = json;
             this.lastRefresh = new Date().toLocaleTimeString();
+            this.loading = false;
         } catch (e) {
             this.error = e.message;
             toastFrontendError(e.message, "BMAD Method");

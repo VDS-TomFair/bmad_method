@@ -59,7 +59,6 @@ def _resolve_project_root(project_path_arg: str | None) -> Path | None:
     return None
 
 
-NOW          = datetime.now().strftime("%Y-%m-%d %H:%M")
 DIV          = "\u2501" * 45
 
 
@@ -103,6 +102,7 @@ def recommend_next(state, broken_agents, broken_skills, passed, total_t, agents_
 
 
 def main():
+    NOW = datetime.now().strftime("%Y-%m-%d %H:%M")
     parser = argparse.ArgumentParser(description="BMAD Framework Status Dashboard")
     parser.add_argument("--base-path", help="BMAD plugin root directory")
     parser.add_argument("--project-path", help="Active BMAD project root directory")

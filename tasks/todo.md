@@ -12,17 +12,17 @@
 
 ## Phase B — Structural Alignment
 
-- [ ] B1: Set `per_project_config: true` in `plugin.yaml` (XS) — One-line change enables per-project toggle UI
-- [ ] B2: Move user prefs to `bmad-user-prefs.promptinclude.md` (S) — Write file on init (no-clobber), remove User Settings block from 01-bmad-config.md template
-- [ ] B3: Add slash-style `trigger_patterns` to `skills/bmad-init/SKILL.md` (XS) — `/bmad`, `/bmad-init`, `/bmad-help`, `/bmad-status` + natural-language variants
-- [ ] B4: Remove dead `SKILL_TO_MODULE` constant from routing extension (XS) — Lines 30–36, verify no importers
-- [ ] B5: Fix orphaned `this.error` field in `bmad-dashboard-store.js` (XS) — Remove assignment or add state declaration to match
-- [ ] B6: Full bash hardening of `bmad-init.sh` (S) — `set -euo pipefail`, rsync fallback, warnings to stderr
-- [ ] B7: Consolidate `AGENT_NAMES`, `PHASE_ACTIONS`, `PHASE_BUCKET_PREFIXES` into `helpers/bmad_status_core.py` (M) — Remove duplicates from api + bmad-status.py; import via importlib
-- [ ] B8: Remove dead imports from `api/_bmad_status.py` (XS) — Delete `re, json`; remove duplicate `Path as _Path`
-- [ ] B9: Implement mtime-keyed caching for alias + CSV reads (M) — `(path_str, mtime_ns)` cache keys for `_alias_cache` and new `_csv_cache`
-- [ ] B10: Git branch setup + VPS deploy confirm (XS) — Verify `develop` branch, tag `v1.0.8-pre-align`, confirm VPS symlink + git pull
-- [ ] B11: Write `tests/test_bmad_init_sh.py` (S) — Subprocess tests: directories created, no hardcoded paths, idempotency, strict-mode header
+- [x] B1: Set `per_project_config: true` in `plugin.yaml` (XS) — One-line change enables per-project toggle UI
+- [x] B2: Move user prefs to `bmad-user-prefs.promptinclude.md` (S) — Write file on init (no-clobber), remove User Settings block from 01-bmad-config.md template
+- [x] B3: Add slash-style `trigger_patterns` to `skills/bmad-init/SKILL.md` (XS) — `/bmad`, `/bmad-init`, `/bmad-help`, `/bmad-status` + natural-language variants
+- [x] B4: Remove dead `SKILL_TO_MODULE` constant from routing extension (XS) — Lines 30–36, verify no importers
+- [x] B5: Fix orphaned `this.error` field in `bmad-dashboard-store.js` (XS) — Remove assignment or add state declaration to match
+- [x] B6: Full bash hardening of `bmad-init.sh` (S) — `set -euo pipefail`, rsync fallback, warnings to stderr
+- [x] B7: Consolidate `AGENT_NAMES`, `PHASE_ACTIONS`, `PHASE_BUCKET_PREFIXES` into `helpers/bmad_status_core.py` (M) — Remove duplicates from api + bmad-status.py; import via importlib
+- [x] B8: Remove dead imports from `api/_bmad_status.py` (XS) — Delete `re, json`; remove duplicate `Path as _Path`
+- [x] B9: Implement mtime-keyed caching for alias + CSV reads (M) — `(path_str, mtime_ns)` cache keys for `_alias_cache` and new `_csv_cache`
+- [x] B10: Git branch setup + VPS deploy confirm (XS) — Verify `develop` branch, tag `v1.0.8-pre-align`, confirm VPS symlink + git pull
+- [x] B11: Write `tests/test_bmad_init_sh.py` (S) — Subprocess tests: directories created, no hardcoded paths, idempotency, strict-mode header
 
 ## Phase C — Routing Consolidation
 

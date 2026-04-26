@@ -1,7 +1,6 @@
 from helpers.api import ApiHandler, Request, Response
 from pathlib import Path
 from datetime import datetime
-import sys as _sys
 import importlib.util as _ilu
 
 # Direct importlib load to avoid name collision with A0's own 'helpers' package.

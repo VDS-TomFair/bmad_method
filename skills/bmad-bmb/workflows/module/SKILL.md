@@ -1,6 +1,20 @@
 ---
 name: bmad-module-builder-workflow
 description: 'Plan, create, edit, and validate complete BMAD modules with agents, workflows, and infrastructure.'
+trigger_patterns:
+  - /bmad-module-builder-workflow
+  - /build-module
+  - /CM
+  - build module
+  - create module
+  - edit module
+  - validate module
+  - /EM
+  - /VM
+  - /IM
+  - ideate module
+  - /PB
+  - module brief
 ---
 
 # Module Builder Routing

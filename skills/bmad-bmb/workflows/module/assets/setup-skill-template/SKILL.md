@@ -1,6 +1,10 @@
 ---
 name: { setup-skill-name }
 description: Sets up {module-name} module in a project. Use when the user requests to 'install {module-code} module', 'configure {module-name}', or 'setup {module-name}'.
+trigger_patterns:
+  - /bmad-setup-skill-template
+  - setup skill template
+  - skill template setup
 ---
 
 # Module Setup

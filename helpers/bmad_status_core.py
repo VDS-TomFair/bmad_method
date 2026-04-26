@@ -8,9 +8,17 @@ Exported:
     check_modules(skills_dir) -> (ok_list, broken_list)
     read_tests(test_dir)  -> (passed_str|None, total_str|None, mtime_str|None)
 """
+import logging
 import re
 from datetime import datetime
 from pathlib import Path
+
+log = logging.getLogger(__name__)
+
+# Compiled regexes — MULTILINE for ^$ per-line, IGNORECASE for case-insensitive matching
+_PHASE_RE = re.compile(r"^[-\s]*Phase:\s*(.+)$", re.MULTILINE | re.IGNORECASE)
+_ARTIFACT_RE = re.compile(r"^[-\s]*Active Artifact:\s*(.+)$", re.MULTILINE | re.IGNORECASE)
+_ISSUE_RE = re.compile(r"(ARCH-|DEFECT-)\d+.*PENDING", re.IGNORECASE)
 
 SKILL_NAMES = ["bmad-init", "bmad-bmm", "bmad-bmb", "bmad-tea", "bmad-cis"]
 
@@ -19,18 +27,51 @@ REQUIRED_PROMPTS = {
     "agent.system.main.communication_additions.md",
 }
 
+AGENT_NAMES = {
+    "bmad-master": "BMad Master",
+    "bmad-analyst": "Mary (Analyst)",
+    "bmad-pm": "John (PM)",
+    "bmad-architect": "Winston (Architect)",
+    "bmad-dev": "Amelia (Dev)",
+    "bmad-qa": "Quinn (QA)",
+    "bmad-sm": "Bob (SM)",
+    "bmad-tech-writer": "Paige (Tech Writer)",
+    "bmad-ux-designer": "Sally (UX)",
+    "bmad-quick-dev": "Barry (Quick Dev)",
+    "bmad-agent-builder": "Bond (Agent Builder)",
+    "bmad-workflow-builder": "Wendy (Workflow Builder)",
+    "bmad-module-builder": "Morgan (Module Builder)",
+    "bmad-test-architect": "Murat (Test Architect)",
+    "bmad-brainstorming-coach": "Carson (Brainstorming)",
+    "bmad-problem-solver": "Dr. Quinn (Problem Solver)",
+    "bmad-design-thinking": "Maya (Design Thinking)",
+    "bmad-innovation": "Victor (Innovation)",
+    "bmad-storyteller": "Sophia (Storyteller)",
+    "bmad-presentation": "Caravaggio (Presentation)",
+}
+
+PHASE_ACTIONS = {
+    "ready":           ("Start a new workflow", "Type LW to list workflows or describe what you want to build"),
+    "1":               ("Continue Phase 1 Analysis", "Ask Mary (Analyst) to continue research or finalize product brief"),
+    "2":               ("Continue Phase 2 Planning", "Ask John (PM) to continue PRD or Sally (UX) for UX design"),
+    "3":               ("Continue Phase 3 Solutioning", "Ask Winston (Architect) to finalize the architecture document"),
+    "4":               ("Continue Phase 4 Implementation", "Ask Bob (SM) for sprint planning or Amelia (Dev) for next story"),
+    "not_initialized": ("Initialize BMAD", "Create or open a project in Agent Zero, then say: bmad init"),
+    "unknown":         ("Initialize BMAD", "Create or open a project in Agent Zero, then say: bmad init"),
+}
+
 
 def read_state(state_file: Path):
     if not state_file.exists():
         return {"phase": "unknown", "artifact": "none", "issues": []}
     text = state_file.read_text(encoding="utf-8")
-    phase    = re.search(r"Phase:\s*(.+)", text)
-    artifact = re.search(r"Active Artifact:\s*(.+)", text)
+    phase_match    = _PHASE_RE.search(text)
+    artifact_match = _ARTIFACT_RE.search(text)
     issues   = [l.strip().lstrip("-# ") for l in text.splitlines()
-                if re.search(r"(ARCH-|DEFECT-)\d+", l) and "PENDING" in l]
+                if _ISSUE_RE.search(l)]
     return {
-        "phase":    phase.group(1).strip()    if phase    else "unknown",
-        "artifact": artifact.group(1).strip() if artifact else "none",
+        "phase":    phase_match.group(1).strip().lower()    if phase_match    else "unknown",
+        "artifact": artifact_match.group(1).strip() if artifact_match else "none",
         "issues":   issues
     }
 
@@ -69,10 +110,9 @@ def read_tests(test_dir: Path):
     text    = latest.read_text(encoding="utf-8")
     matches = re.findall(r"(\d+)\s+of\s+(\d+)[^\n]*PASS", text)
     if not matches:
-        import re as _re
-        m_pass = _re.search(r"PASS:\s*(\d+)", text)
-        m_partial = _re.search(r"PARTIAL:\s*(\d+)", text)
-        m_fail = _re.search(r"FAIL:\s*(\d+)", text)
+        m_pass = re.search(r"PASS:\s*(\d+)", text)
+        m_partial = re.search(r"PARTIAL:\s*(\d+)", text)
+        m_fail = re.search(r"FAIL:\s*(\d+)", text)
         if m_pass:
             passed = int(m_pass.group(1))
             partial = int(m_partial.group(1)) if m_partial else 0

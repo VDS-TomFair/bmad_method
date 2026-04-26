@@ -6,24 +6,79 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [1.0.8] — 2026-04-10
+## [1.0.8] — 2026-04-26
 
-### Sprint 10 — Gap Closure Sprint
+### Agent Zero Alignment Migration (Phases A–D)
 
-#### Added
+A comprehensive 4-phase migration aligning the BMAD Method plugin with Agent Zero architecture
+standards. 35 tasks completed, 200 tests, 49 commits.
 
-- **Skill Validator workflow (`VS`)** — New `skills/bmad-bmb/workflows/skill/workflow-validate-skill.md` (376 lines). Ports 27 rules (14 deterministic SKILL-01 → SEQ-02 + 13 LLM-inference) from upstream `tools/skill-validator.md`. Completes the BMB validation quartet: VA + VW + VM + VS. Executor: Bond (bmad-agent-builder)
-- **File Reference Validator script (`VF`)** — New `skills/bmad-bmb/scripts/validate-file-refs.py` (310 lines, Python 3 stdlib only). Scans `*.md/*.yaml/*.csv` recursively for broken file path references; `--strict` mode exits non-zero on any broken reference. Executor: Amelia (bmad-dev)
+#### Phase A — Critical Bug Fixes (7 tasks)
 
-#### Closed
+- **A1**: Replace hardcoded `/a0/usr/projects/` paths with `$A0PROJ`-derived vars, add `set -euo pipefail`
+- **A2**: Consolidate `read_state()` into `helpers/bmad_status_core.py` with compiled regexes, lowercase phase normalization
+- **A3**: Remove cross-project mtime fallback from API and routing extension, gate CLI behind `BMAD_DEV_MODE`
+- **A4**: Remove 4 stray `</div>` and 1 stray `</template>` from `bmad-dashboard.html`
+- **A5**: Add `log.warning()` to all bare `except` blocks in routing extension
+- **A6**: Add None-guard on `spec_from_file_location` in API module
+- **A7**: Remove dead code — `SKILL_TO_MODULE`, consolidate phase-bucket dicts via `PHASE_BUCKETS` constant
 
-- **GAP-002 CLOSED** — Skill Validator rules ported to BMB (Story 059)
-- **GAP-003 CLOSED** — File Reference Validator script added (Story 060)
-- **GAP-004 CONFIRMED CLOSED** — Code Review 3-layer sharding already implemented: Blind Hunter + Edge Case Hunter + Acceptance Auditor in `step-02-review.md`
+#### Phase B — Structural Alignment (11 tasks)
 
-#### Status
+- **B1**: Enable `per_project_config: true` in `plugin.yaml`
+- **B2**: User preferences → `bmad-user-prefs.promptinclude.md` (no-clobber pattern)
+- **B3**: Slash-style `trigger_patterns` in SKILL.md: `/bmad`, `/bmad-init`, `/bmad-help`, `/bmad-status`
+- **B4**: Verified `SKILL_TO_MODULE` removal complete (A7)
+- **B5**: Fix orphaned `this.error` reference in dashboard store JS
+- **B6**: Full bash hardening of `bmad-init.sh` (rsync fallback, stderr warnings)
+- **B7**: Consolidate `AGENT_NAMES`, `PHASE_ACTIONS` into `helpers/bmad_status_core.py`
+- **B8**: Remove dead imports from `api/_bmad_status.py`
+- **B9**: mtime-keyed caching `(path_str, mtime_ns)` for alias + CSV reads
+- **B10**: Tag `v1.0.8-pre-align`
+- **B11**: Comprehensive subprocess tests for `bmad-init.sh`
 
-- **Upstream parity: ~98%** — only BMGD game dev module deferred
+#### Phase C — Routing Consolidation (8 tasks)
+
+- **C0**: Migrate `bmad-init/core/module-help.csv` to upstream 13-column schema
+- **C1**: Remove dual-read compatibility code from routing extension
+- **C2–C6**: Add `trigger_patterns` to **57 SKILL.md files** across bmm, cis, tea, bmb, and init/core modules
+- **C7**: Comprehensive routing + discoverability verification tests
+
+#### Phase D — UX Surface (9 tasks)
+
+- **D1**: Create `bmad.methodology.shared.md` shared fragment (85 lines)
+- **D2**: Audit all 20 `main.specifics.md` for shared content scope
+- **D3**: Update 19 non-master `main.specifics.md` to use `{{ include }}` directive
+- **D4**: Remove static 19-agent table from `bmad-master/role.md` → dynamic via `{{agent_profiles}}`
+- **D5**: Pre-computed `_recommend()` results in API module with caching
+- **D6**: Dashboard error display — `x-text` only, store-gated rendering
+- **D7**: `project-context.md` stub generation in `bmad-init.sh`
+- **D8**: Party mode implementation (solo mode, 8 acceptance criteria)
+- **D9**: Plugin audit via structured review process
+
+#### Review Fixes (3 additional)
+
+- Restore `_SKILLS_DIR` / `_BMAD_CONFIG_DIR` definitions in routing extension
+- Fix dashboard `this.loading` reset on success path
+- Eliminate CSV cache bypass via `_read_csv_cached()` shared helper
+
+#### Code Simplification (6 improvements)
+
+- Removed redundant imports (`re`, `sys`, `json`)
+- Moved timestamp computation to runtime
+- Eliminated unused variables
+- Added bounded cache eviction (max 128 entries, FIFO)
+
+### Metrics
+
+| Metric | Before | After |
+|---|---|---|
+| Tests | 14 | **200** |
+| SKILL.md trigger_patterns | 0 | **57 files** |
+| Duplicated agent prompt lines | ~1,662 | **1 shared file (85 lines)** |
+| Agent roster | Static 19-entry table | **Dynamic via `{{agent_profiles}}`** |
+| CSV schema alignment | 1 file outdated | **All 5 on upstream 13-col** |
+| Dead code | Multiple instances | **Zero** |
 
 ---
 

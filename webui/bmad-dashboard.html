@@ -110,7 +110,11 @@
         </template>
 
         <!-- Error -->
-
+        <template x-if="$store.bmadDashboard.error && !$store.bmadDashboard.loading">
+          <div class="error-state">
+            <strong>⚠ Error:</strong> <span x-text="$store.bmadDashboard.error"></span>
+          </div>
+        </template>
         <!-- Main content -->
         <template x-if="$store.bmadDashboard.data">
           <div>
@@ -253,17 +257,12 @@
               </div>
 
             </div>
-                    </div>
-                  </div>
-                </template>
-              </div>
             </div>
 
           </div>
         </template>
       </div>
 
-    </div>
   </template>
 </div>
 </body>

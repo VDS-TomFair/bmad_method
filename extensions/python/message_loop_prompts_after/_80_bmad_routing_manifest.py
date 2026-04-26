@@ -11,40 +11,73 @@ for bmad-master to use on every message loop.
 
 import csv
 import io
+import logging
+import traceback
 from pathlib import Path
+import importlib.util as _ilu
 from helpers.extension import Extension
 from helpers import files
 from agent import LoopData
+
+log = logging.getLogger(__name__)
 
 # Dynamic path resolution — works regardless of install method (plugin, symlink, dev)
 _PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 _SKILLS_DIR = _PLUGIN_ROOT / "skills"
 _BMAD_CONFIG_DIR = _PLUGIN_ROOT / "skills" / "bmad-init" / "_config"
 
-# Module-level alias cache — populated once per config file path (AC-06)
+# Load shared state parser via importlib to avoid name collision with A0's 'helpers' package
+_core_path = str(_PLUGIN_ROOT / "helpers" / "bmad_status_core.py")
+_spec = _ilu.spec_from_file_location("bmad_status_core", _core_path)
+if _spec is None:
+    raise ImportError(f"Cannot load bmad_status_core from {_core_path}")
+_core_mod = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(_core_mod)
+_read_state = _core_mod.read_state
+
+# Module-level caches — keyed by (path_str, mtime_ns) for auto-invalidation on file change
+_MAX_CACHE_ENTRIES = 128
 _alias_cache: dict = {}
+_csv_cache: dict = {}
+
+
+def _evict_if_full(cache: dict) -> None:
+    """Remove oldest entries when cache exceeds _MAX_CACHE_ENTRIES."""
+    if len(cache) > _MAX_CACHE_ENTRIES:
+        # Remove oldest half (FIFO eviction — good enough for mtime-keyed caches)
+        keys_to_remove = list(cache.keys())[:len(cache) // 2]
+        for k in keys_to_remove:
+            del cache[k]
 
 BMAD_MASTER_PROFILE = "bmad-master"
 
-# Skill directory name → module code used in module-help.csv
-SKILL_TO_MODULE = {
-    "bmad-init": "core",
-    "bmad-bmm": "bmm",
-    "bmad-bmb": "bmb",
-    "bmad-cis": "cis",
-    "bmad-tea": "tea",
-}
 
-# Phase → relevant modules map
+# Canonical phase bucket keys — single source of truth for phase-bucket dicts
+PHASE_BUCKETS = ["1-analysis", "2-planning", "3-solutioning", "4-implementation"]
+
+# Phase → relevant modules map (derived from PHASE_BUCKETS)
 PHASE_MODULES = {
     "ready":            ["core", "bmm", "bmb", "tea", "cis"],
-    "1-analysis":       ["core", "bmm", "cis"],
-    "2-planning":       ["core", "bmm", "cis"],
-    "3-solutioning":    ["core", "bmm", "tea", "cis"],
-    "4-implementation": ["core", "bmm", "tea", "cis"],
+    **{PHASE_BUCKETS[i]: v for i, v in enumerate([
+        ["core", "bmm", "cis"],       # 1-analysis
+        ["core", "bmm", "cis"],       # 2-planning
+        ["core", "bmm", "tea", "cis"], # 3-solutioning
+        ["core", "bmm", "tea", "cis"], # 4-implementation
+    ])},
     "bmb":              ["core", "bmb"],
     "cis":              ["core", "cis"],
 }
+
+
+def _read_csv_cached(csv_path: Path) -> str:
+    """Read CSV file with mtime-keyed cache invalidation."""
+    global _csv_cache
+    mtime_ns = csv_path.stat().st_mtime_ns
+    cache_key = (str(csv_path), mtime_ns)
+    if cache_key not in _csv_cache:
+        _csv_cache[cache_key] = csv_path.read_text(encoding="utf-8")
+        _evict_if_full(_csv_cache)
+    return _csv_cache[cache_key]
 
 
 def _resolve_state_file(agent) -> Path | None:
@@ -60,71 +93,42 @@ def _resolve_state_file(agent) -> Path | None:
     except Exception:
         pass
 
-    # Fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
-    try:
-        projects_dir = Path("/a0/usr/projects")
-        if projects_dir.exists():
-            candidates = []
-            for proj in projects_dir.iterdir():
-                if not proj.is_dir():
-                    continue
-                state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
-                if state.exists():
-                    candidates.append((state.stat().st_mtime, state))
-            if candidates:
-                candidates.sort(reverse=True)
-                return candidates[0][1]
-    except Exception:
-        pass
-
     return None
 
 
-def _collect_routing_rows(active_modules: list | None) -> list[str]:
+def _collect_routing_rows(active_modules: list | None, csv_files: list | None = None) -> list[str]:
     """
     Read all skills/*/module-help.csv files and return routing row strings.
-    Filters by active_modules if provided.
+    Filters by active_modules if provided. Uses _csv_cache with mtime invalidation.
     """
     routing_rows = []
 
-    # Discover all module-help.csv files sorted by skill name
-    csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
+    # Discover all module-help.csv files sorted by skill name (use provided list or glob)
+    if csv_files is None:
+        csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
 
     for csv_path in csv_files:
-        skill_name = csv_path.parent.name
 
         try:
-            content = csv_path.read_text(encoding="utf-8")
+            content = _read_csv_cached(csv_path)
             reader = csv.DictReader(io.StringIO(content))
 
             for row in reader:
                 module = row.get("module", "").strip()
                 row_phase = row.get("phase", "").strip()
-                # Support new 13-col format (display-name, menu-code, skill)
-                # and old format (name, code, agent-name/agent) — dual read
-                name = (
-                    row.get("display-name", "").strip()
-                    or row.get("name", "").strip()
-                )
-                code = (
-                    row.get("menu-code", "").strip()
-                    or row.get("code", "").strip()
-                )
+                # All CSVs use unified 13-col schema (display-name, menu-code, skill)
+                name = row.get("display-name", "").strip()
+                code = row.get("menu-code", "").strip()
                 description = row.get("description", "").strip()
                 # action = canonical skill name for skills_tool:load
                 # args = direct workflow file path fallback when action is empty
                 action = row.get("action", "").strip()
                 args = row.get("args", "").strip()
-                # New format uses 'agent'; old formats: 'skill', 'agent-name'
-                agent_name = (
-                    row.get("agent", "").strip()
-                    or row.get("skill", "").strip()
-                    or row.get("agent-name", "").strip()
-                )
+                # agent column maps to profile name for call_subordinate
+                agent_name = row.get("skill", "").strip()
                 # Agent display name — fallback to agent_name
                 agent_display = (
                     row.get("agent-display-name", "").strip()
-                    or row.get("agent-title", "").strip()
                     or agent_name
                 )
 
@@ -155,10 +159,14 @@ def _collect_routing_rows(active_modules: list | None) -> list[str]:
 def _parse_alias_map(config_path: Path) -> dict:
     """Parse 01-bmad-config.md Path Conventions table.
     Returns alias_key (without braces) → resolved absolute path string.
-    AC-01: alias resolution. AC-06: cached by config file path.
+    AC-01: alias resolution. AC-06: cached by (path, mtime_ns).
     """
     global _alias_cache
-    cache_key = str(config_path)
+    try:
+        mtime_ns = config_path.stat().st_mtime_ns
+    except OSError:
+        return {}
+    cache_key = (str(config_path), mtime_ns)
     if cache_key in _alias_cache:
         return _alias_cache[cache_key]
 
@@ -182,6 +190,7 @@ def _parse_alias_map(config_path: Path) -> dict:
         pass
 
     _alias_cache[cache_key] = alias_map
+    _evict_if_full(_alias_cache)
     return alias_map
 
 
@@ -203,15 +212,10 @@ def _scan_artifact_existence(csv_files: list, alias_map: dict) -> dict:
     Phase is complete if ANY required=true artifact for that phase is found.
     AC-06: uses Path.glob() for performance.
     """
-    phase_map: dict = {
-        "1-analysis": (False, "no required artifact found"),
-        "2-planning": (False, "no required artifact found"),
-        "3-solutioning": (False, "no required artifact found"),
-        "4-implementation": (False, "no required artifact found"),
-    }
+    phase_map: dict = {k: (False, "no required artifact found") for k in PHASE_BUCKETS}
     for csv_path in csv_files:
         try:
-            content = csv_path.read_text(encoding="utf-8")
+            content = _read_csv_cached(csv_path)
             reader = csv.DictReader(io.StringIO(content))
             for row in reader:
                 # AC-03: only required=true rows gate phase completion
@@ -327,7 +331,7 @@ def _build_staleness_warnings(alias_map: dict) -> str:
                     )
 
     except Exception:
-        pass  # Never block routing
+        log.warning("BMAD routing: staleness check failed: %s", traceback.format_exc())
 
     if not warnings:
         return ""
@@ -374,15 +378,15 @@ class BmadRoutingManifest(Extension):
                 return
 
             if state_path:
-                state = state_path.read_text(encoding="utf-8")
-                for line in state.splitlines():
-                    if line.strip().startswith("- Phase:"):
-                        phase = line.split(":", 1)[1].strip().lower()
-                        active_modules = PHASE_MODULES.get(phase)
-                        break
+                state_result = _read_state(state_path)
+                phase = state_result["phase"]
+                active_modules = PHASE_MODULES.get(phase)
+
+            # Single glob per execute() — reused for routing rows and artifact scan
+            csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
 
             # Collect routing rows from all module-help.csv files
-            routing_rows = _collect_routing_rows(active_modules)
+            routing_rows = _collect_routing_rows(active_modules, csv_files)
 
             if not routing_rows:
                 return
@@ -406,7 +410,6 @@ class BmadRoutingManifest(Extension):
                 config_path = state_path.parent / "01-bmad-config.md"  # AC-01
                 if config_path.exists():
                     alias_map = _parse_alias_map(config_path)  # AC-06: cached
-                    csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))  # AC-06
                     phase_map = _scan_artifact_existence(csv_files, alias_map)  # AC-02, AC-03
                     completed_text = _build_completed_phases_text(phase_map)  # AC-04
                     manifest_prompt += f"\n\n{completed_text}"
@@ -421,4 +424,4 @@ class BmadRoutingManifest(Extension):
             loop_data.extras_temporary["bmad_routing_manifest"] = manifest_prompt
 
         except Exception:
-            pass
+            log.warning("BMAD routing: execute failed: %s", traceback.format_exc())

@@ -1,11 +1,27 @@
 #!/usr/bin/env python3
 """BMAD Framework Status Dashboard v0.5 - Dynamic path resolution + WHAT/WHY/NEXT."""
-import argparse, re, sys, json
+import argparse, sys, os, logging
 from datetime import datetime
 from pathlib import Path
-from bmad_status_core import read_state, check_agents, check_modules, read_tests, SKILL_NAMES
+import importlib.util as _ilu
 
-# --- Dynamic path resolution ---
+log = logging.getLogger(__name__)
+
+# Load shared state parser from helpers/ — single source of truth
+_core_path = str(Path(__file__).resolve().parents[3] / "helpers" / "bmad_status_core.py")
+_spec = _ilu.spec_from_file_location("bmad_status_core", _core_path)
+if _spec is None:
+    print(f"ERROR: Cannot load bmad_status_core from {_core_path}", file=sys.stderr)
+    sys.exit(1)
+_core_mod = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(_core_mod)
+read_state    = _core_mod.read_state
+check_agents  = _core_mod.check_agents
+check_modules = _core_mod.check_modules
+read_tests    = _core_mod.read_tests
+SKILL_NAMES   = _core_mod.SKILL_NAMES
+AGENT_NAMES   = _core_mod.AGENT_NAMES
+PHASE_ACTIONS = _core_mod.PHASE_ACTIONS
 # All paths are resolved at runtime from CLI args or self-discovery.
 # No hardcoded absolute paths.
 
@@ -24,61 +40,27 @@ def _resolve_project_root(project_path_arg: str | None) -> Path | None:
             return p
         return None
 
-    # Fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
-    projects_dir = Path("/a0/usr/projects")
-    if projects_dir.exists():
-        candidates = []
-        for proj in projects_dir.iterdir():
-            if not proj.is_dir():
-                continue
-            state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
-            if state.exists():
-                candidates.append((state.stat().st_mtime, proj))
-        if candidates:
-            candidates.sort(reverse=True)
-            return candidates[0][1]
+    # Dev-only fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
+    # Gated behind BMAD_DEV_MODE env var — not for production use
+    if os.environ.get("BMAD_DEV_MODE"):
+        projects_dir = Path("/a0/usr/projects")
+        if projects_dir.exists():
+            candidates = []
+            for proj in projects_dir.iterdir():
+                if not proj.is_dir():
+                    continue
+                state = proj / ".a0proj" / "instructions" / "02-bmad-state.md"
+                if state.exists():
+                    candidates.append((state.stat().st_mtime, proj))
+            if candidates:
+                candidates.sort(reverse=True)
+                log.warning("BMAD_DEV_MODE: using cross-project mtime fallback → %s", candidates[0][1])
+                return candidates[0][1]
     return None
 
 
-NOW          = datetime.now().strftime("%Y-%m-%d %H:%M")
 DIV          = "\u2501" * 45
 
-AGENT_NAMES = {
-    "bmad-master":              "BMad Master",
-    "bmad-analyst":             "Mary (Analyst)",
-    "bmad-pm":                  "John (PM)",
-    "bmad-architect":           "Winston (Architect)",
-    "bmad-dev":                 "Amelia (Dev)",
-    "bmad-qa":                  "Quinn (QA)",
-    "bmad-sm":                  "Bob (Scrum Master)",
-    "bmad-tech-writer":         "Paige (Tech Writer)",
-    "bmad-ux-designer":         "Sally (UX)",
-    "bmad-quick-dev":           "Barry (Quick Dev)",
-    "bmad-agent-builder":       "Bond (Agent Builder)",
-    "bmad-workflow-builder":    "Wendy (Workflow Builder)",
-    "bmad-module-builder":      "Morgan (Module Builder)",
-    "bmad-test-architect":      "Murat (Test Architect)",
-    "bmad-brainstorming-coach": "Carson (Brainstorming)",
-    "bmad-problem-solver":      "Dr. Quinn (Problem Solver)",
-    "bmad-design-thinking":     "Maya (Design Thinking)",
-    "bmad-innovation":          "Victor (Innovation)",
-    "bmad-storyteller":         "Sophia (Storyteller)",
-    "bmad-presentation":        "Caravaggio (Presentation)",
-}
-
-PHASE_ACTIONS = {
-    "ready":   ("Start a new workflow",
-                "Type LW to list workflows, or describe what you want to build"),
-    "1":       ("Continue Phase 1 Analysis",
-                "Ask Mary (Analyst) to continue research or finalize product brief"),
-    "2":       ("Continue Phase 2 Planning",
-                "Ask John (PM) to continue PRD, or Sally (UX) for UX design"),
-    "3":       ("Continue Phase 3 Solutioning",
-                "Ask Winston (Architect) to finalize the architecture document"),
-    "4":       ("Continue Phase 4 Implementation",
-                "Ask Bob (SM) for sprint planning or Amelia (Dev) for next story"),
-    "unknown": ("Initialize BMAD", "Run: bmad init"),
-}
 
 
 def wwn(what, why, nxt, indent="   "):
@@ -120,6 +102,7 @@ def recommend_next(state, broken_agents, broken_skills, passed, total_t, agents_
 
 
 def main():
+    NOW = datetime.now().strftime("%Y-%m-%d %H:%M")
     parser = argparse.ArgumentParser(description="BMAD Framework Status Dashboard")
     parser.add_argument("--base-path", help="BMAD plugin root directory")
     parser.add_argument("--project-path", help="Active BMAD project root directory")

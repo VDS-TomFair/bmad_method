@@ -5,18 +5,22 @@ version: "1.0.0"
 author: "BMAD"
 tags: ["bmad", "init", "bootstrap", "orchestrator", "help"]
 trigger_patterns:
-  - "initialize bmad"
-  - "bmad init"
-  - "init bmad"
-  - "setup bmad"
-  - "start bmad"
-  - "bmad help"
-  - "bmad-help"
-  - "bmad master"
-  - "bmad-master"
-  - "what can bmad do"
-  - "bmad status"
-  - "activate bmad"
+  - /bmad
+  - /bmad-init
+  - /bmad-help
+  - /bmad-status
+  - initialize bmad
+  - bmad init
+  - init bmad
+  - setup bmad
+  - start bmad
+  - bmad help
+  - bmad-help
+  - bmad master
+  - bmad-master
+  - what can bmad do
+  - bmad status
+  - activate bmad
 ---
 
 # BMAD Method Framework — Init, Help, and Orchestration

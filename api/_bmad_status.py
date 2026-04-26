@@ -1,15 +1,14 @@
 from helpers.api import ApiHandler, Request, Response
-import re, json
 from pathlib import Path
 from datetime import datetime
-import sys as _sys
 import importlib.util as _ilu
-from pathlib import Path as _Path
 
 # Direct importlib load to avoid name collision with A0's own 'helpers' package.
 # sys.path manipulation fails here because A0's 'helpers' is already in sys.modules.
-_core_path = str(_Path(__file__).resolve().parent.parent / "helpers" / "bmad_status_core.py")
+_core_path = str(Path(__file__).resolve().parent.parent / "helpers" / "bmad_status_core.py")
 _spec = _ilu.spec_from_file_location("bmad_status_core", _core_path)
+if _spec is None:
+    raise ImportError(f"Cannot load bmad_status_core from {_core_path}")
 _core_mod = _ilu.module_from_spec(_spec)
 _spec.loader.exec_module(_core_mod)
 check_agents  = _core_mod.check_agents
@@ -17,6 +16,8 @@ check_modules = _core_mod.check_modules
 read_state    = _core_mod.read_state
 read_tests    = _core_mod.read_tests
 SKILL_NAMES   = _core_mod.SKILL_NAMES
+AGENT_NAMES   = _core_mod.AGENT_NAMES
+PHASE_ACTIONS = _core_mod.PHASE_ACTIONS
 
 # --- Plugin-level paths (fixed, plugin-relative) ---
 # Path(__file__).resolve() follows symlinks to the real file location.
@@ -31,7 +32,6 @@ def _resolve_project_root(ctxid: str | None) -> Path | None:
     Resolution order:
     1. Active context → project name → project folder (correct A0-aware method)
     2. Dev/symlink fallback: walk up from plugin dir looking for .a0proj
-    3. Production fallback: scan /a0/usr/projects/ for most-recently-modified BMAD state
     """
     # Stage 1: resolve from active A0 context (the right way)
     if ctxid:
@@ -48,56 +48,16 @@ def _resolve_project_root(ctxid: str | None) -> Path | None:
                     else:
                         return None  # project exists but no bmad init — show not_initialized
         except Exception:
-            pass  # fall through to fallbacks
+            pass  # fall through to fallback
 
     # Stage 2: dev/symlink mode — .a0proj is an ancestor of the real file location
     for parent in [_PLUGIN_ROOT, *_PLUGIN_ROOT.parents]:
         if (parent / ".a0proj").exists():
             return parent
 
-    # Stage 3: production fallback — scan user projects for most-recently-modified BMAD state
-    projects_dir = Path("/a0/usr/projects")
-    if projects_dir.exists():
-        candidates = []
-        for proj in projects_dir.iterdir():
-            if not proj.is_dir():
-                continue
-            state = proj / ".a0proj/instructions/02-bmad-state.md"
-            if state.exists():
-                candidates.append((state.stat().st_mtime, proj))
-        if candidates:
-            candidates.sort(reverse=True)
-            return candidates[0][1]
-
     return None  # no BMAD project found
 
 
-AGENT_NAMES = {
-    "bmad-master":"BMad Master","bmad-analyst":"Mary (Analyst)",
-    "bmad-pm":"John (PM)","bmad-architect":"Winston (Architect)",
-    "bmad-dev":"Amelia (Dev)","bmad-qa":"Quinn (QA)",
-    "bmad-sm":"Bob (SM)","bmad-tech-writer":"Paige (Tech Writer)",
-    "bmad-ux-designer":"Sally (UX)","bmad-quick-dev":"Barry (Quick Dev)",
-    "bmad-agent-builder":"Bond (Agent Builder)",
-    "bmad-workflow-builder":"Wendy (Workflow Builder)",
-    "bmad-module-builder":"Morgan (Module Builder)",
-    "bmad-test-architect":"Murat (Test Architect)",
-    "bmad-brainstorming-coach":"Carson (Brainstorming)",
-    "bmad-problem-solver":"Dr. Quinn (Problem Solver)",
-    "bmad-design-thinking":"Maya (Design Thinking)",
-    "bmad-innovation":"Victor (Innovation)",
-    "bmad-storyteller":"Sophia (Storyteller)",
-    "bmad-presentation":"Caravaggio (Presentation)",
-}
-PHASE_ACTIONS = {
-    "ready":           ("Start a new workflow","Type LW to list workflows or describe what you want to build"),
-    "1":               ("Continue Phase 1 Analysis","Ask Mary (Analyst) to continue research or finalize product brief"),
-    "2":               ("Continue Phase 2 Planning","Ask John (PM) to continue PRD or Sally (UX) for UX design"),
-    "3":               ("Continue Phase 3 Solutioning","Ask Winston (Architect) to finalize the architecture document"),
-    "4":               ("Continue Phase 4 Implementation","Ask Bob (SM) for sprint planning or Amelia (Dev) for next story"),
-    "not_initialized": ("Initialize BMAD","Create or open a project in Agent Zero, then say: bmad init"),
-    "unknown":         ("Initialize BMAD","Create or open a project in Agent Zero, then say: bmad init"),
-}
 
 
 class BmadStatus(ApiHandler):
@@ -109,15 +69,20 @@ class BmadStatus(ApiHandler):
             state_file   = (project_root / ".a0proj/instructions/02-bmad-state.md") if project_root else None
             test_dir     = (project_root / ".a0proj/_bmad-output/test-artifacts")    if project_root else None
 
+            state  = self._read_state(state_file)
+            agents = self._check_agents()
+            skills = self._check_skills()
+            tests  = self._read_tests(test_dir)
+
             return {
                 "success":        True,
                 "generated":      datetime.now().strftime("%Y-%m-%d %H:%M"),
                 "project":        str(project_root) if project_root else None,
-                "state":          self._read_state(state_file),
-                "agents":         self._check_agents(),
-                "skills":         self._check_skills(),
-                "tests":          self._read_tests(test_dir),
-                "recommendation": self._recommend(state_file, test_dir),
+                "state":          state,
+                "agents":         agents,
+                "skills":         skills,
+                "tests":          tests,
+                "recommendation": self._recommend(state, agents, skills, tests),
             }
         except Exception as e:
             return {"success": False, "error": str(e)}
@@ -149,11 +114,7 @@ class BmadStatus(ApiHandler):
         return {"status": "ok", "passed": int(passed), "total": int(total), "verified": mtime,
                 "failing": int(total) - int(passed)}
 
-    def _recommend(self, state_file: Path | None, test_dir: Path | None):
-        state  = self._read_state(state_file)
-        agents = self._check_agents()
-        skills = self._check_skills()
-        tests  = self._read_tests(test_dir)
+    def _recommend(self, state: dict, agents: dict, skills: dict, tests: dict):
         issues = []
         if skills["broken"]:
             issues.append({"sev":"blocker","what":str(len(skills["broken"]))+" module(s) missing",

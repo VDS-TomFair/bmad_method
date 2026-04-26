@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 PROJECT_PATH="${1:-$(pwd)}"
 A0PROJ="$PROJECT_PATH/.a0proj"
 PROJECT_NAME=$(basename "$PROJECT_PATH")
@@ -15,14 +15,21 @@ mkdir -p "$A0PROJ/knowledge/fragments"
 mkdir -p "$A0PROJ/knowledge/solutions"
 mkdir -p "$A0PROJ/instructions"
 
+# Create project-context.md stub (no-clobber — preserves user content on re-init)
+touch "$A0PROJ/knowledge/main/project-context.md"
+
 # Seed BMAD framework knowledge into project (idempotent — no-clobber preserves user edits)
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SEED_DIR="$SCRIPT_DIR/../seed-knowledge"
 if [ -d "$SEED_DIR" ]; then
-  cp -rn "$SEED_DIR/." "$A0PROJ/knowledge/main/"
+  if command -v rsync &>/dev/null; then
+    rsync -a --ignore-existing "$SEED_DIR/." "$A0PROJ/knowledge/main/"
+  else
+    cp -Rn "$SEED_DIR/." "$A0PROJ/knowledge/main/"
+  fi
   echo "BMAD seed knowledge copied to project knowledge base."
 else
-  echo "Warning: seed-knowledge directory not found at $SEED_DIR — skipping knowledge seed."
+  echo "Warning: seed-knowledge directory not found at $SEED_DIR — skipping knowledge seed." >&2
 fi
 
 # Write 01-bmad-config.md (only if not already present — immutable config)
@@ -37,21 +44,29 @@ if [ ! -f "$A0PROJ/instructions/01-bmad-config.md" ]; then
 ### Path Conventions
 | Alias | Resolved Path |
 |---|---|
-| \`{project-root}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/\` |
-| \`{planning_artifacts}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/_bmad-output/planning-artifacts/\` |
-| \`{implementation_artifacts}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/_bmad-output/implementation-artifacts/\` |
-| \`{product_knowledge}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/knowledge/\` |
-| \`{output_folder}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/_bmad-output/\` |
-
-### User Settings
-- **User Name:** User
-- **Communication Language:** English
-- **User Skill Level:** intermediate
+| \`{project-root}\` | \`$A0PROJ/\` |
+| \`{planning_artifacts}\` | \`$A0PROJ/_bmad-output/planning-artifacts/\` |
+| \`{implementation_artifacts}\` | \`$A0PROJ/_bmad-output/implementation-artifacts/\` |
+| \`{product_knowledge}\` | \`$A0PROJ/knowledge/\` |
+| \`{output_folder}\` | \`$A0PROJ/_bmad-output/\` |
 
 CONFIG
   echo "Config file written."
 else
   echo "Config file already present, preserving existing config."
+fi
+
+# Write bmad-user-prefs.promptinclude.md (no-clobber — preserves user edits on re-init)
+if [ ! -f "$A0PROJ/instructions/bmad-user-prefs.promptinclude.md" ]; then
+  cat > "$A0PROJ/instructions/bmad-user-prefs.promptinclude.md" << 'PREFS'
+## User Settings
+- **User Name:** User
+- **Communication Language:** English
+- **User Skill Level:** intermediate
+PREFS
+  echo "User prefs file written."
+else
+  echo "User prefs file already present, preserving existing preferences."
 fi
 
 # Write 02-bmad-state.md (only if not already present)

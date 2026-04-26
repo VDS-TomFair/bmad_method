@@ -182,9 +182,12 @@ If conversation naturally concludes:
 
 ## MODERATION NOTES
 
-**Quality Control:**
+**Known Divergence from Upstream:**
+- No parallel subagent spawning — party mode runs as solo implementation within a single agent context
+- No `--model` flag — agent uses whatever model is configured for the session
+- These are intentional design decisions for A0 compatibility, not bugs
 
-- If discussion becomes circular, have bmad-master summarize and redirect
+**Quality Control:**
 - Balance fun and productivity based on conversation tone
 - Ensure all agents stay true to their merged personalities
 - Exit gracefully when user indicates completion

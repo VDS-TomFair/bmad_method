@@ -2,13 +2,13 @@
 
 ## Phase A — Critical Bug Fixes
 
-- [ ] A1: Fix hardcoded `/a0/usr/projects/` paths in `bmad-init.sh` (S) — Replace 5 path-table literals with `$A0PROJ`-derived vars; add `set -euo pipefail`
-- [ ] A2: Consolidate `read_state()` into `helpers/bmad_status_core.py` (M) — Add MULTILINE+IGNORECASE regex, lowercase output, delete scripts/bmad_status_core.py, update bmad-status.py + routing ext
-- [ ] A3: Remove/gate cross-project mtime fallback — split treatment (M) — `api/_bmad_status.py` + routing ext: hard remove, return `None`; `bmad-status.py`: gate behind `BMAD_DEV_MODE` with `log.warning()`
-- [ ] A4: Fix malformed HTML in `bmad-dashboard.html` (XS) — Remove 4 stray `</div>` and 1 stray `</template>` at lines 255–263
-- [ ] A5: Add `log.warning()` to bare `except` blocks in routing extension (XS) — Top-level `execute()` except + `_build_staleness_warnings()` except
-- [ ] A6: None-guard on `spec_from_file_location` in `api/_bmad_status.py` (XS) — Add `if _spec is None: raise ImportError(...)`
-- [ ] A7: Write `tests/test_bmad_status_core.py` (S) — 6+ `read_state()` format variants, exports, check_agents/check_modules fixtures
+- [x] A1: Fix hardcoded `/a0/usr/projects/` paths in `bmad-init.sh` (S) — Replace 5 path-table literals with `$A0PROJ`-derived vars; add `set -euo pipefail`
+- [x] A2: Consolidate `read_state()` into `helpers/bmad_status_core.py` (M) — Add MULTILINE+IGNORECASE regex, lowercase output, delete scripts/bmad_status_core.py, update bmad-status.py + routing ext
+- [x] A3: Remove/gate cross-project mtime fallback — split treatment (M) — `api/_bmad_status.py` + routing ext: hard remove, return `None`; `bmad-status.py`: gate behind `BMAD_DEV_MODE` with `log.warning()`
+- [x] A4: Fix malformed HTML in `bmad-dashboard.html` (XS) — Remove 4 stray `</div>` and 1 stray `</template>` at lines 255–263
+- [x] A5: Add `log.warning()` to bare `except` blocks in routing extension (XS) — Top-level `execute()` except + `_build_staleness_warnings()` except
+- [x] A6: None-guard on `spec_from_file_location` in `api/_bmad_status.py` (XS) — Add `if _spec is None: raise ImportError(...)`
+- [x] A7: Write `tests/test_bmad_status_core.py` (S) — 6+ `read_state()` format variants, exports, check_agents/check_modules fixtures
 
 ## Phase B — Structural Alignment
 

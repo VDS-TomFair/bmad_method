@@ -33,8 +33,9 @@ _core_mod = _ilu.module_from_spec(_spec)
 _spec.loader.exec_module(_core_mod)
 _read_state = _core_mod.read_state
 
-# Module-level alias cache — populated once per config file path (AC-06)
+# Module-level caches — keyed by (path_str, mtime_ns) for auto-invalidation on file change
 _alias_cache: dict = {}
+_csv_cache: dict = {}
 
 BMAD_MASTER_PROFILE = "bmad-master"
 
@@ -72,21 +73,28 @@ def _resolve_state_file(agent) -> Path | None:
     return None
 
 
-def _collect_routing_rows(active_modules: list | None) -> list[str]:
+def _collect_routing_rows(active_modules: list | None, csv_files: list | None = None) -> list[str]:
     """
     Read all skills/*/module-help.csv files and return routing row strings.
-    Filters by active_modules if provided.
+    Filters by active_modules if provided. Uses _csv_cache with mtime invalidation.
     """
+    global _csv_cache
     routing_rows = []
 
-    # Discover all module-help.csv files sorted by skill name
-    csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
+    # Discover all module-help.csv files sorted by skill name (use provided list or glob)
+    if csv_files is None:
+        csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
 
     for csv_path in csv_files:
         skill_name = csv_path.parent.name
 
         try:
-            content = csv_path.read_text(encoding="utf-8")
+            # mtime-keyed cache — invalidates when file changes
+            mtime_ns = csv_path.stat().st_mtime_ns
+            cache_key = (str(csv_path), mtime_ns)
+            if cache_key not in _csv_cache:
+                _csv_cache[cache_key] = csv_path.read_text(encoding="utf-8")
+            content = _csv_cache[cache_key]
             reader = csv.DictReader(io.StringIO(content))
 
             for row in reader:
@@ -147,10 +155,14 @@ def _collect_routing_rows(active_modules: list | None) -> list[str]:
 def _parse_alias_map(config_path: Path) -> dict:
     """Parse 01-bmad-config.md Path Conventions table.
     Returns alias_key (without braces) → resolved absolute path string.
-    AC-01: alias resolution. AC-06: cached by config file path.
+    AC-01: alias resolution. AC-06: cached by (path, mtime_ns).
     """
     global _alias_cache
-    cache_key = str(config_path)
+    try:
+        mtime_ns = config_path.stat().st_mtime_ns
+    except OSError:
+        return {}
+    cache_key = (str(config_path), mtime_ns)
     if cache_key in _alias_cache:
         return _alias_cache[cache_key]
 
@@ -365,8 +377,11 @@ class BmadRoutingManifest(Extension):
                 phase = state_result["phase"]
                 active_modules = PHASE_MODULES.get(phase)
 
+            # Single glob per execute() — reused for routing rows and artifact scan
+            csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
+
             # Collect routing rows from all module-help.csv files
-            routing_rows = _collect_routing_rows(active_modules)
+            routing_rows = _collect_routing_rows(active_modules, csv_files)
 
             if not routing_rows:
                 return
@@ -390,7 +405,6 @@ class BmadRoutingManifest(Extension):
                 config_path = state_path.parent / "01-bmad-config.md"  # AC-01
                 if config_path.exists():
                     alias_map = _parse_alias_map(config_path)  # AC-06: cached
-                    csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))  # AC-06
                     phase_map = _scan_artifact_existence(csv_files, alias_map)  # AC-02, AC-03
                     completed_text = _build_completed_phases_text(phase_map)  # AC-04
                     manifest_prompt += f"\n\n{completed_text}"

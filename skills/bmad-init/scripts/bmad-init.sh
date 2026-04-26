@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 PROJECT_PATH="${1:-$(pwd)}"
 A0PROJ="$PROJECT_PATH/.a0proj"
 PROJECT_NAME=$(basename "$PROJECT_PATH")
@@ -37,11 +37,11 @@ if [ ! -f "$A0PROJ/instructions/01-bmad-config.md" ]; then
 ### Path Conventions
 | Alias | Resolved Path |
 |---|---|
-| \`{project-root}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/\` |
-| \`{planning_artifacts}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/_bmad-output/planning-artifacts/\` |
-| \`{implementation_artifacts}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/_bmad-output/implementation-artifacts/\` |
-| \`{product_knowledge}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/knowledge/\` |
-| \`{output_folder}\` | \`/a0/usr/projects/$PROJECT_NAME/.a0proj/_bmad-output/\` |
+| \`{project-root}\` | \`$A0PROJ/\` |
+| \`{planning_artifacts}\` | \`$A0PROJ/_bmad-output/planning-artifacts/\` |
+| \`{implementation_artifacts}\` | \`$A0PROJ/_bmad-output/implementation-artifacts/\` |
+| \`{product_knowledge}\` | \`$A0PROJ/knowledge/\` |
+| \`{output_folder}\` | \`$A0PROJ/_bmad-output/\` |
 
 ### User Settings
 - **User Name:** User

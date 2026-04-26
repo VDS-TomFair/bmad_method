@@ -59,6 +59,16 @@ PHASE_MODULES = {
 }
 
 
+def _read_csv_cached(csv_path: Path) -> str:
+    """Read CSV file with mtime-keyed cache invalidation."""
+    global _csv_cache
+    mtime_ns = csv_path.stat().st_mtime_ns
+    cache_key = (str(csv_path), mtime_ns)
+    if cache_key not in _csv_cache:
+        _csv_cache[cache_key] = csv_path.read_text(encoding="utf-8")
+    return _csv_cache[cache_key]
+
+
 def _resolve_state_file(agent) -> Path | None:
     """Resolve the BMAD state file from the active project context."""
     try:
@@ -80,7 +90,6 @@ def _collect_routing_rows(active_modules: list | None, csv_files: list | None = 
     Read all skills/*/module-help.csv files and return routing row strings.
     Filters by active_modules if provided. Uses _csv_cache with mtime invalidation.
     """
-    global _csv_cache
     routing_rows = []
 
     # Discover all module-help.csv files sorted by skill name (use provided list or glob)
@@ -91,12 +100,7 @@ def _collect_routing_rows(active_modules: list | None, csv_files: list | None = 
         skill_name = csv_path.parent.name
 
         try:
-            # mtime-keyed cache — invalidates when file changes
-            mtime_ns = csv_path.stat().st_mtime_ns
-            cache_key = (str(csv_path), mtime_ns)
-            if cache_key not in _csv_cache:
-                _csv_cache[cache_key] = csv_path.read_text(encoding="utf-8")
-            content = _csv_cache[cache_key]
+            content = _read_csv_cached(csv_path)
             reader = csv.DictReader(io.StringIO(content))
 
             for row in reader:
@@ -200,7 +204,7 @@ def _scan_artifact_existence(csv_files: list, alias_map: dict) -> dict:
     phase_map: dict = {k: (False, "no required artifact found") for k in PHASE_BUCKETS}
     for csv_path in csv_files:
         try:
-            content = csv_path.read_text(encoding="utf-8")
+            content = _read_csv_cached(csv_path)
             reader = csv.DictReader(io.StringIO(content))
             for row in reader:
                 # AC-03: only required=true rows gate phase completion

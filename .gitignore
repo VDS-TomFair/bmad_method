@@ -11,3 +11,10 @@
 .a0proj/autoresearch/
 agents/*/settings.json
 
+
+# AI-tool scratch directories — never commit
+.kilo/
+.cursor/
+.claude/
+.windsurf/
+.aider*

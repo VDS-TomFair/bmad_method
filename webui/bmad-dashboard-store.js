@@ -5,6 +5,7 @@ export const store = createStore("bmadDashboard", {
     loading: false,
     data: null,
     lastRefresh: null,
+    error: "",
 
     async onOpen() {
         await this.refresh();

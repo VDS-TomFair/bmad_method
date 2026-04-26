@@ -43,15 +43,23 @@ if [ ! -f "$A0PROJ/instructions/01-bmad-config.md" ]; then
 | \`{product_knowledge}\` | \`$A0PROJ/knowledge/\` |
 | \`{output_folder}\` | \`$A0PROJ/_bmad-output/\` |
 
-### User Settings
-- **User Name:** User
-- **Communication Language:** English
-- **User Skill Level:** intermediate
-
 CONFIG
   echo "Config file written."
 else
   echo "Config file already present, preserving existing config."
+fi
+
+# Write bmad-user-prefs.promptinclude.md (no-clobber — preserves user edits on re-init)
+if [ ! -f "$A0PROJ/instructions/bmad-user-prefs.promptinclude.md" ]; then
+  cat > "$A0PROJ/instructions/bmad-user-prefs.promptinclude.md" << 'PREFS'
+## User Settings
+- **User Name:** User
+- **Communication Language:** English
+- **User Skill Level:** intermediate
+PREFS
+  echo "User prefs file written."
+else
+  echo "User prefs file already present, preserving existing preferences."
 fi
 
 # Write 02-bmad-state.md (only if not already present)

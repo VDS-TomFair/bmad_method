@@ -9,7 +9,6 @@ SHARED_SECTIONS = [
     'BMAD Activation Protocol',
     'Initial Clarification',
     'Thinking Framework',
-    'Using BMAD Skills',
     'Tool Calling',
     'File and Artifact Handling',
 ]

@@ -50,20 +50,14 @@ class TestD2AuditSharedSections(unittest.TestCase):
                     'bmad-master should NOT have A0 Variable Resolution')
 
     def test_six_sections_identical_across_non_master(self):
-        """6 sections (excluding Using BMAD Skills) must be identical across 19 non-master agents."""
-        identical_sections = [s for s in SHARED_SECTIONS if s != 'Using BMAD Skills']
+        """6 sections (excluding Using BMAD Skills) are now in shared fragment."""
         agents = [a for a in _get_agents() if a != 'bmad-master']
-
-        for section in identical_sections:
-            hashes = set()
-            for agent in agents:
-                spec = AGENTS_DIR / agent / 'prompts' / 'agent.system.main.specifics.md'
-                content = spec.read_text()
-                extracted = _extract_section(content, section)
-                self.assertIsNotNone(extracted, f'{agent} missing section: {section}')
-                hashes.add(hashlib.md5(extracted.strip().encode()).hexdigest())
-            self.assertEqual(len(hashes), 1,
-                        f'Section "{section}" is not identical across agents: {len(hashes)} variants')
+        for agent in agents:
+            spec = AGENTS_DIR / agent / 'prompts' / 'agent.system.main.specifics.md'
+            content = spec.read_text()
+            # After D3, shared sections are in include file, not inline
+            self.assertIn('{{ include "bmad-agent-shared.md" }}', content,
+                        f'{agent} missing include directive')
 
     def test_using_bmad_skills_protocol_identical(self):
         """The protocol part of 'Using BMAD Skills' (before skills table) is identical."""

@@ -6,6 +6,32 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.1.0] — 2026-05-01
+
+### Upstream v6.6.0 Sync (Phase F)
+
+Sync with upstream BMAD-METHOD v6.6.0 (88b9a1c → 9debc16). 12 tasks completed.
+
+#### P0 — Critical Workflow Step Sync
+
+- **F-P0-1**: Fix pre-checked architecture checklist in step-07-validation.md — all items unchecked `[ ]`, ✅ emoji removed from headers, 3-tier conditional status (READY FOR IMPLEMENTATION | READY WITH MINOR GAPS | NOT READY)
+- **F-P0-2**: Add file churn detection to epic design in step-02-design-epics.md — Principle #6 (Implementation Efficiency), Step C (Review for File Overlap), brownfield context assessment, wrong/correct examples
+- **F-P0-3**: Add file churn check + HALT + on_complete hook in step-04-final-validation.md — File Churn Check subsection, HALT instruction, resolve_customization.py on_complete hook
+
+#### P1 — Config Migration + Customization
+
+- **F-P1-1**: Move `project_name` from bmm config to core config
+- **F-P1-2**: Remove `project_name` from bmm config
+- **F-P1-3**: Update all 5 config.yaml versions to 6.6.0
+- **F-P1-4**: Verify CSV row coverage post-migration (confirmed safe)
+- **F-P1-5**: Include `resolve_customization.py` in plugin with A0 path adaptations
+- **F-P1-6**: Create `bmad-customize` skill — ported upstream core skill with SKILL.md, list_customizable_skills.py, 30 customize.toml files
+
+#### P2 — Polish
+
+- **F-P2-1**: Update CHANGELOG with Phase F entries
+- **F-P2-2**: Plugin version bump to 1.1.0
+
 ## [1.0.8] — 2026-04-26
 
 ### Agent Zero Alignment Migration (Phases A–D)

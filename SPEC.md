@@ -1,31 +1,33 @@
-# Spec: BMAD Method Plugin — Full A0 Alignment Migration (v1.1)
+# Spec: BMAD Method Plugin — Upstream v6.6.0 Sync (v1.2)
 
-**Date:** 2026-04-26  
+**Date:** 2026-05-01  
 **Status:** Draft — pending user approval  
 **Branch:** `develop` (merge to `main` on `/ship`)  
-**Scope:** Phases A–D (full alignment migration)
+**Scope:** Phase F (upstream v6.6.0 sync) — Phases A–D ✅ COMPLETE  
+**Upstream sync:** `88b9a1c` → `9debc16` (v6.6.0, 37 files changed)
 
 ---
 
 ## Objective
 
-Migrate the BMAD Method A0 plugin from its current state (BMAD v5-flavored, partially-aligned, 4 Critical bugs) to a maximally A0-idiomatic implementation that:
+Sync the BMAD Method A0 plugin (v1.0.8) with upstream BMAD-METHOD v6.6.0, incorporating critical workflow step improvements, config migration, and evaluating new upstream features for A0 compatibility.
 
-- Fixes all 4 Critical and key Important/Suggestion bugs (Phase A)
-- Aligns structural conventions with A0 native mechanisms (Phase B)
-- Consolidates routing to SKILL.md frontmatter, eliminating `module-help.csv` redundancy (Phase C)
-- Improves UX surface: dynamic agent table, shared methodology fragments, dashboard polish (Phase D)
+**Prior work (COMPLETE):** Phases A–D delivered 35 tasks, 200 tests, 49 commits — full A0 alignment migration fixing all Critical bugs, aligning structural conventions, consolidating routing, and polishing UX surface. See [CHANGELOG.md](CHANGELOG.md) for details.
+
+**This phase targets:**
+
+- **P0 (Critical):** Sync 3 workflow step files with upstream v6.6.0 content (architecture checklist fix, design epics file churn, final validation hook)
+- **P1 (High):** Migrate `project_name` from bmm config to core config, update version headers
+- **P2 (Nice to have):** Evaluate `bmad-customize` skill for A0, update CHANGELOG
 
 **Target user:** Individual developer using Agent Zero for personal software projects. BMAD is **project-scoped** — each project gets independent BMAD state, initialization, and knowledge. BMAD must work in any A0 project (`.a0proj/` present) or A0 workdir. Not limited to `/a0/usr/projects/`.
 
 **What success looks like:**
-- `bmad init` works from any filesystem path (workdir, `/a0/usr/projects/`, `/tmp/`, `/home/user/`)
-- Phase tracking is consistent: dashboard and routing always show the same phase
-- Cross-project state leakage is eliminated
-- Routing manifest extension is ≤ 100 lines (down from 424)
-- All 20 BMAD agent personas remain fully functional throughout every phase
-- Plugin passes `a0-review-plugin` audit with no Critical findings
-- Dashboard renders without malformed HTML
+- All 3 critical workflow steps match upstream v6.6.0 content
+- Config migration complete (`project_name` in core config, versions updated to 6.6.0)
+- Plugin version bumped to v1.1.0 (feature addition from upstream sync)
+- All A0-specific additions (Step Complete sections, YAML frontmatter, trigger_patterns) preserved
+- All 200+ existing tests continue to pass
 
 ---
 
@@ -41,6 +43,7 @@ Migrate the BMAD Method A0 plugin from its current state (BMAD v5-flavored, part
 | Testing | `pytest` | Existing `tests/test_extension_80.py` pattern |
 | VCS | Git | `develop` branch → `main` on /ship |
 | Deployment | VPS `162.19.152.199` | Plugin dir mapped to testing instance |
+| Upstream | BMAD-METHOD v6.6.0 | `.a0proj/upstream/BMAD-METHOD/` local clone |
 
 ---
 
@@ -62,6 +65,10 @@ python -m flake8 api/ helpers/ extensions/ --max-line-length 100
 # Test BMAD init on arbitrary path (smoke test)
 bash skills/bmad-init/scripts/bmad-init.sh /tmp/test-bmad-project
 grep 'A0PROJ' /tmp/test-bmad-project/.a0proj/instructions/01-bmad-config.md  # must NOT contain /a0/usr/projects
+
+# Diff workflow step against upstream
+diff skills/bmad-bmm/workflows/3-solutioning/create-epics-and-stories/steps/step-02-design-epics.md \
+     .a0proj/upstream/BMAD-METHOD/src/bmm-skills/create-epics-and-stories/steps/step-02-design-epics.md
 
 # Git: create dev branch
 git -C /a0/usr/projects/a0_bmad_method checkout -b develop
@@ -117,78 +124,88 @@ ssh -i /a0/usr/.ssh/id_ed25519 -o StrictHostKeyChecking=no root@162.19.152.199 \
 ```
 /a0/usr/projects/a0_bmad_method/
 │
-├── plugin.yaml                          ← per_project_config: true (Phase B)
+├── plugin.yaml                          ← per_project_config: true ✅
 ├── SPEC.md                              ← this file
 ├── CHANGELOG.md
 ├── README.md
 ├── .gitignore                           ← ✅ DONE: .kilo/ .cursor/ .claude/ .windsurf/ added
 │
 ├── api/
-│   └── _bmad_status.py                  ← I2: add None-guard on _spec (Phase A)
-│                                           S3: _recommend() accept cached results (Phase B)
+│   └── _bmad_status.py                  ← ✅ DONE: None-guard, _recommend() caching
 │
 ├── helpers/
 │   ├── __init__.py
-│   └── bmad_status_core.py              ← C2/I3/N1/N3: shared read_state() (Phase A)
-│                                           I6/S6/S8: AGENT_NAMES, PHASE_ACTIONS, PHASE_BUCKET_PREFIXES (Phase B)
+│   └── bmad_status_core.py              ← ✅ DONE: read_state(), AGENT_NAMES, PHASE_ACTIONS, PHASE_BUCKET_PREFIXES
 │
 ├── extensions/
 │   ├── python/
 │   │   └── message_loop_prompts_after/
-│   │       └── _80_bmad_routing_manifest.py
-│   │           Phase A: C3 fallback gate, I1 logging
-│   │           Phase B: mtime caching, dead constant removal
-│   │           Phase C: CSV column alignment to upstream format
+│   │       └── _80_bmad_routing_manifest.py  ← ✅ DONE: mtime caching, log.warning, dead code removed
 │   └── webui/
 │       └── sidebar-quick-actions-main-start/
 │           └── _bmad_dashboard_btn.html
 │
-├── agents/                              ← 20 bmad-* profiles (idiomatic ✅ — keep structure)
+├── agents/                              ← 20 bmad-* profiles (idiomatic ✅)
+│   ├── _shared/
+│   │   └── prompts/
+│   │       └── bmad-agent-shared.md     ← ✅ DONE: shared fragment (85 lines)
 │   ├── bmad-master/
 │   │   └── prompts/
-│   │       ├── agent.system.main.role.md      ← Phase D: remove static 19-agent table
-│   │       ├── agent.system.main.specifics.md ← Phase D: include bmad.methodology.shared.md
+│   │       ├── agent.system.main.role.md      ← ✅ DONE: dynamic via {{agent_profiles}}
+│   │       ├── agent.system.main.specifics.md ← ✅ DONE: includes shared fragment
 │   │       └── ...
-│   └── bmad-pm/ ... (19 more — same Phase D treatment for specifics.md)
+│   └── bmad-pm/ ... (19 more — same shared include ✅)
 │
 ├── skills/
 │   ├── bmad-init/
-│   │   ├── SKILL.md                    ← Phase B: add /bmad /bmad-init /bmad-help trigger_patterns
-│   │   ├── module-help.csv             ← KEEP — upstream BMAD canonical routing
-│   │   │                                 Phase C: align to upstream 13-column schema
+│   │   ├── SKILL.md                    ← ✅ DONE: trigger_patterns added
+│   │   ├── module-help.csv             ← ✅ DONE: upstream 13-col schema
+│   │   ├── core/
+│   │   │   └── config.yaml             ← Phase F: add project_name, update version
 │   │   └── scripts/
-│   │       ├── bmad-init.sh            ← C1: use $A0PROJ paths, set -euo pipefail (Phase A)
-│   │       ├── bmad-status.py          ← Phase B: use bmad_status_core constants
-│   │       └── bmad_status_core.py     ← DELETED: moved to helpers/ (Phase A)
+│   │       ├── bmad-init.sh            ← ✅ DONE: $A0PROJ paths, set -euo pipefail
+│   │       └── bmad-status.py          ← ✅ DONE: importlib, BMAD_DEV_MODE gate
 │   ├── bmad-bmm/
-│   │   └── workflows/**/SKILL.md       ← Phase C: add bmad: frontmatter block
-│   │   └── workflows/**/SKILL.md       ← Phase C: add trigger_patterns (slash-style, A0 discovery)
-│   └── bmad-init/_config/
-│       └── manifest.yaml               ← single source of truth for module registry
+│   │   ├── config.yaml                 ← Phase F: remove project_name, update version
+│   │   ├── module-help.csv             ← ✅ DONE: upstream 13-col schema
+│   │   └── workflows/
+│   │       └── 3-solutioning/create-epics-and-stories/steps/
+│   │           ├── step-02-design-epics.md      ← Phase F P0: sync with upstream v6.6.0
+│   │           └── step-04-final-validation.md  ← Phase F P0: sync with upstream v6.6.0
+│   │       └── 3-solutioning/create-architecture/steps/
+│   │           └── step-07-validation.md        ← Phase F P0: sync with upstream v6.6.0
+│   ├── bmad-tea/                        ← ✅ DONE: trigger_patterns, CSV aligned
+│   ├── bmad-cis/                        ← ✅ DONE: trigger_patterns, CSV aligned
+│   └── bmad-bmb/                        ← ✅ DONE: trigger_patterns, CSV aligned
 │
 ├── webui/
-│   ├── bmad-dashboard.html             ← C4: fix malformed HTML (Phase A)
-│   └── bmad-dashboard-store.js         ← I8: remove stale error field (Phase B)
+│   ├── bmad-dashboard.html             ← ✅ DONE: HTML fixed
+│   └── bmad-dashboard-store.js         ← ✅ DONE: orphan removed
 │
-├── prompts/                            ← NEW: Phase D
-│   └── bmad.methodology.shared.md     ← shared fragment included by all 20 main.specifics.md
+├── prompts/                            ← ✅ DONE
+│   └── bmad.methodology.shared.md      ← shared fragment (85 lines)
 │
-├── tests/
-│   ├── test_extension_80.py            ← expand with read_state() variants, ctxid-missing path
-│   ├── test_bmad_status_core.py        ← NEW Phase A: unit tests for shared helpers
-│   └── test_bmad_init_sh.py            ← NEW Phase B: shell integration tests
+├── tests/                              ← 200+ tests ✅
+│   ├── test_extension_80.py            ← routing extension tests
+│   ├── test_bmad_status_core.py        ← read_state() variants
+│   ├── test_bmad_init_sh.py            ← shell integration tests
+│   └── ... (27+ more test files)
 │
-└── docs/
-    ├── SPEC.md (symlink)               ← or just reference from root
-    ├── alignment-analysis.md
-    └── document-lifecycle.md
+├── docs/
+│   ├── upstream-sync-report-6.6.0.md   ← Phase F source of truth for sync
+│   ├── alignment-analysis.md
+│   ├── document-lifecycle.md
+│   └── adr/                            ← 6 architecture decision records
+│
+└── .a0proj/
+    └── upstream/BMAD-METHOD/           ← upstream repo clone (v6.6.0)
 ```
 
 ---
 
 ## Code Style
 
-### Python — canonical example (new helpers/bmad_status_core.py style)
+### Python — canonical example (helpers/bmad_status_core.py style)
 
 ```python
 import re
@@ -281,7 +298,7 @@ else
 fi
 ```
 
-### SKILL.md frontmatter — Phase C target format
+### SKILL.md frontmatter — established format
 
 ```yaml
 ---
@@ -323,10 +340,13 @@ bmad:
 
 | File | Covers |
 |---|---|
-| `tests/test_extension_80.py` | Routing extension helpers (expand with `read_state()` variants, ctxid-missing path, mtime caching) |
-| `tests/test_bmad_status_core.py` | NEW Phase A: `read_state()`, `_parse_alias_map()`, `AGENT_NAMES`, `PHASE_ACTIONS`, `PHASE_BUCKET_PREFIXES` |
-| `tests/test_bmad_status_api.py` | NEW Phase A: `BmadStatus.process()` integration — each response key with fixture project dir |
-| `tests/test_bmad_init_sh.py` | NEW Phase B: `bmad-init.sh` on `/tmp/test-*` dirs — idempotency, path correctness, file contents |
+| `tests/test_extension_80.py` | Routing extension helpers |
+| `tests/test_bmad_status_core.py` | `read_state()`, `_parse_alias_map()`, `AGENT_NAMES`, `PHASE_ACTIONS`, `PHASE_BUCKET_PREFIXES` |
+| `tests/test_bmad_init_sh.py` | `bmad-init.sh` on `/tmp/test-*` dirs — idempotency, path correctness |
+| `tests/test_core_csv_schema.py` | CSV column schema validation |
+| `tests/test_c*_triggers.py` (4 files) | trigger_patterns presence per module |
+| `tests/test_d*.py` (9 files) | Phase D: shared fragment, includes, table removal, caching, party mode |
+| + 16 more | Dead code, constants, dashboard, routing vars, etc. |
 
 **Coverage targets:**
 - `helpers/bmad_status_core.py` — 100% (pure functions)
@@ -334,9 +354,9 @@ bmad:
 - `api/_bmad_status.py` — integration test per response key
 - `skills/bmad-init/scripts/bmad-init.sh` — smoke test via subprocess
 
-**CI gate (to add in Phase B):**
+**CI gate:**
 ```bash
-python -m pytest tests/ -v --tb=short          # all green
+python -m pytest tests/ -v --tb=short          # all green (200+ tests)
 tidy -e webui/bmad-dashboard.html 2>&1 | grep -c "^Error" | grep -q "^0$"  # zero HTML errors
 bash -n skills/bmad-init/scripts/bmad-init.sh  # bash syntax
 ```
@@ -361,6 +381,8 @@ def test_init_sh_paths_not_hardcoded():
 - Keep SPEC.md updated before implementing spec changes
 - Work on `develop` branch; merge to `main` only on confirmed `/ship`
 - Verify tests pass on VPS testing instance before merge
+- **When syncing upstream content:** Preserve all A0-specific additions (YAML frontmatter, Step Complete sections, trigger_patterns, `bmad:` blocks in SKILL.md)
+- **When merging upstream diffs:** Read our file fully first, identify A0-only sections, merge upstream content around them
 
 ### Ask First
 - Any change to `02-bmad-state.md` field names or format (breaks existing initialized projects)
@@ -369,7 +391,8 @@ def test_init_sh_paths_not_hardcoded():
 - Removing any `module-help.csv` file before Phase C SKILL.md frontmatter migration is complete for that module
 - Changing `bmad-init.sh` output file format or instruction file names (backward-compat risk)
 - Any change to the VPS testing instance outside the plugin folder
-- Removing the static 19-agent table from bmad-master/role.md (Phase D) before confirming `{{agent_profiles}}` delivers BMAD profiles
+- Removing the static 19-agent table from bmad-master/role.md before confirming `{{agent_profiles}}` delivers BMAD profiles
+- **Adding the `bmad-customize` skill** — upstream-only feature that may need A0 adaptation
 
 ### Never Do
 - Modify A0 core files (`/a0/agent.py`, core `/a0/helpers/*.py`, `/a0/prompts/`, core `/a0/extensions/`)
@@ -380,135 +403,112 @@ def test_init_sh_paths_not_hardcoded():
 - Hard-code the string `/a0/usr/projects/` in any new code
 - Use `x-html` in Alpine templates (XSS risk)
 - Fabricate CHANGELOG entries for changes not in the diff (PR #5 class mistake)
+- **Overwrite A0-specific additions** (Step Complete sections, YAML frontmatter, trigger_patterns) when merging upstream content
+- **Delete our plugin-specific sections** without explicit confirmation they're no longer needed
 
 ---
 
 ## Migration Phases
 
-### Phase A — Critical Bug Fixes
-**Effort:** ~6–8 hours | **Risk:** Low | **Gate:** Must pass before any other work
+### Phase A — Critical Bug Fixes ✅ COMPLETE
+**Effort:** ~6–8 hours | **Delivered:** v1.0.8  
+**7 tasks:** C1 (hardcoded paths), C2+I3+N1+N3 (shared `read_state()`), C3 (mtime fallback), C4 (HTML fix), I1 (log warning), I2 (None-guard), Tests  
+*See [CHANGELOG § Phase A](CHANGELOG.md) for details.*
+
+### Phase B — Structural Alignment ✅ COMPLETE
+**Effort:** ~2–3 days | **Delivered:** v1.0.8  
+**11 tasks:** per_project_config, promptinclude, trigger_patterns, dead code removal, bash hardening, constants consolidation, mtime caching, git setup, shell tests  
+*See [CHANGELOG § Phase B](CHANGELOG.md) for details.*
+
+### Phase C — Routing Consolidation ✅ COMPLETE
+**Effort:** ~1 week | **Delivered:** v1.0.8  
+**8 tasks:** CSV 13-col migration (all 5 files), trigger_patterns on 57 SKILL.md files, routing verification  
+*See [CHANGELOG § Phase C](CHANGELOG.md) for details.*
+
+### Phase D — UX Surface ✅ COMPLETE
+**Effort:** ~3–5 days | **Delivered:** v1.0.8  
+**9 tasks:** shared fragment (85 lines), 19 specifics.md updated, dynamic agent table, _recommend() caching, dashboard errors, project-context stub, party mode, plugin audit  
+*See [CHANGELOG § Phase D](CHANGELOG.md) for details.*
+
+---
+
+### Phase F — Upstream v6.6.0 Sync
+**Effort:** ~1–2 days | **Risk:** Low–Medium | **Prereq:** Phases A–D complete ✅  
+**Upstream:** `88b9a1c` → `9debc16` (v6.6.0) | **Files changed upstream:** 37 (3422 insertions, 312 deletions)  
+**Reference:** `docs/upstream-sync-report-6.6.0.md`
+
+This phase syncs our plugin with upstream BMAD-METHOD v6.6.0. The upstream release improves epic design quality (file churn detection), architecture validation rigor (unchecked checklists with conditional status), and workflow completion hooks. A config migration moves `project_name` to the canonical location.
+
+#### P0 — Critical Workflow Step Sync (3 files)
 
 | ID | Task | File | Detail |
 |---|---|---|---|
-| C1 | Fix hardcoded path | `skills/bmad-init/scripts/bmad-init.sh:40-44` | Replace `$PROJECT_NAME` with `$A0PROJ`-derived vars; add `set -euo pipefail` |
-| C2+I3+N1+N3 | Shared `read_state()` | `helpers/bmad_status_core.py` | `_PHASE_RE` + `_ARTIFACT_RE` anchored MULTILINE IGNORECASE; lowercase output; update routing ext + API to use it |
-| C3 | Gate mtime fallback | `_80_bmad_routing_manifest.py`, `api/_bmad_status.py`, `scripts/bmad-status.py` | Remove production fallback; gate behind `BMAD_DEV_MODE` env var with `log.warning()` |
-| C4 | Fix HTML structure | `webui/bmad-dashboard.html:255-263` | Delete 4 stray `</div>` and 1 stray `</template>`; verify with tidy |
-| I1 | Log at outermost except | `_80_bmad_routing_manifest.py:423` | `log.warning(traceback.format_exc())` — do not re-raise |
-| I2 | None-guard on `_spec` | `api/_bmad_status.py:11-14` | `if _spec is None: raise ImportError(...)` |
-| Tests | Regression tests | `tests/test_bmad_status_core.py` (new) | `read_state()` with 6 format variants (dash/no-dash, extra whitespace, uppercase, narrative match, missing file) |
+| F-P0-1 | Fix pre-checked architecture checklist | `skills/bmad-bmm/workflows/3-solutioning/create-architecture/steps/step-07-validation.md` | Change all checklist items from `[x]` to `[ ]` (unchecked); remove ✅ emoji from section headers; add 3-tier conditional status (READY FOR IMPLEMENTATION / READY WITH MINOR GAPS / NOT READY) with evaluation rules; **preserve our Step Complete section** |
+| F-P0-2 | Add file churn detection to epic design | `skills/bmad-bmm/workflows/3-solutioning/create-epics-and-stories/steps/step-02-design-epics.md` | Add Implementation Efficiency principle (#6); rename Step A to "Assess Context and Identify Themes" with brownfield context assessment; update Step B to consider file overlap per epic; add new Step C: Review for File Overlap; add wrong/correct examples for file churn; **preserve our YAML frontmatter and Step Complete section** |
+| F-P0-3 | Add file churn check + HALT + on_complete hook | `skills/bmad-bmm/workflows/3-solutioning/create-epics-and-stories/steps/step-04-final-validation.md` | Add File Churn Check subsection to Epic Structure Validation; add HALT instruction to Final Menu; add On Complete hook (`resolve_customization.py`); **preserve our Workflow Completion — State Write section** |
 
-**Phase A acceptance criteria:**
-- [ ] `bash skills/bmad-init/scripts/bmad-init.sh /tmp/test-dir` → `01-bmad-config.md` contains `/tmp/test-dir/.a0proj/`, NOT `/a0/usr/projects/`
-- [ ] `tidy -e webui/bmad-dashboard.html` → zero errors
-- [ ] `pytest tests/ -v` → all green, all `read_state()` variants pass
-- [ ] Routing extension and `BmadStatus.process()` return identical `phase` value for same state file
-- [ ] Any exception in `BmadRoutingManifest.execute()` produces a log warning, not silent swallow
+**Critical sync rules for P0 tasks:**
+1. Read our file fully before any changes
+2. Identify all A0-specific sections (YAML frontmatter, Step Complete, State Write)
+3. Merge upstream content into the appropriate locations
+4. Verify A0-specific sections remain intact after merge
+5. Run `python -m pytest tests/ -v` to verify no regressions
 
----
+#### P1 — Config Migration (HIGH)
 
-### Phase B — Structural Alignment
-**Effort:** ~2–3 days | **Risk:** Low | **Prereq:** Phase A complete
+| ID | Task | File | Detail |
+|---|---|---|---|
+| F-P1-1 | Move `project_name` to core config | `skills/bmad-init/core/config.yaml` | Add `project_name` field (moved from bmm config); update version header to `6.6.0` |
+| F-P1-2 | Remove `project_name` from bmm config | `skills/bmad-bmm/config.yaml` | Remove `project_name` field; update version header to `6.6.0` |
+| F-P1-3 | Update remaining config versions | `skills/bmad-cis/config.yaml`, `skills/bmad-tea/config.yaml`, `skills/bmad-bmb/config.yaml` | Update version headers to `6.6.0` if present |
+| F-P1-4 | Verify CSV row coverage | All 5 `module-help.csv` files | Verify no CSV rows reference config fields that moved; ensure routing still works |
 
-| Task | File | Detail |
+#### P2 — Nice to Have
+
+| ID | Task | Detail |
 |---|---|---|
-| `per_project_config: true` | `plugin.yaml:23` | Enables per-project toggle UI |
-| User prefs → promptinclude | `skills/bmad-init/scripts/bmad-init.sh` + new `.promptinclude.md` | Move user name/language/skill level from `01-bmad-config.md` to `bmad-user-prefs.promptinclude.md`; auto-injected by A0 `_16_promptinclude` |
-| Slash-style trigger_patterns | `skills/bmad-init/SKILL.md` | Add `/bmad`, `/bmad-init`, `/bmad-help`, `/bmad-status` to trigger_patterns |
-| Delete dead constant | `_80_bmad_routing_manifest.py:30-36` | Remove `SKILL_TO_MODULE` (unused) |
-| Fix store JS orphan | `webui/bmad-dashboard-store.js:19` | Remove `this.error = ""` or reinstate error UI |
-| Bash hardening | `bmad-init.sh:2` | `set -euo pipefail`; rsync fallback; warnings to stderr |
-| Consolidate constants | `helpers/bmad_status_core.py` | `AGENT_NAMES`, `PHASE_ACTIONS`, `PHASE_BUCKET_PREFIXES` — single source; update all 3 consumers |
-| Remove dead imports | `api/_bmad_status.py:2` | Delete `import re, json` |
-| Mtime caching | `_80_bmad_routing_manifest.py` | `_alias_cache` keyed on `(path, mtime_ns)`; `_csv_cache` same; single glob per `execute()` |
-| Gitignore | `.gitignore` | Add `.kilo/`, `.cursor/`, `.claude/`, `.windsurf/` |
-| Git setup | repo | Create `develop` branch, push to remote; tag current state as `v1.0.8-pre-align` |
-| VPS mapping | VPS | Confirm/establish git-based deploy from `develop` branch to `/home/debian/agent-zero/testing/usr/plugins/bmad_method` |
-| Tests | `tests/test_bmad_init_sh.py` | Shell integration tests via subprocess |
+| F-P2-1 | Evaluate `bmad-customize` skill | Upstream added `bmad-customize` core skill. Assess whether it applies to A0 (where customization uses SKILL.md frontmatter + `.promptinclude.md`), or if it should be adapted/skipped |
+| F-P2-2 | Update CHANGELOG | Add Phase F entries to CHANGELOG.md |
+| F-P2-3 | Plugin version bump | Bump `plugin.yaml` version to `1.1.0` (feature addition from upstream sync) |
+
+#### Phase F acceptance criteria:
+
+**P0 (merge gate):**
+- [ ] `step-07-validation.md` checklist items are all `[ ]` (unchecked), section headers have no ✅ emoji, Overall Status has 3-tier conditional logic
+- [ ] `step-02-design-epics.md` has 6 principles (including #6 Implementation Efficiency), Step C (File Overlap Review) exists, wrong/correct file churn examples present
+- [ ] `step-04-final-validation.md` has File Churn Check in validation, HALT instruction in Final Menu, On Complete hook section
+- [ ] All 3 files retain their YAML frontmatter and Step Complete sections (A0-specific)
+- [ ] `python -m pytest tests/ -v` → all 200+ tests green (no regressions)
+
+**P1:**
+- [ ] `skills/bmad-init/core/config.yaml` has `project_name` field
+- [ ] `skills/bmad-bmm/config.yaml` no longer has `project_name` field
+- [ ] All config.yaml files have version `6.6.0` in headers
+- [ ] Routing manifest still reads CSV correctly after config migration
+
+**P2:**
+- [ ] `bmad-customize` evaluation documented (adopt / adapt / skip with rationale)
+- [ ] CHANGELOG.md has Phase F entries
+- [ ] `plugin.yaml` version is `1.1.0`
 
 ---
 
-### Phase C — CSV Alignment + A0 Discovery Layer
-**Effort:** ~1 week | **Risk:** Medium | **Prereq:** Phase B complete
+## Success Criteria (Phase F — Upstream v6.6.0 Sync)
 
-**Revised goal (upstream discovery):** `module-help.csv` is the **canonical BMAD routing mechanism** — used in upstream BMAD-METHOD too. It is NOT something we invented. Upstream SKILL.md only carries `name` + `description` frontmatter; all routing metadata lives in CSV.
+**P0 (merge gate — no P1/P2 work until these pass):**
+- [ ] All 3 critical workflow steps match upstream v6.6.0 content
+- [ ] No A0-specific sections lost during sync (YAML frontmatter, Step Complete, State Write)
+- [ ] All 200+ existing tests pass without modification
 
-For Agent Zero, the right two-layer model is:
-- `module-help.csv` = **BMAD-native routing** (keep; align column names to upstream format)
-- `SKILL.md` = **A0-native discovery** (minimal: `name`, `description`, `trigger_patterns` for `skills_tool:search`)
-- Routing extension = reads CSV + A0 context → injects manifest into EXTRAS (keep; fix bugs, add caching)
+**P1 (config migration):**
+- [ ] `project_name` lives in core config only (not duplicated in bmm)
+- [ ] All config.yaml version headers read `6.6.0`
+- [ ] CSV row routing unaffected by config migration
 
-| Task | Detail |
-|---|---|
-| Align CSV columns to upstream format | Upstream: `module,skill,display-name,menu-code,description,action,args,phase,after,before,required,output-location,outputs`. Our columns differ (e.g. `skill` column uses skill-codes vs agent names). Normalize. |
-| Add `trigger_patterns` to all ~40 workflow SKILL.md | Slash-style triggers (`/bmad-dev-story`, `/bmad-create-prd`, etc.) for `skills_tool:search` discoverability. No routing fields — keep SKILL.md minimal. |
-| Mtime caching on CSV + alias reads | `_alias_cache` + `_csv_cache` keyed on `(path, mtime_ns)`; single glob per `execute()`. Already listed in Phase B; if not done, do here. |
-| Verify all ~40 workflows discoverable | `skills_tool:search` returns correct results on VPS testing instance for key workflow names. |
-| Expand tests | CSV column normalization, trigger_patterns presence in SKILL.md, phase-filter correctness |
-
-**Phase C acceptance criteria:**
-- [ ] CSV columns match upstream `module-help.csv` schema (all 13 columns present)
-- [ ] All ~40 workflow SKILL.md files have `trigger_patterns` with slash-style entries
-- [ ] `skills_tool:search "dev story"` returns `bmad-dev-story` on VPS testing instance
-- [ ] `skills_tool:search "create prd"` returns correct workflow
-- [ ] Routing extension still reads CSV correctly after column normalization
-- [ ] Caching: routing manifest built from cache on second call in same turn
-
----
-
-### Phase D — UX Surface
-**Effort:** ~3–5 days | **Risk:** Medium | **Prereq:** Phase C complete
-
-| Task | File | Detail |
-|---|---|---|
-| Remove static 19-agent table from bmad-master | `agents/bmad-master/prompts/agent.system.main.role.md` | Replace with routing guidance prose; confirm `{{agent_profiles}}` delivers BMAD profiles first (open question #2) |
-| Shared methodology fragment | `prompts/bmad.methodology.shared.md` (new) | Extract common Activation Protocol, Thinking Framework, Using BMAD Skills sections; include via `{{ include "bmad.methodology.shared.md" }}` in all 20 `main.specifics.md` |
-| Fix `_recommend()` caching | `api/_bmad_status.py:152-178` | Accept pre-computed state/agents/skills/tests instead of recomputing |
-| Dashboard error display | `webui/bmad-dashboard.html` + `bmad-dashboard-store.js` | Reinstate or clean up the error template |
-| `project-context.md` stub | `skills/bmad-init/scripts/bmad-init.sh` | Write empty stub on init; upstream BMAD v6 alignment |
-| Plugin audit | — | Run `a0-review-plugin` skill; fix any Critical/Important findings |
-
-**Phase D acceptance criteria:**
-- [ ] `bmad-master` can call all 20 subordinates without a static table (relies on dynamic profile list)
-- [ ] `prompts/bmad.methodology.shared.md` included by all 20 `main.specifics.md`
-- [ ] Dashboard error states display correctly
-- [ ] `a0-review-plugin` passes with no Critical findings
-
----
-
-### Phase E — Optional Upstream v6 Sync
-**Effort:** 2–3 weeks | **Risk:** High | **Decision:** Deferred — user to decide post Phase D
-
-Includes: `module.yaml` per module, `customize.toml` 3-layer model, `_bmad/` non-dot output folder migration, BMGD module addition. Only if user decides to track upstream BMAD-METHOD v6.
-
----
-
-## Success Criteria (full migration)
-
-**Phase A (merge gate — no Phase B until these pass):**
-- [ ] `bmad-init.sh /tmp/test-dir` → config contains `$A0PROJ`-derived paths, NOT `/a0/usr/projects/`
-- [ ] `tidy -e webui/bmad-dashboard.html` → zero errors
-- [ ] `pytest tests/ -v` → all green
-- [ ] Routing extension and dashboard show identical phase value
-- [ ] No top-level silent exception swallow in routing extension
-
-**Phase B:**
-- [ ] `plugin.yaml` has `per_project_config: true`
-- [ ] `bmad-user-prefs.promptinclude.md` exists and is auto-injected
-- [ ] All A0 instances of `AGENT_NAMES`/`PHASE_ACTIONS` use the single core module source
-- [ ] `.gitignore` blocks AI-tool scratch dirs
-- [ ] `develop` branch pushed to remote; VPS deploy pipeline confirmed
-
-**Phase C:**
-- [ ] CSV columns aligned to upstream format (all 13 columns)
-- [ ] All ~40 workflow SKILL.md files have slash-style `trigger_patterns`
-- [ ] `skills_tool:search` returns correct workflows on VPS testing instance
-- [ ] Routing extension caching confirmed working
-
-**Phase D:**
-- [ ] `bmad-master/role.md` has no static agent table
-- [ ] `bmad.methodology.shared.md` included by all 20 agents
-- [ ] `a0-review-plugin` clean
+**P2 (polish):**
+- [ ] `bmad-customize` evaluation documented
+- [ ] CHANGELOG updated
+- [ ] Plugin version `1.1.0`
 
 **Overall (pre-`main` merge):**
 - [ ] All 20 BMAD agents functional end-to-end on VPS testing instance
@@ -525,8 +525,14 @@ Includes: `module.yaml` per module, `customize.toml` 3-layer model, `_bmad/` non
 
 3. ~~**CSV vs SKILL.md routing**~~ ✅ **RESOLVED** — `module-help.csv` is upstream BMAD-METHOD's canonical routing mechanism (confirmed in `bmad-code-org/BMAD-METHOD` source). Upstream SKILL.md carries only `name`+`description`. Phase C revised: keep CSV as routing source, add `trigger_patterns` to SKILL.md for A0 discoverability only.
 
-4. **`bmad.methodology.shared.md` exact scope:** Which sections are truly shared across all 20 agents vs. module-specific? (BMM phase model not relevant to BMB/CIS agents.) Resolve at Phase D start by reading all 20 `main.specifics.md` files.
+4. ~~**`bmad.methodology.shared.md` exact scope**~~ ✅ **RESOLVED** — Phase D audit identified 7 shared sections; extracted to `agents/_shared/prompts/bmad-agent-shared.md` (85 lines). BMB/CIS agents use role-specific sections alongside shared fragment.
 
-5. **Party Mode requirements:** `party-mode` workflow exists in `skills/bmad-init/core/workflows/party-mode/`. Any specific acceptance criteria for multi-agent coordination in scope?
+5. ~~**Party Mode requirements**~~ ✅ **RESOLVED** — Phase D delivered solo party mode with 8 ACs (AC-PM-01–08). Divergence from upstream documented: no subagent spawning, no `--model` flag.
 
-6. **`02-bmad-state.md` backward compat:** If we later migrate to YAML frontmatter (cleaner parsing), we need a migration script for existing initialized projects. Defer to Phase C decision.
+6. ~~**`02-bmad-state.md` backward compat**~~ ✅ **RESOLVED** — Phase C kept existing format; `read_state()` handles all variants. No YAML migration needed.
+
+7. ~~**`resolve_customization.py` in On Complete hook**~~ ✅ **RESOLVED** — Upstream script exists at `src/scripts/resolve_customization.py` (Python 3.11+, we have 3.13 ✅). Decision: **INCLUDE** in our plugin, adapting paths to A0 conventions (`$A0PROJ/_bmad/scripts/`). The script does 3-layer TOML merge for skill customization. Added as new task F-P1-5.
+
+8. ~~**`bmad-customize` skill applicability**~~ ✅ **RESOLVED** — Decision: **CREATE** the skill. Port upstream `bmad-customize` core skill with A0 adaptations. Includes SKILL.md, `scripts/list_customizable_skills.py`, and porting `customize.toml` files from bmm skills. Upgraded from P2 evaluation to P1 creation task F-P1-6.
+
+9. ~~**CSV row coverage post-config-migration**~~ ✅ **RESOLVED** — Verified: no CSV rows reference `project_name` at all. Config migration is safe with zero CSV changes needed. F-P1-4 reduced to a quick sanity check (no longer a blocker).

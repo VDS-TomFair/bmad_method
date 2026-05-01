@@ -50,6 +50,37 @@ Fix critical agent prompt defects discovered during workflow-builder failure ana
 
 **Overall: Failure probability reduced from 95-100% to <5%**
 
+### BMB Creation Path Fixes (Phase H)
+
+Fix BMB creation output paths so agents and skills land in A0-discoverable directories. 8 tasks + review fixes completed.
+
+#### P0 — Critical Fixes
+
+- **H-P0-1**: Split `bmb_creations_output_folder` into `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills` in `skills/bmad-bmb/config.yaml`
+- **H-P0-2**: Update ~70 BMB step files with new path variables — agent steps → `bmb_build_output_agents`, workflow steps → `bmb_build_output_skills`, staging → `bmb_staging_folder`
+
+#### P1 — High Priority
+
+- **H-P1-1**: Create `bmad-promote` skill with `/promote-agent`, `/promote-workflow`, `/promote-skill` triggers for project-to-plugin promotion
+- **H-P1-2**: Update `bmad-init.sh` to create `.a0proj/agents/` and `.a0proj/skills/` directories on init
+
+#### P2 — Polish
+
+- **H-P2-1**: Update celebrate step files with A0 auto-discovery guidance (no manual install instructions)
+
+#### Review Fixes
+
+- Path traversal validation in `promote.sh` — reject `..`, `/`, leading hyphens
+- Added `/promote-skill` trigger to bmad-promote skill
+- Created dedicated `test_phase_h_promote.py` (17 tests)
+- Updated `module-help.csv` references
+
+#### Test Coverage
+
+- `tests/test_phase_h_paths.py`: Path split verification, celebrate step updates
+- `tests/test_phase_h_promote.py`: 17 tests — name validation, type routing, error handling, trigger verification
+- Total: 327 tests pass, 94 subtests, 0 failures
+
 
 ## [1.1.0] — 2026-05-01
 

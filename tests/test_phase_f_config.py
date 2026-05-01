@@ -57,25 +57,25 @@ class TestConfigVersions66(unittest.TestCase):
 
 
 class TestPluginVersion(unittest.TestCase):
-    """F-P2-2: plugin.yaml must declare version 1.1.0."""
+    """F-P2-2: plugin.yaml must declare version 1.3.0."""
 
     def test_plugin_version_110(self):
-        """plugin.yaml version field must be 1.1.0."""
+        """plugin.yaml version field must be 1.3.0."""
         plugin_yaml = ROOT / 'plugin.yaml'
         text = plugin_yaml.read_text()
-        self.assertIn('version: 1.1.0', text,
-                      'plugin.yaml does not have version: 1.1.0')
+        self.assertIn('version: 1.3.0', text,
+                      'plugin.yaml does not have version: 1.3.0')
 
 
 class TestChangelog(unittest.TestCase):
-    """F-P2-1: CHANGELOG.md must have 1.1.0 entries."""
+    """F-P2-1: CHANGELOG.md must have 1.3.0 entries."""
 
     def test_changelog_has_110_header(self):
-        """CHANGELOG.md must contain [1.1.0] header."""
+        """CHANGELOG.md must contain [1.3.0] header."""
         changelog = ROOT / 'CHANGELOG.md'
         text = changelog.read_text()
-        self.assertIn('[1.1.0]', text,
-                      'CHANGELOG.md does not contain [1.1.0] header')
+        self.assertIn('[1.3.0]', text,
+                      'CHANGELOG.md does not contain [1.3.0] header')
 
     def test_changelog_mentions_phase_f(self):
         """CHANGELOG.md must mention Phase F or upstream sync."""

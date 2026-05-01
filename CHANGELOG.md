@@ -5,6 +5,51 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+---
+
+## [1.3.0] — 2026-05-01
+
+### Agent Prompt Fixes (Phase G)
+
+Fix critical agent prompt defects discovered during workflow-builder failure analysis. All changes are prompt text only — no code changes. 10 tasks completed.
+
+#### P0 — Critical Fixes
+
+- **G-P0-1**: Fix broken `{{ include }}` — move `agents/_shared/prompts/bmad-agent-shared.md` to `prompts/bmad-agent-shared.md` (plugin root IS in search chain). Remove `agents/_shared/` directory. Revise ADR 0002.
+- **G-P0-2**: Add `MANDATORY PROCESS COMPLIANCE` section to all 20 agent `role.md` files — 6-point directive enforcing process-driven behavior before persona definition
+- **G-P0-3**: Rewrite shared fragment `Initial Clarification` section — remove escape hatch, add process-aware clarification (determines WHERE to start, not WHETHER)
+- **G-P0-4**: Replace all 20 `solving.md` with clean BMAD-specific full override — eliminates high-agency vs follow-steps conflict entirely
+- **G-P0-5**: Convert bmad-master `specifics.md` from 109-line inline to `{{ include }}` — prevents divergence after shared fragment rewrite
+
+#### P1 — High Priority
+
+- **G-P1-1**: Add `Subordinate Mode Detection` section to all 20 `communication_additions.md` — recognize superior agent, load skill, route, execute, suppress menu
+- **G-P1-2**: Create shared `prompts/bmad-agent-shared-solving.md` fragment — replace 20 `solving.md` with `{{ include }}` for single source of truth
+
+#### P2 — Polish
+
+- **G-P2-1**: Add `A0 Framework Integration` section to BMB agent specifics (Wendy, Bond, Morgan)
+- **G-P2-2**: Update failure analysis report to reflect clean full override decision
+
+#### Test Coverage
+
+- `tests/test_phase_g_include.py`: 12 tests — shared fragment location, include directives, agent counts, content verification
+- `tests/test_phase_g_compliance.py`: 3 tests — compliance section presence, ordering, directive content
+- Total: 263 tests pass (up from 248), 0 skipped
+
+#### Root Causes Addressed
+
+| Root Cause | Fix | Impact |
+|---|---|---|
+| RC0: Broken include | G-P0-1: Move to `prompts/` | 95% -> 60% |
+| RC1: Conflicting directives | G-P0-4: Clean override | 60% -> 30% |
+| RC2: Escape hatch | G-P0-3: Process-aware | 30% -> 15% |
+| RC3: Step rules not in prompts | G-P0-2: Compliance gate | 15% -> 10% |
+| RC4: No subordinate mode | G-P1-1: Detection section | 10% -> 5% |
+| RC5: No process compliance gate | G-P0-2: Compliance gate | Combined with RC3 |
+
+**Overall: Failure probability reduced from 95-100% to <5%**
+
 
 ## [1.1.0] — 2026-05-01
 

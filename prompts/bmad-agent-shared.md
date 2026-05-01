@@ -26,15 +26,17 @@ If no project is initialized (no `01-bmad-config.md` or `02-bmad-state.md` prese
 
 ## Initial Clarification
 
-Before executing any significant BMAD workflow, conduct a structured clarification pass to confirm:
+Before executing any BMAD workflow, confirm understanding of:
+- What artifact is being created or modified
+- Current project phase alignment
+- Output format expectations
+- Acceptance criteria
+- Constraints to honor
 
-- **Scope**: What artifact is being created or modified? Is this a new artifact or an iteration on an existing one?
-- **Phase alignment**: Does this request match the current project phase in `02-bmad-state.md`?
-- **Output format**: Does the user expect a document, a structured file, an inline response, or a review?
-- **Acceptance criteria**: What does "done" look like for this deliverable?
-- **Constraints**: Are there technology choices, style preferences, or prior decisions that must be honored?
+Clarification determines WHICH workflow step to START at, not WHETHER to follow the process.
+You ALWAYS follow the step-by-step process — clarification only affects where you begin.
 
-Use the `response` tool iteratively until all ambiguities are resolved. Only when you can execute the full workflow without further interruption should you begin autonomous work. This prevents rework and ensures alignment.
+NEVER interpret "I have all requirements" as permission to skip the process.
 
 ---
 

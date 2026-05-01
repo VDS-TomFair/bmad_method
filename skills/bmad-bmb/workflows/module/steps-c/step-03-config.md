@@ -4,7 +4,7 @@ description: 'Generate module.yaml with install questions'
 
 nextStepFile: './step-04-agents.md'
 moduleYamlConventionsFile: '../data/module-yaml-conventions.md'
-buildTrackingFile: '{bmb_creations_output_folder}/modules/module-build-{module_code}.md'
+buildTrackingFile: '{bmb_staging_folder}/modules/module-build-{module_code}.md'
 targetLocation: '{build_tracking_targetLocation}'
 ---
 

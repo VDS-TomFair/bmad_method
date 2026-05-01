@@ -19,7 +19,7 @@
 - Has access to module-specific variables
 - Stored in module's workflows directory
 
-**BMB additional variable:** `{bmb_creations_output_folder}`
+**BMB additional variable:** `{bmb_staging_folder}`
 
 ## 2. Continuable or Single-Session?
 

@@ -3,7 +3,7 @@ name: 'step-05-plan-review'
 description: 'Review the complete workflow plan and approve before design'
 
 nextStepFile: './step-06-design.md'
-workflowPlanFile: '{bmb_creations_output_folder}/workflows/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
+workflowPlanFile: '{bmb_build_output_skills}/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'
 partyModeWorkflow: '{project-root}/skills/bmad-init/core/workflows/party-mode/workflow.md'
 ---

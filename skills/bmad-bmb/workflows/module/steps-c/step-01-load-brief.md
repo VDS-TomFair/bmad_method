@@ -72,7 +72,7 @@ Look for existing module build state:
 **"Where is your module brief?"**
 
 Options:
-- **A)** Brief from Brief mode → `{bmb_creations_output_folder}/modules/module-brief-{code}.md`
+- **A)** Brief from Brief mode → `{bmb_staging_folder}/modules/module-brief-{code}.md`
 - **B)** User-provided write-up → Ask for path
 - **C)** Detailed description → User describes the module now
 

@@ -3,7 +3,7 @@ name: 'step-09-build-next-step'
 description: 'Build the next step in the workflow sequence - repeatable until all steps are built'
 
 nextStepFile: './step-09-build-next-step.md'  # Self-referencing - repeats until complete
-targetWorkflowPath: '{bmb_creations_output_folder}/workflows/{new_workflow_name}'
+targetWorkflowPath: '{bmb_build_output_skills}/{new_workflow_name}'
 workflowPlanFile: '{targetWorkflowPath}/workflow-plan-{new_workflow_name}.md'
 stepTemplate: '../templates/step-template.md'
 stepTypePatterns: '../data/step-type-patterns.md'

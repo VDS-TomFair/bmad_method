@@ -3,7 +3,7 @@ name: 'step-06-docs'
 description: 'Generate README.md, TODO.md, and docs/ folder'
 
 nextStepFile: './step-07-complete.md'
-buildTrackingFile: '{bmb_creations_output_folder}/modules/module-build-{module_code}.md'
+buildTrackingFile: '{bmb_staging_folder}/modules/module-build-{module_code}.md'
 targetLocation: '{build_tracking_targetLocation}'
 ---
 

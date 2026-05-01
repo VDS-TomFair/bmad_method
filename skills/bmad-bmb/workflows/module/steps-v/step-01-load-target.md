@@ -3,7 +3,7 @@ name: 'step-01-load-target'
 description: 'Load target for validation'
 
 nextStepFile: './step-02-file-structure.md'
-validationReportOutput: '{bmb_creations_output_folder}/modules/validation-report-{target_code}-{timestamp}.md'
+validationReportOutput: '{bmb_staging_folder}/modules/validation-report-{target_code}-{timestamp}.md'
 ---
 
 # Step 1: Load Target (Validate Mode)
@@ -42,7 +42,7 @@ Options:
 Based on selection, load the target:
 
 **IF Brief:**
-- Path: `{bmb_creations_output_folder}/modules/module-brief-{code}.md`
+- Path: `{bmb_staging_folder}/modules/module-brief-{code}.md`
 - Ask for module code if not specified
 
 **IF Module:**

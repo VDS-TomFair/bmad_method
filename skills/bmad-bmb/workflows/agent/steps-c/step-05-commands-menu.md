@@ -4,7 +4,7 @@ description: 'Build capabilities and command structure'
 
 # File References
 nextStepFile: './step-06-activation.md'
-agentPlan: '{bmb_creations_output_folder}/agent-plan-{agent_name}.md'
+agentPlan: '{bmb_staging_folder}/agent-plan-{agent_name}.md'
 agentMenuPatterns: ../data/agent-menu-patterns.md
 
 # Example Menus (for reference)

@@ -118,7 +118,7 @@ done
 - **Output files using config variables:** Skip (won't exist yet - workflow not installed/running)
   - Example: `{output_folder}/my-doc.md` - SKIP
   - Example: `{planning_artifacts}/prd.md` - SKIP
-  - Example: `{bmb_creations_output_folder}/file.md` - SKIP
+  - Example: `{bmb_staging_folder}/file.md` - SKIP
 
 - **Data files, step files, other workflows:** MUST EXIST - flag if missing
   - Example: `{dataFile}` where value is `../data/config.csv` - MUST EXIST
@@ -171,7 +171,7 @@ fi
 
 ```json
 {
-  "known_config_variables": ["output_folder", "planning_artifacts", "bmb_creations_output_folder", ...],
+  "known_config_variables": ["output_folder", "planning_artifacts", "bmb_staging_folder", "bmb_build_output_agents", "bmb_build_output_skills", ...],
   "content_violations": [
     {"file": "step-v-01-discovery.md", "line": 63, "violation": "hardcoded path in content", "details": "{project-root}/src/modules/.../prd-purpose.md"}
   ],

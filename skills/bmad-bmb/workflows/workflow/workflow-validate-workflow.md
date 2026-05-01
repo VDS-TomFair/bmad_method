@@ -53,7 +53,7 @@ This uses **step-file architecture** for disciplined execution:
 
 Load and read full config from {project-root}/skills/bmad-bmb/config.yaml and resolve:
 
-- `project_name`, `output_folder`, `user_name`, `communication_language`, `document_output_language`, `bmb_creations_output_folder`
+- `project_name`, `output_folder`, `user_name`, `communication_language`, `document_output_language`, `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills`
 - ✅ YOU MUST ALWAYS SPEAK OUTPUT In your Agent communication style with the config `{communication_language}`
 
 ### 2. Route to Validate Workflow

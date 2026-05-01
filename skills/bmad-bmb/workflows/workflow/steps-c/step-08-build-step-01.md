@@ -3,7 +3,7 @@ name: 'step-08-build-step-01'
 description: 'Build step-01-init.md and step-01b-continue.md (if continuable) with any supporting files'
 
 nextStepFile: './step-09-build-next-step.md'
-targetWorkflowPath: '{bmb_creations_output_folder}/workflows/{new_workflow_name}'
+targetWorkflowPath: '{bmb_build_output_skills}/{new_workflow_name}'
 workflowPlanFile: '{targetWorkflowPath}/workflow-plan-{new_workflow_name}.md'
 stepTemplate: '../templates/step-template.md'
 stepTypePatterns: '../data/step-type-patterns.md'

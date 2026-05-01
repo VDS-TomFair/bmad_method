@@ -1,9 +1,9 @@
-# Spec: BMAD Method Plugin — Phase G: Agent Prompt Fixes (v1.3)
+# Spec: BMAD Method Plugin — Phase G+H: Agent Prompt Fixes + BMB Path Fixes (v1.4)
 
 **Date:** 2026-05-01  
 **Status:** Draft — pending user approval  
 **Branch:** `develop` (merge to `main` on `/ship`)  
-**Scope:** Phase G (agent prompt fixes) — Phases A–F ✅ COMPLETE  
+**Scope:** Phase H (BMB creation path fixes) — Phases A–G ✅ COMPLETE  
 **Grounding:** `docs/workflow-builder-failure-analysis.md` — empirical VPS verification + A0 framework source
 
 ---
@@ -20,6 +20,12 @@ Fix critical agent prompt defects discovered during bmad-workflow-builder failur
 - **P1 (High):** Add subordinate-mode detection (R4), create shared solving.md fragment (R5)
 - **P2 (Nice to have):** Add A0 framework skill awareness (R6)
 
+**Phase H targets:**
+
+- **P0 (Critical):** Fix BMB creation output paths — agents/skills built by BMB must land in A0-discoverable directories
+- **P1 (High):** Add promotion skill for copying project-scoped agents/skills to plugin-level (globally available)
+- **P2 (Nice to have):** Update celebrate steps with correct installation guidance for A0
+
 **Target user:** Individual developer using Agent Zero for personal software projects. BMAD is **project-scoped** — each project gets independent BMAD state, initialization, and knowledge. BMAD must work in any A0 project (`.a0proj/` present) or A0 workdir. Not limited to `/a0/usr/projects/`.
 
 **What success looks like:**
@@ -28,6 +34,11 @@ Fix critical agent prompt defects discovered during bmad-workflow-builder failur
 - Process compliance enforced at multiple layers (role.md, shared fragment, solving.md)
 - Failure probability drops from 95-100% → <5%
 - All 250+ existing tests continue to pass
+- BMB-built agents appear in `.a0proj/agents/{name}/` and are immediately callable via `call_subordinate`
+- BMB-built workflows appear in `.a0proj/skills/{name}/` and are immediately discoverable via `skills_tool`
+- `/promote-agent` and `/promote-workflow` commands copy from project scope to plugin scope
+- All 80+ BMB step files updated with correct output paths
+- All 292+ existing tests continue to pass
 - ADR 0002 revised to reflect actual state
 
 ---
@@ -164,7 +175,7 @@ ssh -i /a0/usr/.ssh/id_ed25519 -o StrictHostKeyChecking=no root@162.19.152.199 \
 │   │   ├── core/
 │   │   │   └── config.yaml             ← ✅ DONE: project_name added, version 6.6.0
 │   │   └── scripts/
-│   │       ├── bmad-init.sh            ← ✅ DONE: $A0PROJ paths, set -euo pipefail
+│   │       ├── bmad-init.sh            ← Phase H: add .a0proj/agents/ and .a0proj/skills/ dir creation
 │   │       └── bmad-status.py          ← ✅ DONE: importlib, BMAD_DEV_MODE gate
 │   ├── bmad-bmm/
 │   │   ├── config.yaml                 ← ✅ DONE: project_name removed, version 6.6.0
@@ -172,7 +183,8 @@ ssh -i /a0/usr/.ssh/id_ed25519 -o StrictHostKeyChecking=no root@162.19.152.199 \
 │   │   └── workflows/                  ← ✅ DONE: synced with upstream v6.6.0
 │   ├── bmad-tea/                        ← ✅ DONE: trigger_patterns, CSV aligned
 │   ├── bmad-cis/                        ← ✅ DONE: trigger_patterns, CSV aligned
-│   ├── bmad-bmb/                        ← ✅ DONE: trigger_patterns, CSV aligned
+│   ├── bmad-bmb/                        ← Phase H: config.yaml path split, step file updates
+│   ├── bmad-promote/                    ← Phase H: NEW promotion skill
 │   └── bmad-customize/                  ← ✅ DONE: ported from upstream
 │
 ├── webui/
@@ -351,6 +363,8 @@ bmad:
 | `tests/test_d*.py` (9 files) | Phase D: shared fragment, includes, table removal, caching, party mode |
 | `tests/test_phase_g_include.py` | **Phase G NEW:** runtime include resolution for all 19 agents |
 | `tests/test_phase_g_compliance.py` | **Phase G NEW:** process compliance prompt content verification |
+| `tests/test_phase_h_paths.py` | **Phase H NEW:** BMB config path split verification |
+| `tests/test_phase_h_promote.py` | **Phase H NEW:** promotion skill integration tests |
 | + 20+ more | Dead code, constants, dashboard, routing vars, etc. |
 
 **Coverage targets:**
@@ -464,6 +478,30 @@ bmad-master has a 109-line `specifics.md` that **inlines the shared content dire
 | **After R0 + R1–R3 (process compliance)** | **5–15%** | Multiple enforcement layers, conflict removed |
 | **After all fixes (R0–R6)** | **<5%** | Defense in depth across all layers |
 
+### BMB Creation Path Issue (Phase H)
+
+BMB (BMAD Builder Module) creates new agents, workflows, and modules. Currently all outputs go to `.a0proj/_bmad-output/bmb-creations/` which is NOT in any of A0's discovery paths.
+
+**A0 agent discovery paths:**
+- `plugins/*/agents/` — global (all projects)
+- `usr/projects/*/.a0proj/agents/` — project-scoped
+- `usr/agents/` — user-level
+
+**A0 skill discovery paths:**
+- `plugins/*/skills/` — global (all projects)
+- `usr/projects/*/.a0proj/skills/` — project-scoped
+- `usr/skills/` — user-level
+
+**Current BMB output:** `.a0proj/_bmad-output/bmb-creations/` — NONE of the above. Created agents are invisible to `call_subordinate()`. Created skills are invisible to `skills_tool`.
+
+**Root cause:** `bmb_creations_output_folder` in `skills/bmad-bmb/config.yaml` points to a non-discoverable directory. This affects ~80 BMB step files that reference this path for agent, skill, and module creation.
+
+| ID | Root Cause | Severity | What |
+|---|---|---|---|
+| **RC6** | BMB creations output in non-discoverable directory | **CRITICAL** | `bmb_creations_output_folder: "{project-root}/_bmad-output/bmb-creations"` is not in any A0 discovery path. Created agents cannot be called, created skills cannot be loaded. |
+| **RC7** | No promotion mechanism from project to plugin scope | **HIGH** | No way to make a project-scoped agent/skill globally available without manual file copying. |
+| **RC8** | Celebrate steps reference non-existent install process | **MEDIUM** | Step 8 (celebrate) tells user to manually install the created agent, but A0 auto-discovers — guidance is misleading. |
+
 ---
 
 ## Recommendations
@@ -482,6 +520,11 @@ Ten recommendations (R0–R9), priority-ordered. **All are prompt text changes �
 | **P1** | R8: Verify bmad-master response include | Quality | Low | 1 verification |
 | **P2** | R6: A0 skill awareness | Quality | Low | 3 files (BMB) |
 | **P2** | R9: Update failure analysis report | Documentation | Low | 1 file |
+| **P0** | R10: Split BMB config paths | RC6 | Low | 1 config file |
+| **P0** | R11: Update BMB step files for new paths | RC6 | Medium | ~80 step files |
+| **P1** | R12: Create bmad-promote skill | RC7 | Medium | 1 new skill |
+| **P1** | R13: Update bmad-init.sh for project-scope dirs | RC6 | Low | 1 script |
+| **P2** | R14: Update celebrate steps for A0 | RC8 | Low | ~5 step files |
 
 **Total estimated effort:** ~3–4 hours for P0 fixes.
 
@@ -664,6 +707,83 @@ bmad-master has `{{ include "agent.system.response_tool_tips.md" }}` in its `res
 
 **Apply to:** `docs/workflow-builder-failure-analysis.md` (1 file).
 
+### R10: Split BMB Config Paths (P0)
+
+Replace the single `bmb_creations_output_folder` with separate paths for staging vs final output:
+
+```yaml
+# Current (broken — output in non-discoverable directory):
+bmb_creations_output_folder: "{project-root}/_bmad-output/bmb-creations"
+
+# Fixed — split into staging + discoverable output:
+bmb_staging_folder: "{project-root}/_bmad-output/bmb-staging"       # plans, reports, intermediate
+bmb_build_output_agents: "{project-root}/agents"                  # → .a0proj/agents/ (A0 discovers)
+bmb_build_output_skills: "{project-root}/skills"                  # → .a0proj/skills/ (A0 discovers)
+```
+
+**Key insight:** `{project-root}` in BMAD config resolves to `.a0proj/`. So `{project-root}/agents` = `.a0proj/agents/` which IS in A0's project-scoped discovery path (`usr/projects/*/.a0proj/agents/`).
+
+**Apply to:** `skills/bmad-bmb/config.yaml` (1 file).
+
+### R11: Update BMB Step Files for New Paths (P0)
+
+Update all ~80 BMB step files that reference `bmb_creations_output_folder` or `bmb-creations`:
+
+- **Agent creation steps** (step-07-build-agent.md, step-08-celebrate.md, etc.): Output agents to `bmb_build_output_agents` (`.a0proj/agents/`)
+- **Workflow creation steps** (step-07-foundation.md, step-11-completion.md, etc.): Output skills to `bmb_build_output_skills` (`.a0proj/skills/`)
+- **Staging/artifact steps** (plans, reports, validation): Use `bmb_staging_folder` (`.a0proj/_bmad-output/bmb-staging/`)
+
+**Key files** (highest priority — these are the actual build output steps):
+- `workflows/agent/steps-c/step-07-build-agent.md` — writes agent.yaml and prompts
+- `workflows/agent/steps-c/step-08-celebrate.md` — confirms output location
+- `workflows/workflow/steps-c/step-07-foundation.md` — creates workflow foundation
+- `workflows/workflow/steps-c/step-11-completion.md` — finalizes workflow
+- `workflows/module/steps-c/step-07-complete.md` — finalizes module
+
+**Apply to:** ~80 files in `skills/bmad-bmb/workflows/`.
+
+### R12: Create bmad-promote Skill (P1)
+
+New skill `bmad-promote` that copies agents/skills from project scope to plugin scope:
+
+**Triggers:** `/promote-agent`, `/promote-workflow`, `/promote-skill`
+
+**Behavior:**
+1. Read source from `.a0proj/agents/{name}/` or `.a0proj/skills/{name}/`
+2. Validate the agent/skill structure (agent.yaml present, SKILL.md present)
+3. Copy to plugin directory: `plugins/bmad_method/agents/{name}/` or `plugins/bmad_method/skills/{name}/`
+4. Confirm the promoted agent/skill is now globally discoverable
+
+**Apply to:** New skill directory `skills/bmad-promote/`.
+
+### R13: Update bmad-init.sh for Project-Scope Dirs (P1)
+
+Add directory creation for `.a0proj/agents/` and `.a0proj/skills/`:
+
+```bash
+# Ensure BMB output directories exist
+mkdir -p "$A0PROJ/agents"
+mkdir -p "$A0PROJ/skills"
+```
+
+**Apply to:** `skills/bmad-init/scripts/bmad-init.sh` (add 2 lines).
+
+### R14: Update Celebrate Steps for A0 (P2)
+
+Replace manual install instructions with A0 auto-discovery guidance:
+
+```markdown
+## A0 Auto-Discovery
+
+Your new agent is now available! Agent Zero automatically discovers agents in `.a0proj/agents/`.
+
+**To use:** Call `call_subordinate` with profile `bmad-{agent-name}`.
+
+**To make globally available** (all projects): Run `/promote-agent {agent-name}`.
+```
+
+**Apply to:** `step-08-celebrate.md` and `e-09-celebrate.md` (agent workflow), similar celebrate steps in workflow/module flows.
+
 ---
 
 ## Migration Phases
@@ -752,6 +872,59 @@ This phase fixes critical agent prompt defects discovered during failure analysi
 - [x] BMB agent specifics.md (Wendy, Bond, Morgan) contain `A0 Framework Integration` section
 - [x] Failure analysis report updated to reflect clean full override
 
+### Phase H — BMB Creation Path Fixes
+**Effort:** ~4–6 hours | **Risk:** Medium (config + ~80 step files) | **Prereq:** Phases A–G complete ✅  
+**Reference:** `docs/workflow-builder-failure-analysis.md`, A0 source code discovery paths  
+**ADR:** 0009 (BMB creation output paths)
+
+This phase fixes the BMB creation path problem where agents and skills built by BMB are placed in a non-discoverable directory.
+
+#### P0 — Critical Fixes (2 tasks)
+
+| ID | Task | Root Cause | Detail |
+|---|---|---|---|
+| H-P0-1 | Split BMB config paths | RC6 | Replace single `bmb_creations_output_folder` with `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills` in `skills/bmad-bmb/config.yaml`. See R10. |
+| H-P0-2 | Update BMB step file paths | RC6 | Update all ~80 BMB step files referencing `bmb_creations_output_folder` or `bmb-creations` to use the new split paths. Agent steps → `bmb_build_output_agents`, workflow steps → `bmb_build_output_skills`, staging → `bmb_staging_folder`. See R11. |
+
+**Implementation order:** H-P0-1 FIRST (config defines the paths), then H-P0-2 (step files reference them).
+
+**Critical verification for H-P0-1:**
+1. After config split, verify BMB reads new path variables correctly
+2. Confirm `{project-root}/agents` resolves to `.a0proj/agents/` which IS in A0's discovery path
+3. Run `python -m pytest tests/ -v` — all 292+ tests green
+
+#### P1 — High Priority (2 tasks)
+
+| ID | Task | Root Cause | Detail |
+|---|---|---|---|
+| H-P1-1 | Create bmad-promote skill | RC7 | New skill with triggers `/promote-agent`, `/promote-workflow`. Copies from `.a0proj/agents/` or `.a0proj/skills/` to `plugins/bmad_method/agents/` or `plugins/bmad_method/skills/`. See R12. |
+| H-P1-2 | Update bmad-init.sh | RC6 | Add `mkdir -p "$A0PROJ/agents"` and `mkdir -p "$A0PROJ/skills"` to init script. Ensures BMB output directories exist. See R13. |
+
+#### P2 — Nice to Have (1 task)
+
+| ID | Task | Detail |
+|---|---|---|
+| H-P2-1 | Update celebrate steps | Replace manual install instructions with A0 auto-discovery guidance in all celebrate step files. See R14. |
+
+#### Phase H acceptance criteria:
+
+**P0 (merge gate — no P1/P2 work until these pass):**
+- [x] `bmb_creations_output_folder` removed from `skills/bmad-bmb/config.yaml`
+- [x] `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills` defined in config.yaml
+- [x] BMB agent creation steps write to `bmb_build_output_agents` (→ `.a0proj/agents/`)
+- [x] BMB workflow creation steps write to `bmb_build_output_skills` (→ `.a0proj/skills/`)
+- [x] BMB staging artifacts go to `bmb_staging_folder` (→ `.a0proj/_bmad-output/bmb-staging/`)
+- [x] `python -m pytest tests/ -v` → all 292+ tests green (no regressions)
+
+**P1:**
+- [x] `bmad-promote` skill created with `/promote-agent`, `/promote-workflow`, `/promote-skill` triggers
+- [x] Promotion copies from `.a0proj/agents/` to `plugins/bmad_method/agents/` correctly
+- [x] Promotion copies from `.a0proj/skills/` to `plugins/bmad_method/skills/` correctly
+- [x] `bmad-init.sh` creates `.a0proj/agents/` and `.a0proj/skills/` directories
+
+**P2:**
+- [x] All celebrate step files updated with A0 auto-discovery guidance
+
 ---
 
 ## Success Criteria
@@ -782,6 +955,28 @@ This phase fixes critical agent prompt defects discovered during failure analysi
 - [x] BMAD initializable from workdir, `/a0/usr/projects/`, `/tmp/`, any arbitrary path
 - [x] Failure probability reduced from 95-100% → <5%
 
+### Phase H — BMB Creation Path Fixes
+
+**P0 (merge gate):**
+- [ ] BMB config split into staging + agents + skills output paths
+- [ ] All BMB step files updated to use new path variables
+- [ ] BMB-built agents land in `.a0proj/agents/` (A0-discoverable)
+- [ ] BMB-built skills land in `.a0proj/skills/` (A0-discoverable)
+- [ ] All 292+ existing tests pass without modification
+
+**P1:**
+- [ ] `/promote-agent` and `/promote-workflow` commands work end-to-end
+- [ ] `bmad-init.sh` creates project-scope agent and skill directories
+
+**P2:**
+- [ ] Celebrate steps provide correct A0 auto-discovery guidance
+
+**Overall (pre-`main` merge):**
+- [ ] BMB agent creation tested end-to-end on VPS — agent appears in `call_subordinate` profile list
+- [ ] BMB workflow creation tested end-to-end on VPS — skill appears in `skills_tool:list`
+- [ ] Promotion tested — project-scoped agent/skill becomes globally available after `/promote-*`
+- [ ] All existing tests pass
+
 ---
 
 ## Open Questions
@@ -807,3 +1002,9 @@ This phase fixes critical agent prompt defects discovered during failure analysi
 10. **ADR 0002 revision** 🔄 **Phase G** — ADR 0002 falsely claims "Confirmed working via live A2A testing." The include silently fails. Must revise status, claims, and consequences. **Action:** Update as part of G-P0-1.
 
 11. **Should `agents/_shared/` directory be removed entirely?** 🔄 **Phase G** — After moving shared fragment to `prompts/`, the `agents/_shared/` directory becomes empty. Decision: remove it ( `_shared` is not a valid A0 profile name, its existence is misleading).
+
+12. **BMB step file count** 🔄 **Phase H** — grep found ~80 files referencing `bmb_creations_output_folder` or `bmb-creations`. Exact count and scope of changes per file needs verification during implementation.
+
+13. **Module creation path** 🔄 **Phase H** — Modules may need different handling than agents/skills since A0 doesn't have a `modules` discovery path. Need to clarify if modules should go to `skills/` or stay in `_bmad-output/`.
+
+14. **Promotion safety** 🔄 **Phase H** — Promoting an agent/skill to plugin scope that already exists in the plugin should warn or prompt for confirmation. Define overwrite behavior.

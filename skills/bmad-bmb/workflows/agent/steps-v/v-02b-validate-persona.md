@@ -3,7 +3,7 @@ name: 'v-02b-validate-persona'
 description: 'Validate persona and append to report'
 
 nextStepFile: './v-02c-validate-menu.md'
-validationReport: '{bmb_creations_output_folder}/validation-report-{agent-name}.md'
+validationReport: '{bmb_staging_folder}/validation-report-{agent-name}.md'
 personaProperties: ../data/persona-properties.md
 principlesCrafting: ../data/principles-crafting.md
 agentFile: '{agent-file-path}'

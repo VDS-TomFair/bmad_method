@@ -4,7 +4,7 @@ description: 'Load target workflow, check compliance, check for validation repor
 
 # File References
 nextStepFile: './step-e-02-discover-edits.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{workflow_name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{workflow_name}.md'
 validationWorkflow: '../steps-v/step-01-validate.md'
 conversionStep: '../steps-c/step-00-conversion.md'
 ---

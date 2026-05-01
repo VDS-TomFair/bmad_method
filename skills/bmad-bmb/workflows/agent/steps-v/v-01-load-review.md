@@ -3,7 +3,7 @@ name: 'v-01-load-review'
 description: 'Load agent and initialize validation report'
 
 nextStepFile: './v-02a-validate-metadata.md'
-validationReport: '{bmb_creations_output_folder}/validation-report-{agent-name}.md'
+validationReport: '{bmb_staging_folder}/validation-report-{agent-name}.md'
 agentMetadata: ../data/agent-metadata.md
 
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'

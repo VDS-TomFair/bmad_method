@@ -4,7 +4,7 @@ description: 'Discover and understand the user workflow idea through collaborati
 
 nextStepFile: './step-02-classification.md'
 workflowExamples: '../data/workflow-examples.md'
-workflowPlanFile: '{bmb_creations_output_folder}/workflows/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
+workflowPlanFile: '{bmb_build_output_skills}/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
 ---
 
 # Step 1: Discovery

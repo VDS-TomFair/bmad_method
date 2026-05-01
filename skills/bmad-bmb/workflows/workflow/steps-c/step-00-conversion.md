@@ -3,7 +3,7 @@ name: 'step-00-conversion'
 description: 'Convert existing workflow to BMAD compliant format by reading all instructions and extracting plan'
 
 nextStepFile: './step-02-classification.md'
-workflowPlanFile: '{bmb_creations_output_folder}/workflows/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
+workflowPlanFile: '{bmb_build_output_skills}/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
 ---
 
 # Step 0: Workflow Conversion

@@ -4,8 +4,8 @@ description: 'Classify the workflow by answering the 4 key structural decisions'
 
 nextStepFile: './step-03-requirements.md'
 workflowTypeCriteria: '../data/workflow-type-criteria.md'
-workflowPlanFile: '{bmb_creations_output_folder}/workflows/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
-bmbCreationsOutputFolder: '{bmb_creations_output_folder}'
+workflowPlanFile: '{bmb_build_output_skills}/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
+bmbCreationsOutputFolder: '{bmb_staging_folder}'
 customWorkflowLocation: '{custom_workflow_location}'
 ---
 

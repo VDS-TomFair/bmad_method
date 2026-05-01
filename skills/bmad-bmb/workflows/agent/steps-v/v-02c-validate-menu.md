@@ -3,7 +3,7 @@ name: 'v-02c-validate-menu'
 description: 'Validate menu structure and append to report'
 
 nextStepFile: './v-02d-validate-structure.md'
-validationReport: '{bmb_creations_output_folder}/validation-report-{agent-name}.md'
+validationReport: '{bmb_staging_folder}/validation-report-{agent-name}.md'
 agentMenuPatterns: ../data/agent-menu-patterns.md
 agentFile: '{agent-file-path}'
 ---

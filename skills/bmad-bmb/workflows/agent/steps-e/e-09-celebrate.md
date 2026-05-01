@@ -95,6 +95,16 @@ Read `{editPlan}` to get:
 - **Agent File:** `{agentFile}`
 - **Backup:** `{agentFile}.backup`"
 
+### 4a. A0 Auto-Discovery Reminder
+
+"🚀 **Remember:** Your updated agent is already installed at `.a0proj/agents/{agent-name}/` and is auto-discovered by Agent Zero at project scope. No reinstallation needed — your changes are live!"
+
+"If you want {agent-name} available across all projects, promote it to plugin scope:"
+
+```
+/promote-agent {agent-name}
+```
+
 ### 5. Document Completion
 
 Append to editPlan:
@@ -109,6 +119,7 @@ Append to editPlan:
 - Agent file updated successfully
 - All edits applied
 - Backup preserved
+- Agent auto-discovered at project scope (`.a0proj/agents/{agent-name}/`)
 ```
 
 ### 6. Present MENU OPTIONS
@@ -144,6 +155,7 @@ IF [V validation option] is selected, the validation workflow will be loaded to 
 - Clear summary of all changes provided
 - Before/after validation comparison shown
 - Verification guidance provided
+- A0 auto-discovery and promote-agent mentioned
 - Workflow completion marked in edit plan
 
 ### ❌ SYSTEM FAILURE:

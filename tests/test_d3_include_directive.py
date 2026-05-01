@@ -3,7 +3,7 @@ from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
 AGENTS_DIR = PROJECT / 'agents'
-SHARED = PROJECT / 'agents' / '_shared' / 'prompts' / 'bmad-agent-shared.md'
+SHARED = PROJECT / 'prompts' / 'bmad-agent-shared.md'
 
 
 def _get_non_master_agents():

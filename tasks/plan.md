@@ -1,543 +1,509 @@
-# Implementation Plan: BMAD Method Plugin — Phase F (Upstream v6.6.0 Sync)
+# Implementation Plan: BMAD Method Plugin — Phase G (Agent Prompt Fixes, v1.3)
 
 ## Overview
 
-Sync the BMAD Method A0 plugin (v1.0.8) with upstream BMAD-METHOD v6.6.0, incorporating critical workflow step improvements, config migration, and evaluating new upstream features for A0 compatibility. This phase targets 12 tasks across 3 priority tiers.
+Fix critical agent prompt defects discovered during bmad-workflow-builder failure analysis. The analysis revealed two systemic failure layers affecting all 20 BMAD agents: a broken `{{ include }}` mechanism (silently failing for 19/20 agents) and conflicting behavioral directives that bias agents toward shortcutting process steps. All changes are prompt text only — no code changes needed.
 
-**Prereq:** Phases A–D COMPLETE (35 tasks, 200 tests, 49 commits).
-**Upstream:** `88b9a1c` → `9debc16` (v6.6.0, 37 files changed, 3422 insertions, 312 deletions).
+**Prereq:** Phases A–F COMPLETE (47+ tasks, 250+ tests, 50+ commits).
+**Reference:** `docs/workflow-builder-failure-analysis.md` (559 lines)
 **Branch:** `develop` → `main` on /ship.
+**Version target:** v1.2.0 → v1.3.0
 **Test command:** `cd /a0/usr/projects/a0_bmad_method && python -m pytest tests/ -v`
 
 ---
 
 ## Architecture Decisions
 
-- **5-step merge protocol for all P0 workflow step syncs:** (1) Read our file fully, (2) Identify all A0-specific sections, (3) Merge upstream content around them, (4) Verify A0 sections intact, (5) Run full test suite. Never overwrite A0 additions.
-- **A0-specific sections to preserve in all 3 workflow steps:** YAML frontmatter (step-02, step-04), Step Complete sections, Workflow Completion — State Write section (step-04).
-- **Config migration is atomic:** `project_name` moves from bmm → core in one commit; version bumps applied to all 5 config files simultaneously.
-- **Plugin version bump to 1.1.0:** Feature addition from upstream sync warrants minor version bump (not patch).
-- **`bmad-customize` skill to be ported from upstream:** Decision: CREATE — port upstream core skill with A0 path adaptations. Uses `resolve_customization.py` for 3-layer TOML merge customization.
-- **`resolve_customization.py` included in plugin:** Upstream script at `src/scripts/resolve_customization.py` is a Python 3.11+ script (we have 3.13) that does 3-layer TOML merge for skill customization. Include at `$A0PROJ/_bmad/scripts/` with A0 path conventions.
+- **R3 uses clean full override for solving.md** — NOT `{{ include original }}` or `{{ extend }}`. BMAD agents need fundamentally different problem-solving behavior (process-driven vs task-driven). The A0 default solving.md contains `"don't accept failure retry be high-agency"` which directly conflicts with BMAD's process requirements. Clean override eliminates conflict entirely.
+- **G-P0-1 MUST be done first** — the broken `{{ include }}` prevents verification of all other prompt changes. After moving the shared fragment to `prompts/`, include resolution can be tested empirically on VPS.
+- **G-P0-5 depends on G-P0-1** — bmad-master's specifics.md can only be converted from 109-line inline to `{{ include }}` after the include mechanism is verified working.
+- **G-P1-2 depends on G-P0-4** — shared solving.md fragment is created from the clean override content written in G-P0-4.
+- **All changes are prompt text only** — no Python code, no bash scripts, no HTML. Low risk, fast implementation.
+- **`agents/_shared/` directory removed entirely** after G-P0-1 — `_shared` is not a valid A0 profile name, its existence is misleading.
+- **ADR 0002 must be revised** — it falsely claims "Confirmed working via live A2A testing." The include silently fails.
 
 ---
 
 ## Dependency Graph
 
 ```
-[F-P0-1: step-07 validation fix]     ← independent
-[F-P0-2: step-02 design epics fix]   ← independent
-[F-P0-3: step-04 final validation]    ← independent
+[G-P0-1: Fix broken {{ include }}] ← MUST BE FIRST
          │
          ▼
-[CHECKPOINT P0 — all 3 synced, tests green]
+[VERIFY: Include resolves for all 19 agents on VPS]
+         │
+    ┌────┼────────────┐
+    │    │            │
+    ▼    ▼            ▼
+[G-P0-2: Compliance gate]  [G-P0-3: Rewrite shared]  [G-P0-4: Rewrite solving.md]
+    │    │            │
+    │    │            ▼
+    │    │    [G-P0-5: Master inline→include] ← depends on G-P0-1
+    │    │            │
+    ▼    ▼            ▼
+[CHECKPOINT P0 — all 5 critical fixes done, tests green]
+         │
+    ┌────┼────────────┐
+    │    │            │
+    ▼    ▼            ▼
+[G-P1-1: Subordinate mode]  [G-P1-2: Shared solving fragment]  [G-P1-3: Verify master response]
+                              ← depends on G-P0-4
          │
          ▼
-[F-P1-1: project_name → core config] ─── [F-P1-2: remove project_name from bmm]
-         │                                      │
-         ▼                                      ▼
-[F-P1-3: update config versions to 6.6.0] ← depends on F-P1-1 + F-P1-2
-         │
-         ▼
-[F-P1-4: verify CSV row coverage]     ← depends on F-P1-3
-[F-P1-5: include resolve_customization.py] ← independent
-         │
-         ▼
-[F-P1-6: create bmad-customize skill]  ← depends on F-P1-5
-         │
-         ▼
-[CHECKPOINT P1 — config migrated, customization in place]
+[CHECKPOINT P1 — high-priority fixes done]
     ┌────┴──────────────────────────┐
-    │ F-P2-1: update CHANGELOG      │
-    │ F-P2-2: version bump 1.1.0    │
+    │ G-P2-1: A0 skill awareness    │
+    │ G-P2-2: Update failure report │
     └──────────────┬────────────────┘
                    │
           [CHECKPOINT P2 — ready for /ship]
 ```
 
 **Parallelization:**
-- F-P0-1, F-P0-2, F-P0-3 can run in parallel (different files)
-- F-P1-1 and F-P1-2 can run in parallel (different files)
-- F-P1-4 and F-P1-5 can run in parallel (independent)
-- F-P2-1, F-P2-2 can run in parallel (different files)
+- G-P0-2, G-P0-3, G-P0-4 can run in parallel (different files) after G-P0-1
+- G-P1-1, G-P1-3 can run in parallel (independent) after P0 checkpoint
+- G-P2-1, G-P2-2 can run in parallel (different files) after P1 checkpoint
 
 ---
 
-## 5-Step Merge Protocol (applies to all P0 tasks)
+## Phase G — P0: Critical Fixes (5 tasks)
 
-All P0 tasks involve merging upstream v6.6.0 content into our workflow step files while preserving A0-specific additions.
-
-1. **Read our file fully** — Load the complete file content; note all sections, structure, and line numbers
-2. **Identify A0-specific sections** — Mark YAML frontmatter blocks, Step Complete sections, State Write sections, any A0-only content not present in upstream
-3. **Merge upstream content** — Apply upstream v6.6.0 changes (new sections, modified text, restructured checklists) while keeping A0-specific sections in their correct positions
-4. **Verify A0 sections intact** — Diff check that all A0-specific sections survive the merge unchanged
-5. **Run test suite** — `python -m pytest tests/ -v` must pass with zero failures
-
-**Upstream source files** (for diff reference):
-- step-07: `.a0proj/upstream/BMAD-METHOD/src/bmm-skills/3-solutioning/bmad-create-architecture/steps/step-07-validation.md`
-- step-02: `.a0proj/upstream/BMAD-METHOD/src/bmm-skills/3-solutioning/bmad-create-epics-and-stories/steps/step-02-design-epics.md`
-- step-04: `.a0proj/upstream/BMAD-METHOD/src/bmm-skills/3-solutioning/bmad-create-epics-and-stories/steps/step-04-final-validation.md`
+**Gate: G-P0-1 MUST pass before any other P0 work begins. All P0 tasks must pass before P1.**
 
 ---
 
-## Phase F — P0: Critical Workflow Step Sync (3 tasks)
+### Task G-P0-1: Fix broken `{{ include }}` — move shared fragment [Size: S]
 
-**Gate: All P0 tasks must pass before any P1 work begins.**
+**SPEC ref:** G-P0-1 (R0)
+**Root cause:** RC0 — broken include resolution
 
----
-
-### Task F-P0-1: Fix pre-checked architecture checklist in step-07-validation.md [Size: M]
-
-**SPEC ref:** F-P0-1
-
-**Description:** The architecture validation checklist in `step-07-validation.md` currently has all items pre-checked `[x]` with hard-coded `READY FOR IMPLEMENTATION` status. Upstream v6.6.0 changed all items to unchecked `[ ]` with conditional 3-tier status logic. This is a critical quality improvement — the checklist is meaningless if every item is pre-checked.
+**Description:** `{{ include "bmad-agent-shared.md" }}` silently fails for all 19 non-master agents. The file lives in `agents/_shared/prompts/` which is NOT in A0's search path (`_shared` is not a profile name). A0's `helpers/files.py:364` silently returns the literal text on `FileNotFoundError`. All 19 agents are missing 85 lines of behavioral instructions. Move the file to `prompts/` which IS in A0's search chain (priority level 7).
 
 **Changes required:**
-1. Change all checklist items from `[x]` to `[ ]` (unchecked)
-2. Remove ✅ emoji from section headers (e.g., `**✅ Requirements Analysis**` → `**Requirements Analysis**`)
-3. Add instruction: "Mark each item `[x]` only if validation confirms it; leave `[ ]` if missing, partial, or unverified."
-4. Replace hard-coded `Overall Status: READY FOR IMPLEMENTATION` with conditional 3-tier logic:
-   - `READY FOR IMPLEMENTATION` — all 16 items `[x]`, no Critical Gaps
-   - `READY WITH MINOR GAPS` — some items unchecked but no Critical Gaps open
-   - `NOT READY` — any Critical Gap open or any Requirements Analysis / Architectural Decisions item unchecked
-5. Add "Architecture Readiness Assessment" section with the conditional rules
-6. **Preserve our Step Complete section** at bottom of file (A0-specific, not in upstream)
+1. Move `agents/_shared/prompts/bmad-agent-shared.md` → `prompts/bmad-agent-shared.md`
+2. Remove empty `agents/_shared/prompts/` directory
+3. Remove empty `agents/_shared/` directory entirely
+4. Verify on VPS: A0 framework Python must find `bmad-agent-shared.md` via `find_file_in_dirs()`
+5. Test `{{ include "bmad-agent-shared.md" }}` resolves in all 19 non-master agents
+6. Update ADR 0002 status to "Revised" with corrected claims
+7. Run `python -m pytest tests/ -v` — all 250+ tests green
 
 **Files affected:**
-- `skills/bmad-bmm/workflows/3-solutioning/create-architecture/steps/step-07-validation.md`
+- `agents/_shared/prompts/bmad-agent-shared.md` → MOVE to `prompts/bmad-agent-shared.md`
+- `agents/_shared/` → REMOVE (becomes empty after move)
+- `docs/adr/0002-shared-fragments-include.md` → UPDATE
 
-**Upstream reference:** `.a0proj/upstream/BMAD-METHOD/src/bmm-skills/3-solutioning/bmad-create-architecture/steps/step-07-validation.md` (361 lines)
-
-**Dependencies:** None
+**Dependencies:** None (MUST be first task)
 
 **Verification steps:**
-- [ ] All checklist items are `[ ]` (unchecked)
-- [ ] No ✅ emoji in any section header
-- [ ] Overall Status has 3-tier conditional instruction
-- [ ] Step Complete section preserved at file bottom
-- [ ] `python -m pytest tests/ -v` — all green
+- [ ] `prompts/bmad-agent-shared.md` exists with correct content (85 lines)
+- [ ] `agents/_shared/` directory removed entirely
+- [ ] ADR 0002 revised — status updated, false claims corrected
+- [ ] Runtime include resolution verified for all 19 non-master agents on VPS
+- [ ] `python -m pytest tests/ -v` — all 250+ tests green
 
-**Risk notes:** Our file (366 lines) vs upstream (361 lines) — 5 extra lines likely from Step Complete section. Low risk merge. No YAML frontmatter in our version to preserve.
+**Risk notes:** Low risk — file move only, no content changes. The `agents/_shared/` directory serves no other purpose. ADR 0002 revision is documentation-only.
 
-**Estimated complexity:** Medium — multiple checklist changes + new conditional section, but straightforward search-and-replace pattern
+**Estimated complexity:** Small — file move + directory cleanup + ADR revision
 
 ---
 
-### Task F-P0-2: Add file churn detection to epic design in step-02-design-epics.md [Size: M]
+### Task G-P0-2: Add process compliance gate to all 20 role.md files [Size: M]
 
-**SPEC ref:** F-P0-2
+**SPEC ref:** G-P0-2 (R1)
+**Root cause:** RC5 — no process compliance gate
 
-**Description:** Upstream v6.6.0 added Implementation Efficiency principle (#6), renamed Step A to include brownfield context assessment, updated Step B to consider file overlap, added new Step C (Review for File Overlap), and added wrong/correct file churn examples. These changes significantly improve epic design quality by detecting when multiple epics target the same core files.
+**Description:** None of the 20 BMAD agents contain a non-overridable process compliance directive. `role.md` focuses on OUTPUT quality, not PROCESS adherence. Add `MANDATORY PROCESS COMPLIANCE` section BEFORE the persona definition to every agent's `role.md`.
 
 **Changes required:**
-1. Add Principle #6: "Implementation Efficiency" — consider consolidating epics that modify the same core files
-2. Add wrong/correct file churn examples after principles (❌ WRONG: 3 epics touching same model/controller/web; ✅ CORRECT: single consolidated epic)
-3. Rename Step A from "Identify User Value Themes" to "Assess Context and Identify Themes" — add brownfield context assessment paragraph
-4. Update Step B instruction to include "considering whether epics share the same core files"
-5. Add new Step C: "Review for File Overlap" — detect when multiple epics target same core files, recommend consolidation
-6. **Preserve our YAML frontmatter** at top of file
-7. **Preserve our Step Complete section** at bottom of file
+1. Add the following section to ALL 20 agents' `role.md`, BEFORE the persona definition:
 
-**Files affected:**
-- `skills/bmad-bmm/workflows/3-solutioning/create-epics-and-stories/steps/step-02-design-epics.md`
+```markdown
+## MANDATORY PROCESS COMPLIANCE
 
-**Upstream reference:** `.a0proj/upstream/BMAD-METHOD/src/bmm-skills/3-solutioning/bmad-create-epics-and-stories/steps/step-02-design-epics.md` (242 lines)
+You are a PROCESS-DRIVEN agent. This means:
 
-**Dependencies:** None
+1. You MUST load the appropriate BMAD skill before ANY workflow execution
+2. You MUST follow the step-file architecture loaded from the skill
+3. You MUST execute steps sequentially — NEVER skip or optimize the sequence
+4. You MUST read each step file completely before taking action
+5. You MUST halt at checkpoints and wait for user input
+6. You MUST NOT produce workflow artifacts except through the step-by-step process
+
+Even if you believe you have all requirements, you MUST still follow the step-by-step process.
+"Complete task" means complete the PROCESS, not skip to the output.
+```
+
+**Files affected (20 files):**
+- `agents/bmad-master/prompts/agent.system.main.role.md`
+- `agents/bmad-analyst/prompts/agent.system.main.role.md`
+- `agents/bmad-architect/prompts/agent.system.main.role.md`
+- `agents/bmad-pm/prompts/agent.system.main.role.md`
+- `agents/bmad-dev/prompts/agent.system.main.role.md`
+- `agents/bmad-ux-designer/prompts/agent.system.main.role.md`
+- `agents/bmad-qa/prompts/agent.system.main.role.md`
+- `agents/bmad-sm/prompts/agent.system.main.role.md`
+- `agents/bmad-tech-writer/prompts/agent.system.main.role.md`
+- `agents/bmad-test-architect/prompts/agent.system.main.role.md`
+- `agents/bmad-innovation/prompts/agent.system.main.role.md`
+- `agents/bmad-design-thinking/prompts/agent.system.main.role.md`
+- `agents/bmad-presentation/prompts/agent.system.main.role.md`
+- `agents/bmad-storyteller/prompts/agent.system.main.role.md`
+- `agents/bmad-brainstorming-coach/prompts/agent.system.main.role.md`
+- `agents/bmad-problem-solver/prompts/agent.system.main.role.md`
+- `agents/bmad-quick-dev/prompts/agent.system.main.role.md`
+- `agents/bmad-workflow-builder/prompts/agent.system.main.role.md`
+- `agents/bmad-agent-builder/prompts/agent.system.main.role.md`
+- `agents/bmad-module-builder/prompts/agent.system.main.role.md`
+
+**Dependencies:** None (can run in parallel with G-P0-3, G-P0-4 after G-P0-1)
 
 **Verification steps:**
-- [ ] 6 principles present (including #6 Implementation Efficiency)
-- [ ] Wrong/correct file churn examples present
-- [ ] Step A renamed to "Assess Context and Identify Themes" with brownfield paragraph
-- [ ] Step B mentions file overlap consideration
-- [ ] Step C (Review for File Overlap) exists
-- [ ] YAML frontmatter preserved at file top
-- [ ] Step Complete section preserved at file bottom
-- [ ] `python -m pytest tests/ -v` — all green
+- [ ] `grep -rl 'MANDATORY PROCESS COMPLIANCE' agents/*/prompts/agent.system.main.role.md` → 20 files
+- [ ] Compliance section appears BEFORE persona definition in each file
+- [ ] `python -m pytest tests/ -v` — all 250+ tests green
 
-**Risk notes:** Our file (233 lines) vs upstream (242 lines) — upstream has +9 lines (new content). Our file has YAML frontmatter that upstream may not. Medium merge complexity due to structural changes (new Step C shifts numbering).
+**Risk notes:** Low risk — additive text insertion only, no existing content modified.
 
-**Estimated complexity:** Medium — structural changes to step flow + new content sections + two preserved A0 sections
+**Estimated complexity:** Medium — 20 files, but identical content insertion at predictable location
 
 ---
 
-### Task F-P0-3: Add file churn check + HALT + on_complete hook in step-04-final-validation.md [Size: M]
+### Task G-P0-3: Rewrite shared fragment Initial Clarification (escape hatch removal) [Size: S]
 
-**SPEC ref:** F-P0-3
+**SPEC ref:** G-P0-3 (R2)
+**Root cause:** RC2 — escape hatch in shared fragment
 
-**Description:** Upstream v6.6.0 added three changes to the final validation step: (1) File Churn Check subsection in Epic Structure Validation, (2) HALT instruction in Final Menu, (3) On Complete hook running `resolve_customization.py`. These changes improve validation rigor and add workflow completion extensibility.
+**Description:** The `Initial Clarification` section in `bmad-agent-shared.md` allows agents to rationalize skipping steps if they believe requirements are clear. This escape hatch is moot while RC0 exists (section never loaded), but becomes active after the include fix in G-P0-1. Replace with process-aware clarification.
 
 **Changes required:**
-1. Add File Churn Check subsection to Epic Structure Validation:
-   - "Do multiple epics repeatedly modify the same core files?"
-   - Assess overlap pattern: unnecessary churn vs incidental
-   - If significant: validate splitting provides genuine value
-   - If no justification: recommend consolidation
-   - Wrong example: multiple epics each modifying same files with no feedback loop
-   - Right example: distinct files/components, or consolidation explicitly considered
-2. Add HALT instruction to Final Menu:
-   - `HALT — wait for user input before proceeding.`
-3. Add On Complete section:
-   - `Run: python3 $A0PROJ/_bmad/scripts/resolve_customization.py --skill {skill-root} --key workflow.on_complete`
-   - If resolved `workflow.on_complete` is non-empty, follow it as final terminal instruction
-   - Note: `resolve_customization.py` is included in F-P1-5
-4. **Preserve our Workflow Completion — State Write section** (A0-specific, not in upstream)
-5. **Preserve our YAML frontmatter** at top of file
+1. Replace the `Initial Clarification` section in `prompts/bmad-agent-shared.md` (now at new location after G-P0-1) with:
+
+```markdown
+## Initial Clarification
+
+Before executing any BMAD workflow, confirm understanding of:
+- What artifact is being created or modified
+- Current project phase alignment
+- Output format expectations
+- Acceptance criteria
+- Constraints to honor
+
+Clarification determines WHICH workflow step to START at, not WHETHER to follow the process.
+You ALWAYS follow the step-by-step process — clarification only affects where you begin.
+
+NEVER interpret "I have all requirements" as permission to skip the process.
+```
 
 **Files affected:**
-- `skills/bmad-bmm/workflows/3-solutioning/create-epics-and-stories/steps/step-04-final-validation.md`
+- `prompts/bmad-agent-shared.md` (the shared fragment — one change fixes all 19 agents)
 
-**Upstream reference:** `.a0proj/upstream/BMAD-METHOD/src/bmm-skills/3-solutioning/bmad-create-epics-and-stories/steps/step-04-final-validation.md` (143 lines)
-
-**Dependencies:** None (On Complete hook references `resolve_customization.py` which will be included in F-P1-5, but the step file can reference it before it exists)
+**Dependencies:** None (can run in parallel with G-P0-2, G-P0-4 after G-P0-1)
 
 **Verification steps:**
-- [ ] File Churn Check subsection exists in Epic Structure Validation
-- [ ] HALT instruction present in Final Menu
-- [ ] On Complete hook section present with resolve_customization.py reference
-- [ ] Workflow Completion — State Write section preserved
-- [ ] YAML frontmatter preserved at file top
-- [ ] `python -m pytest tests/ -v` — all green
+- [ ] `grep 'NEVER interpret' prompts/bmad-agent-shared.md` → found
+- [ ] No escape hatch language remains (no "if you have all requirements, you may proceed directly")
+- [ ] Clarification section is process-aware
+- [ ] `python -m pytest tests/ -v` — all 250+ tests green
 
-**Risk notes:** Our file (167 lines) vs upstream (143 lines) — our +24 lines are the State Write section. On Complete hook path adapted from upstream's `{project-root}/_bmad/scripts/` to A0's `$A0PROJ/_bmad/scripts/`.
+**Risk notes:** Low risk — single file edit, content replacement in one section.
 
-**Estimated complexity:** Medium — multiple additions + one preserved A0 section
+**Estimated complexity:** Small — one section replacement in one file
+
+---
+
+### Task G-P0-4: Rewrite solving.md — clean full override (remove high-agency conflict) [Size: M]
+
+**SPEC ref:** G-P0-4 (R3)
+**Root cause:** RC1 — conflicting directives in solving.md
+
+**Description:** Line 25 of the current solving.md (`don't accept failure retry be high-agency`) directly conflicts with line 33 (`Follow workflow steps precisely`). LLM task-completion bias resolves toward shortcut. Replace with clean BMAD-specific solving.md — no `{{ include original }}` or `{{ extend }}`. Clean full override eliminates conflict entirely.
+
+**Changes required:**
+1. Replace the content of ALL 20 agents' `solving.md` files with the clean BMAD-specific override:
+
+```markdown
+## Problem solving
+
+You are a PROCESS-DRIVEN BMAD agent. Process compliance overrides efficiency.
+
+0. Load the appropriate BMAD skill FIRST — no exceptions
+1. Follow the step-file architecture loaded from the skill
+2. Execute steps sequentially — never skip or optimize the sequence
+3. Read each step file completely before taking action
+4. Halt at checkpoints and wait for user input
+5. Produce artifacts only through the step-by-step process
+6. Use `text_editor:patch` for large artifacts
+7. Update `02-bmad-state.md` after phase transitions
+
+CRITICAL: "Complete task" means complete the PROCESS, not skip to the output.
+If you feel tension between completing the task and following the process,
+FOLLOW THE PROCESS.
+```
+
+**Files affected (20 files):**
+- `agents/bmad-master/prompts/agent.system.main.solving.md`
+- `agents/bmad-analyst/prompts/agent.system.main.solving.md`
+- ... (all 20 agents' `solving.md` files)
+
+**Dependencies:** None (can run in parallel with G-P0-2, G-P0-3 after G-P0-1)
+
+**Verification steps:**
+- [ ] `grep -rl 'PROCESS-DRIVEN BMAD agent' agents/*/prompts/agent.system.main.solving.md` → 20 files
+- [ ] No conflicting "high-agency" or "don't accept failure" directive in any solving.md
+- [ ] All 20 files have identical content
+- [ ] `python -m pytest tests/ -v` — all 250+ tests green
+
+**Risk notes:** Low risk — content replacement only. The clean override is self-contained and does not inherit from A0 framework defaults.
+
+**Estimated complexity:** Medium — 20 files, but identical content replacement
+
+---
+
+### Task G-P0-5: Convert bmad-master specifics.md from 109-line inline to `{{ include }}` [Size: S]
+
+**SPEC ref:** G-P0-5 (R7)
+**Root cause:** RC0 + divergence risk
+
+**Description:** bmad-master's `specifics.md` is 109 lines because it inlines all shared content directly — it does NOT use `{{ include }}`. This was the right call when the include was broken (RC0), but creates a divergence risk after G-P0-1+G-P0-3. After those fixes, 19 agents get new process-aware shared content via the rewritten `bmad-agent-shared.md`, but bmad-master keeps its stale 109-line inline version. The two copies will silently diverge.
+
+**Changes required:**
+1. Read current `agents/bmad-master/prompts/agent.system.main.specifics.md` (109 lines)
+2. Extract master-specific content (persona preamble, master-specific extras)
+3. Replace with: persona preamble + `{{ include "bmad-agent-shared.md" }}` + master-specific extras
+4. Verify on VPS that include resolves correctly for bmad-master
+
+**Files affected:**
+- `agents/bmad-master/prompts/agent.system.main.specifics.md`
+
+**Dependencies:** G-P0-1 (include mechanism must be verified working before master can use it)
+
+**Verification steps:**
+- [ ] `grep '{{ include "bmad-agent-shared.md" }}' agents/bmad-master/prompts/agent.system.main.specifics.md` → found
+- [ ] File is significantly shorter than 109 lines (inline content removed)
+- [ ] Master-specific content preserved (persona preamble, extras)
+- [ ] Include resolves on VPS for bmad-master
+- [ ] `python -m pytest tests/ -v` — all 250+ tests green
+
+**Risk notes:** Medium risk — must carefully extract master-specific content from the 109-line file without losing anything. The inline content should match the shared fragment (after G-P0-3 rewrite), but may have master-only additions.
+
+**Estimated complexity:** Small — content extraction + include directive in one file
 
 ---
 
 ## Checkpoint: P0
 
 **Pass criteria (ALL must be green before P1 starts):**
-- [ ] `step-07-validation.md` — all `[ ]` unchecked, no ✅ emoji, 3-tier conditional status
-- [ ] `step-02-design-epics.md` — 6 principles, Step C exists, file churn examples
-- [ ] `step-04-final-validation.md` — File Churn Check, HALT, On Complete hook
-- [ ] All 3 files retain their A0-specific sections (YAML frontmatter, Step Complete, State Write)
-- [ ] `python -m pytest tests/ -v` → all 200+ tests green
+- [ ] `bmad-agent-shared.md` moved to `prompts/` — `agents/_shared/` removed
+- [ ] Runtime include resolution test passes for all 19 non-master agents on VPS
+- [ ] All 20 `role.md` files contain `MANDATORY PROCESS COMPLIANCE` section before persona
+- [ ] `bmad-agent-shared.md` Initial Clarification is process-aware (no escape hatch)
+- [ ] All 20 `solving.md` files use clean BMAD-specific full override (no conflicting directive)
+- [ ] bmad-master specifics.md converted from 109-line inline to `{{ include }}`
+- [ ] ADR 0002 revised to reflect actual state
+- [ ] `python -m pytest tests/ -v` → all 250+ tests green
 
 ---
 
-## Phase F — P1: Config Migration + Customization (6 tasks)
+## Phase G — P1: High Priority (3 tasks)
 
 **Prereq:** P0 checkpoint passed.
 
 ---
 
-### Task F-P1-1: Move `project_name` to core config [Size: XS]
+### Task G-P1-1: Add subordinate-mode detection to all 20 communication_additions.md [Size: M]
 
-**SPEC ref:** F-P1-1
+**SPEC ref:** G-P1-1 (R4)
+**Root cause:** RC4 — no subordinate-mode awareness
 
-**Description:** `project_name` currently lives in `skills/bmad-bmm/config.yaml` but upstream v6.6.0 moved it to the core config as it's a project-level value, not BMM-specific. Add `project_name` field to `skills/bmad-init/core/config.yaml` and update the version header from `6.0.3` to `6.6.0`.
+**Description:** Menu-driven interaction breaks when agents are called via `call_subordinate`. Agents have no alternative execution path for subordinate mode. Add `Subordinate Mode Detection` section to all 20 agents' `communication_additions.md`.
 
 **Changes required:**
-1. Add `project_name: ""` to `skills/bmad-init/core/config.yaml`
-2. Update version comment from `6.0.3` to `6.6.0`
+1. Add the following section to ALL 20 agents' `communication_additions.md`:
 
-**Current core config state:**
-~~~yaml
-# CORE Module Configuration
-# Version: 6.0.3
+```markdown
+## Subordinate Mode Detection
 
-user_name: ""
-communication_language: English
-document_output_language: English
-output_folder: "{project-root}/_bmad-output"
-~~~
+When you receive a direct task instruction (not a menu selection from the user),
+you are in SUBORDINATE MODE:
 
-**Target state:**
-~~~yaml
-# CORE Module Configuration
-# Version: 6.6.0
+1. Recognize you are being called by a superior agent
+2. Load the appropriate BMAD skill IMMEDIATELY
+3. Route to the matching workflow based on the task
+4. Execute the workflow step-by-step — do NOT skip the process
+5. Return results via the `response` tool when complete
 
-project_name: ""
-user_name: ""
-communication_language: English
-document_output_language: English
-output_folder: "{project-root}/_bmad-output"
-~~~
+Do NOT display the menu in subordinate mode — proceed directly to workflow execution.
+```
 
-**Files affected:**
-- `skills/bmad-init/core/config.yaml`
+**Files affected (20 files):**
+- `agents/bmad-master/prompts/agent.system.main.communication_additions.md`
+- `agents/bmad-analyst/prompts/agent.system.main.communication_additions.md`
+- ... (all 20 agents' `communication_additions.md` files)
 
-**Dependencies:** None
+**Dependencies:** None (independent after P0 checkpoint)
 
 **Verification steps:**
-- [ ] `grep 'project_name' skills/bmad-init/core/config.yaml` → found
-- [ ] `grep 'Version: 6.6.0' skills/bmad-init/core/config.yaml` → found
+- [ ] `grep -rl 'Subordinate Mode Detection' agents/*/prompts/agent.system.main.communication_additions.md` → 20 files
+- [ ] Section contains all 5 numbered items + the menu suppression instruction
+- [ ] `python -m pytest tests/ -v` — all 250+ tests green
 
-**Risk notes:** Low risk. `project_name` may be referenced by CSV routing rows or workflow templates — verify in F-P1-4.
+**Risk notes:** Low risk — additive text insertion only.
 
-**Estimated complexity:** Small — add one field, change version string
+**Estimated complexity:** Medium — 20 files, but identical content insertion
 
 ---
 
-### Task F-P1-2: Remove `project_name` from bmm config [Size: XS]
+### Task G-P1-2: Create shared solving.md fragment in `prompts/bmad-agent-shared-solving.md` [Size: S]
 
-**SPEC ref:** F-P1-2
+**SPEC ref:** G-P1-2 (R5)
+**Root cause:** Maintenance optimization
 
-**Description:** Remove `project_name` from `skills/bmad-bmm/config.yaml` now that it lives in core config. Update version header from `6.0.3` to `6.6.0`.
+**Description:** After G-P0-4, all 20 agents have identical solving.md content. Extract to a shared fragment to eliminate copy-paste across 20 files. Replace each `solving.md` with a single `{{ include }}` directive.
 
 **Changes required:**
-1. Remove `project_name: ""` line from `skills/bmad-bmm/config.yaml`
-2. Update version comment from `6.0.3` to `6.6.0`
-
-**Current bmm config state:**
-~~~yaml
-# BMM Module Configuration
-# Version: 6.0.3
-
-project_name: ""
-user_skill_level: intermediate
-...
-~~~
-
-**Target state:**
-~~~yaml
-# BMM Module Configuration
-# Version: 6.6.0
-
-user_skill_level: intermediate
-...
-~~~
+1. Create `prompts/bmad-agent-shared-solving.md` with the clean BMAD-specific content from G-P0-4
+2. Replace all 20 `solving.md` files with: `{{ include "bmad-agent-shared-solving.md" }}`
 
 **Files affected:**
-- `skills/bmad-bmm/config.yaml`
+- NEW: `prompts/bmad-agent-shared-solving.md` (shared fragment)
+- `agents/bmad-master/prompts/agent.system.main.solving.md` → reduce to include
+- ... (all 20 agents' `solving.md` files)
 
-**Dependencies:** F-P1-1 (project_name must exist in core config before removing from bmm)
+**Dependencies:** G-P0-4 (shared fragment created from the clean override content)
 
 **Verification steps:**
-- [ ] `grep 'project_name' skills/bmad-bmm/config.yaml` → empty
-- [ ] `grep 'Version: 6.6.0' skills/bmad-bmm/config.yaml` → found
-- [ ] `python -m pytest tests/ -v` — all green
+- [ ] `prompts/bmad-agent-shared-solving.md` exists with BMAD solving content
+- [ ] `grep -rl '{{ include "bmad-agent-shared-solving.md" }}' agents/*/prompts/agent.system.main.solving.md` → 20 files
+- [ ] Include resolves on VPS for all 20 agents
+- [ ] `python -m pytest tests/ -v` — all 250+ tests green
 
-**Risk notes:** Any code or workflow that reads `project_name` from bmm config will break. Need to verify all consumers in F-P1-4.
+**Risk notes:** Low risk — content extraction + include directive. Same content as G-P0-4, just centralized.
 
-**Estimated complexity:** Small — remove one line, change version string
+**Estimated complexity:** Small — one new file + 20 files reduced to single-line include
 
 ---
 
-### Task F-P1-3: Update remaining config versions to 6.6.0 [Size: XS]
+### Task G-P1-3: Verify bmad-master response.md include resolves on VPS [Size: XS]
 
-**SPEC ref:** F-P1-3
+**SPEC ref:** G-P1-3 (R8)
+**Root cause:** Quality assurance
 
-**Description:** Update version headers in the 3 remaining config files from `6.0.3` to `6.6.0`. No content changes needed — these files don't have `project_name`.
+**Description:** bmad-master has `{{ include "agent.system.response_tool_tips.md" }}` in its `response.md`. This references the A0 framework file at `/a0/prompts/agent.system.response_tool_tips.md`. It should work (framework files are in the search path), but this has never been empirically verified.
 
-**Changes required:**
-1. `skills/bmad-cis/config.yaml` — change `Version: 6.0.3` to `Version: 6.6.0`
-2. `skills/bmad-tea/config.yaml` — change `Version: 6.0.3` to `Version: 6.6.0`
-3. `skills/bmad-bmb/config.yaml` — change `Version: 6.0.3` to `Version: 6.6.0`
+**Changes required:** None expected — verification only.
 
-**Files affected:**
-- `skills/bmad-cis/config.yaml`
-- `skills/bmad-tea/config.yaml`
-- `skills/bmad-bmb/config.yaml`
-
-**Dependencies:** F-P1-1, F-P1-2 (config migration should be atomic)
-
-**Verification steps:**
-- [ ] `grep -r 'Version: 6.0.3' skills/*/config.yaml` → empty
-- [ ] `grep -r 'Version: 6.6.0' skills/*/config.yaml` → 5 hits (all 5 configs)
-- [ ] `python -m pytest tests/ -v` — all green
-
-**Risk notes:** Minimal — version string change only, no functional impact.
-
-**Estimated complexity:** Small — version string update in 3 files
-
----
-
-### Task F-P1-4: Verify CSV row coverage post-migration [Size: S]
-
-**SPEC ref:** F-P1-4
-
-**Description:** After moving `project_name` from bmm to core config, verify that all 5 `module-help.csv` files still route correctly. Verified upstream: no CSV rows reference `project_name` at all, so this is a quick sanity check confirming the migration is safe.
-
-**Changes required:** None (verification-only task, but may require fixes if issues found)
-
-**Verification steps:**
-- [ ] `grep -r 'project_name' skills/*/module-help.csv` — confirm no CSV references project_name
-- [ ] `python -m pytest tests/test_extension_80.py -v` — routing tests pass
-- [ ] `python -m pytest tests/test_core_csv_schema.py -v` — CSV schema tests pass
-- [ ] Manual: load a bmm workflow via routing manifest and verify config resolution
+**Action:**
+1. Run verification script on VPS testing instance to confirm the include resolves correctly in bmad-master's context
+2. If include does NOT resolve, investigate and fix
 
 **Files affected:**
-- Potentially any `module-help.csv` if references need updating (unlikely)
+- Potentially `agents/bmad-master/prompts/agent.system.main.response.md` if fix needed
 
-**Dependencies:** F-P1-3 (all config changes complete)
-
-**Risk notes:** Low risk — verified upstream that no CSV rows reference `project_name`. Config migration is safe.
-
-**Estimated complexity:** Small — quick sanity check, no longer a blocker
-
----
-
-### Task F-P1-5: Include `resolve_customization.py` in plugin [Size: S]
-
-**SPEC ref:** F-P1-5
-
-**Description:** Upstream's `resolve_customization.py` is a Python 3.11+ script (we have 3.13) that performs 3-layer TOML merge for skill customization. Include it in our plugin, adapting paths from upstream's `{project-root}/_bmad/` to A0's `$A0PROJ/_bmad/` conventions.
-
-**Changes required:**
-1. Copy `src/scripts/resolve_customization.py` from upstream to `$A0PROJ/_bmad/scripts/resolve_customization.py`
-2. Adapt all path references from `{project-root}/_bmad/` to `$A0PROJ/_bmad/`
-3. Verify script runs with our Python 3.13 environment
-4. Add any missing dependencies (e.g., `tomllib` or `tomli` for TOML parsing)
-
-**Files affected:**
-- NEW: `$A0PROJ/_bmad/scripts/resolve_customization.py` (adapted from upstream)
-
-**Upstream reference:** `.a0proj/upstream/BMAD-METHOD/src/scripts/resolve_customization.py`
-
-**Dependencies:** None (can run in parallel with F-P1-4)
+**Dependencies:** None (independent after P0 checkpoint)
 
 **Verification steps:**
-- [ ] Script exists at `$A0PROJ/_bmad/scripts/resolve_customization.py`
-- [ ] `python3 $A0PROJ/_bmad/scripts/resolve_customization.py --help` runs without error
-- [ ] All path references adapted from upstream format to A0 format
-- [ ] `python -m pytest tests/ -v` — all green
+- [ ] Include resolves on VPS — bmad-master response contains expected tooltips content
+- [ ] If fix needed: commit and re-verify
 
-**Risk notes:** Low risk — straightforward port with path adaptation. Python 3.13 has `tomllib` built-in for TOML reading (3.11+ feature).
+**Risk notes:** Low risk — verification-only task. Framework files should be in the search path.
 
-**Estimated complexity:** Small — copy + path adaptation
-
----
-
-### Task F-P1-6: Create bmad-customize skill [Size: M]
-
-**SPEC ref:** F-P1-6
-
-**Description:** Port the upstream `bmad-customize` core skill to our plugin with A0 path adaptations. This skill enables project-level customization (adjusting agent personas, workflow parameters, etc.) using the `resolve_customization.py` script for 3-layer TOML merge.
-
-**Changes required:**
-1. Port upstream SKILL.md with A0 path adaptations:
-   - `src/core-skills/bmad-customize/SKILL.md` → adapt with A0 paths
-2. Port supporting scripts:
-   - `src/core-skills/bmad-customize/scripts/list_customizable_skills.py`
-   - `src/core-skills/bmad-customize/scripts/tests/test_list_customizable_skills.py`
-3. Port `customize.toml` files from bmm skills (31 files found upstream)
-4. Adapt all path references from upstream conventions to A0 conventions
-
-**Files affected:**
-- NEW: Skill directory with SKILL.md, scripts, and customize.toml files
-
-**Upstream references:**
-- `.a0proj/upstream/BMAD-METHOD/src/core-skills/bmad-customize/SKILL.md`
-- `.a0proj/upstream/BMAD-METHOD/src/core-skills/bmad-customize/scripts/list_customizable_skills.py`
-- `.a0proj/upstream/BMAD-METHOD/src/core-skills/bmad-customize/scripts/tests/test_list_customizable_skills.py`
-- 31 `customize.toml` files across bmm skills
-
-**Dependencies:** F-P1-5 (resolve_customization.py must be in place for the skill to function)
-
-**Verification steps:**
-- [ ] bmad-customize skill loads via SKILL.md
-- [ ] `list_customizable_skills.py` runs and discovers customizable skills
-- [ ] Test for `list_customizable_skills.py` passes
-- [ ] All customize.toml files ported and valid TOML
-- [ ] All path references adapted to A0 conventions
-- [ ] `python -m pytest tests/ -v` — all green
-
-**Risk notes:** Medium complexity — 31 customize.toml files to port, but they're likely simple config files. The SKILL.md needs careful path adaptation. Test file needs to work in A0's test environment.
-
-**Estimated complexity:** Medium — multiple files to port with path adaptations
+**Estimated complexity:** Extra-small — verification script run on VPS
 
 ---
 
 ## Checkpoint: P1
 
 **Pass criteria:**
-- [ ] `project_name` in core config only (not duplicated in bmm)
-- [ ] All 5 config.yaml version headers read `6.6.0`
-- [ ] CSV row routing unaffected by config migration
-- [ ] `resolve_customization.py` included at `$A0PROJ/_bmad/scripts/`
-- [ ] `bmad-customize` skill created with all supporting files
-- [ ] `python -m pytest tests/ -v` → all 200+ tests green
+- [ ] All 20 `communication_additions.md` files contain `Subordinate Mode Detection` section
+- [ ] Shared solving.md fragment exists in `prompts/bmad-agent-shared-solving.md`
+- [ ] All 20 `solving.md` files reduced to `{{ include "bmad-agent-shared-solving.md" }}`
+- [ ] bmad-master response.md include verified resolving on VPS
+- [ ] `python -m pytest tests/ -v` → all 250+ tests green
 
 ---
 
-## Phase F — P2: Polish (2 tasks)
+## Phase G — P2: Nice to Have (2 tasks)
 
 **Prereq:** P1 checkpoint passed.
 
 ---
 
-### Task F-P2-1: Update CHANGELOG [Size: XS]
+### Task G-P2-1: Add A0 framework skill awareness to BMB specifics.md [Size: XS]
 
-**SPEC ref:** F-P2-1
+**SPEC ref:** G-P2-1 (R6)
+**Root cause:** Quality improvement
 
-**Description:** Add Phase F entries to CHANGELOG.md documenting all changes from the upstream v6.6.0 sync.
+**Description:** Add `A0 Framework Integration` section to BMB agent specifics.md files (Wendy/bmad-workflow-builder, Bond/bmad-agent-builder, Morgan/bmad-module-builder) so they understand A0 tool patterns when building BMAD artifacts.
 
 **Changes required:**
-Add new section at top of CHANGELOG:
+1. Add the following section to 3 BMB agent specifics.md files:
 
-~~~markdown
-## [1.1.0] — 2026-05-XX
+```markdown
+## A0 Framework Integration
 
-### Phase F — Upstream v6.6.0 Sync
+When building workflows that interact with Agent Zero:
+- Load `a0-development` skill to understand framework architecture
+- Reference A0 tool patterns and conventions
+- Use `call_subordinate` to delegate specialist work
+- Follow A0 prompt inheritance and override patterns
+```
 
-#### P0 — Critical Workflow Step Sync
-- **F-P0-1**: Architecture validation checklist unchecked with 3-tier conditional status
-- **F-P0-2**: File churn detection in epic design (Principle #6, Step C, examples)
-- **F-P0-3**: File churn validation + HALT instruction + on_complete hook in final validation
+**Files affected (3 files):**
+- `agents/bmad-workflow-builder/prompts/agent.system.main.specifics.md`
+- `agents/bmad-agent-builder/prompts/agent.system.main.specifics.md`
+- `agents/bmad-module-builder/prompts/agent.system.main.specifics.md`
 
-#### P1 — Config Migration + Customization
-- **F-P1-1**: `project_name` moved to core config
-- **F-P1-2**: `project_name` removed from bmm config
-- **F-P1-3**: All config version headers updated to 6.6.0
-- **F-P1-4**: CSV row coverage verified post-migration
-- **F-P1-5**: `resolve_customization.py` included in plugin
-- **F-P1-6**: `bmad-customize` skill created from upstream
-
-#### P2 — Polish
-- **F-P2-1**: CHANGELOG updated
-- **F-P2-2**: Plugin version bumped to 1.1.0
-~~~
-
-**Files affected:**
-- `CHANGELOG.md`
-
-**Dependencies:** F-P0-1, F-P0-2, F-P0-3, F-P1-1 through F-P1-6 (all changes documented)
+**Dependencies:** None
 
 **Verification steps:**
-- [ ] CHANGELOG has `[1.1.0]` section at top
-- [ ] All Phase F task IDs referenced
-- [ ] No fabricated entries
+- [ ] `grep -rl 'A0 Framework Integration' agents/bmad-workflow-builder/prompts/ agents/bmad-agent-builder/prompts/ agents/bmad-module-builder/prompts/` → 3 files
+- [ ] `python -m pytest tests/ -v` — all 250+ tests green
 
-**Risk notes:** None
+**Risk notes:** None — additive text only.
 
-**Estimated complexity:** Small — documentation only
+**Estimated complexity:** Extra-small — identical section added to 3 files
 
 ---
 
-### Task F-P2-2: Plugin version bump to 1.1.0 [Size: XS]
+### Task G-P2-2: Update failure analysis report to reflect clean full override decision [Size: XS]
 
-**SPEC ref:** F-P2-2
+**SPEC ref:** G-P2-2 (R9)
+**Root cause:** Documentation accuracy
 
-**Description:** Bump plugin version from `1.0.8` to `1.1.0` in `plugin.yaml`. This is a minor version bump (feature addition from upstream sync), not a patch bump.
+**Description:** `docs/workflow-builder-failure-analysis.md` still references the old `{{ extend }}` approach in its recommendations. The decision was made to use a clean full override instead (R3). Update the report to reflect the actual implementation.
 
 **Changes required:**
-1. Update `version: 1.0.8` to `version: 1.1.0` in `plugin.yaml` line 3
+1. Update failure analysis report recommendations to reflect clean full override decision
+2. Remove or update references to `{{ extend }}` approach
+3. Add note about why clean override was chosen over extend
 
 **Files affected:**
-- `plugin.yaml`
+- `docs/workflow-builder-failure-analysis.md`
 
-**Dependencies:** All P0 and P1 tasks complete (version bump is the final gate)
+**Dependencies:** None
 
 **Verification steps:**
-- [ ] `grep 'version: 1.1.0' plugin.yaml` → found
-- [ ] `python -m pytest tests/ -v` — all green
+- [ ] Report references clean full override, not `{{ extend }}`
+- [ ] Rationale for decision documented
 
-**Risk notes:** None
+**Risk notes:** None — documentation only.
 
-**Estimated complexity:** Small — single line change
+**Estimated complexity:** Extra-small — single file text update
 
 ---
 
 ## Checkpoint: P2 (ready for /ship)
 
 **Pass criteria — all required for `/ship`:**
-- [ ] CHANGELOG updated with Phase F entries
-- [ ] Plugin version `1.1.0`
+- [ ] BMB agent specifics.md contain `A0 Framework Integration` section
+- [ ] Failure analysis report updated to reflect clean full override
+- [ ] CHANGELOG updated with Phase G entries
+- [ ] Plugin version `1.3.0`
 - [ ] All 20 BMAD agents functional end-to-end on VPS testing instance
-- [ ] BMAD initializable from any path
-- [ ] Tagged as `v1.1.0`; merged to `main`
+- [ ] Include resolution empirically verified on VPS for all 19 non-master agents
+- [ ] Failure probability reduced from 95-100% → <5%
+- [ ] Tagged as `v1.3.0`; merged to `main`
 
 ---
 
@@ -545,12 +511,12 @@ Add new section at top of CHANGELOG:
 
 | Risk | Impact | Probability | Mitigation |
 |------|--------|-------------|------------|
-| A0-specific sections lost during merge | High — breaks Step Complete / State Write | Low | 5-step merge protocol; explicit diff check after each merge |
-| Upstream structural changes conflict with our YAML frontmatter | Medium — frontmatter parsing breaks | Low | Read file fully before merge; frontmatter is delimited by `---` fences |
-| Config migration breaks routing | High — CSV rows can't find `project_name` | Low | F-P1-4 dedicated verification task; upstream confirms no CSV references `project_name` |
-| Test regressions from workflow step content changes | Medium — tests may validate step structure | Low | No existing tests parse step file internals; all 200+ tests should pass unchanged |
-| Upstream step-04 has fewer lines than ours | Low — content removed upstream that we need | Low | Our +24 lines are A0-specific (State Write); upstream content is additive |
-| customize.toml files have upstream-specific paths | Medium — customization won't resolve correctly | Low | Careful path adaptation during F-P1-6; test with list_customizable_skills.py |
+| G-P0-1 file move breaks include resolution for agents that already had it working | Medium — bmad-master uses specifics.md not include | Low | bmad-master does NOT use `{{ include }}` for shared fragment; it inlines. Move only affects 19 agents that were already broken |
+| 20-file changes introduce typos or inconsistencies | Medium — agents get different prompts | Low | Use scripted/text-editor batch approach; verify with `grep` counts |
+| G-P0-5 content extraction loses master-specific content | High — bmad-master loses unique behavior | Medium | Read 109-line file fully before extraction; verify master-specific extras survive |
+| ADR 0002 revision exposes past incorrect claims | Low — documentation accuracy | High | Transparent revision is better than leaving false claims; add revision date and corrected status |
+| Test suite doesn't cover prompt content | Medium — prompt defects not caught | High | Phase G adds `test_phase_g_include.py` and `test_phase_g_compliance.py` for runtime and content verification |
+| Clean full override loses future A0 framework solving.md improvements | Medium — BMAD agents don't benefit from framework updates | Low | BMAD needs fundamentally different behavior; shared fragment in `prompts/` can be updated independently |
 
 ---
 
@@ -558,17 +524,16 @@ Add new section at top of CHANGELOG:
 
 | ID | Task | Priority | Size | Dependencies | Status |
 |----|------|----------|------|-------------|--------|
-| F-P0-1 | Fix pre-checked architecture checklist | P0 | M | None | Ready |
-| F-P0-2 | Add file churn detection to epic design | P0 | M | None | Ready |
-| F-P0-3 | Add file churn check + HALT + on_complete | P0 | M | None | Ready |
-| F-P1-1 | Move project_name to core config | P1 | XS | None | Ready |
-| F-P1-2 | Remove project_name from bmm config | P1 | XS | F-P1-1 | Ready |
-| F-P1-3 | Update config versions to 6.6.0 | P1 | XS | F-P1-1, F-P1-2 | Ready |
-| F-P1-4 | Verify CSV row coverage | P1 | S | F-P1-3 | Ready |
-| F-P1-5 | Include resolve_customization.py | P1 | S | None | Ready |
-| F-P1-6 | Create bmad-customize skill | P1 | M | F-P1-5 | Ready |
-| F-P2-1 | Update CHANGELOG | P2 | XS | All P0+P1 | Ready |
-| F-P2-2 | Plugin version bump to 1.1.0 | P2 | XS | All P0+P1 | Ready |
+| G-P0-1 | Fix broken `{{ include }}` — move shared fragment | P0 | S | None (MUST BE FIRST) | Ready |
+| G-P0-2 | Add process compliance gate to all 20 role.md | P0 | M | None (after G-P0-1) | Ready |
+| G-P0-3 | Rewrite shared fragment Initial Clarification | P0 | S | None (after G-P0-1) | Ready |
+| G-P0-4 | Rewrite solving.md — clean full override | P0 | M | None (after G-P0-1) | Ready |
+| G-P0-5 | Convert bmad-master inline to `{{ include }}` | P0 | S | G-P0-1 | Ready |
+| G-P1-1 | Add subordinate-mode detection to 20 agents | P1 | M | P0 checkpoint | Ready |
+| G-P1-2 | Create shared solving.md fragment | P1 | S | G-P0-4 | Ready |
+| G-P1-3 | Verify bmad-master response include on VPS | P1 | XS | P0 checkpoint | Ready |
+| G-P2-1 | Add A0 framework skill awareness to BMB | P2 | XS | P1 checkpoint | Ready |
+| G-P2-2 | Update failure analysis report | P2 | XS | P1 checkpoint | Ready |
 
-**Totals:** 12 tasks (P0: 3 · P1: 6 · P2: 2)
-**Estimated effort:** 1–2 days
+**Totals:** 10 tasks (P0: 5 · P1: 3 · P2: 2)
+**Estimated effort:** 3–4 hours for P0, 5–6 hours total

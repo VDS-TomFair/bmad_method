@@ -5,7 +5,7 @@
 #   promote.sh <type> <name> [project_root]
 #
 # Arguments:
-#   type          "agent" or "workflow"
+#   type          "agent", "workflow", or "skill"
 #   name          the agent or skill/workflow name
 #   project_root  path to the project (default: current directory)
 #
@@ -20,7 +20,7 @@ set -euo pipefail
 # --- Parse arguments ---
 if [[ $# -lt 2 ]]; then
     echo "Usage: promote.sh <type> <name> [project_root]"
-    echo "  type: 'agent' or 'workflow'"
+    echo "  type: 'agent', 'workflow', or 'skill'"
     echo "  name: the agent or skill/workflow directory name"
     echo "  project_root: path to the project (default: current directory)"
     exit 1
@@ -31,16 +31,22 @@ NAME="$2"
 PROJECT_ROOT="${3:-$(pwd)}"
 FORCE="${PROMOTE_FORCE:-false}"
 
+# --- Validate name (prevent path traversal) ---
+if [[ "$NAME" =~ / ]] || [[ "$NAME" =~ \.\. ]] || [[ "$NAME" =~ ^- ]]; then
+    echo "ERROR: Invalid name '$NAME'. Must not contain '/', '..', or start with '-'."
+    exit 1
+fi
+
 # --- Validate type ---
 case "$TYPE" in
     agent)
         SUBDIR="agents"
         ;;
-    workflow)
+    workflow|skill)
         SUBDIR="skills"
         ;;
     *)
-        echo "ERROR: Invalid type '$TYPE'. Must be 'agent' or 'workflow'."
+        echo "ERROR: Invalid type '$TYPE'. Must be 'agent', 'workflow', or 'skill'."
         exit 1
         ;;
 esac

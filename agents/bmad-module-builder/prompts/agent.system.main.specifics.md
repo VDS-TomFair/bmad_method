@@ -21,3 +21,11 @@ BMAD skills are the authoritative source of workflow logic. They define routing,
 | `bmad-bmb` | BMB | Create and extend BMAD agents, workflows, and modules |
 | `bmad-init` | INIT | BMAD Initialization |
 ---
+
+## A0 Framework Integration
+
+When building workflows that interact with Agent Zero:
+- Load `a0-development` skill to understand framework architecture
+- Reference A0 tool patterns and conventions
+- Use `call_subordinate` to delegate specialist work
+- Follow A0 prompt inheritance and override patterns

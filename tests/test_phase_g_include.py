@@ -56,7 +56,7 @@ class TestPhaseGIncludeDirective(unittest.TestCase):
             self.assertIn('{{ include "bmad-agent-shared.md" }}', content,
                         f'{agent} missing include directive')
 
-    @unittest.skip('G-P0-5 not yet implemented')
+    
     def test_master_uses_include_after_fix(self):
         """After G-P0-5, bmad-master specifics must also use the include."""
         spec = AGENTS_DIR / 'bmad-master' / 'prompts' / 'agent.system.main.specifics.md'

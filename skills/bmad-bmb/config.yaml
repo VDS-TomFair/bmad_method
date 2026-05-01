@@ -3,7 +3,13 @@
 # Version: 6.6.0
 # Date: 2026-02-24T20:06:55.671Z
 
-bmb_creations_output_folder: "{project-root}/_bmad-output/bmb-creations"
+# Phase H: Path split — staging for intermediate, agents/skills for A0-discoverable output
+bmb_staging_folder: "{project-root}/_bmad-output/bmb-staging"
+bmb_build_output_agents: "{project-root}/agents"
+bmb_build_output_skills: "{project-root}/skills"
+
+# Backward compat alias (points to staging)
+bmb_creations_output_folder: "{project-root}/_bmad-output/bmb-staging"
 
 # Core Configuration Values
 user_name: ""

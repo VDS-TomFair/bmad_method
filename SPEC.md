@@ -909,21 +909,21 @@ This phase fixes the BMB creation path problem where agents and skills built by 
 #### Phase H acceptance criteria:
 
 **P0 (merge gate — no P1/P2 work until these pass):**
-- [ ] `bmb_creations_output_folder` removed from `skills/bmad-bmb/config.yaml`
-- [ ] `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills` defined in config.yaml
-- [ ] BMB agent creation steps write to `bmb_build_output_agents` (→ `.a0proj/agents/`)
-- [ ] BMB workflow creation steps write to `bmb_build_output_skills` (→ `.a0proj/skills/`)
-- [ ] BMB staging artifacts go to `bmb_staging_folder` (→ `.a0proj/_bmad-output/bmb-staging/`)
-- [ ] `python -m pytest tests/ -v` → all 292+ tests green (no regressions)
+- [x] `bmb_creations_output_folder` removed from `skills/bmad-bmb/config.yaml`
+- [x] `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills` defined in config.yaml
+- [x] BMB agent creation steps write to `bmb_build_output_agents` (→ `.a0proj/agents/`)
+- [x] BMB workflow creation steps write to `bmb_build_output_skills` (→ `.a0proj/skills/`)
+- [x] BMB staging artifacts go to `bmb_staging_folder` (→ `.a0proj/_bmad-output/bmb-staging/`)
+- [x] `python -m pytest tests/ -v` → all 292+ tests green (no regressions)
 
 **P1:**
-- [ ] `bmad-promote` skill created with `/promote-agent`, `/promote-workflow`, `/promote-skill` triggers
-- [ ] Promotion copies from `.a0proj/agents/` to `plugins/bmad_method/agents/` correctly
-- [ ] Promotion copies from `.a0proj/skills/` to `plugins/bmad_method/skills/` correctly
-- [ ] `bmad-init.sh` creates `.a0proj/agents/` and `.a0proj/skills/` directories
+- [x] `bmad-promote` skill created with `/promote-agent`, `/promote-workflow`, `/promote-skill` triggers
+- [x] Promotion copies from `.a0proj/agents/` to `plugins/bmad_method/agents/` correctly
+- [x] Promotion copies from `.a0proj/skills/` to `plugins/bmad_method/skills/` correctly
+- [x] `bmad-init.sh` creates `.a0proj/agents/` and `.a0proj/skills/` directories
 
 **P2:**
-- [ ] All celebrate step files updated with A0 auto-discovery guidance
+- [x] All celebrate step files updated with A0 auto-discovery guidance
 
 ---
 

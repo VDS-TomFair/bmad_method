@@ -199,7 +199,7 @@ class TestIncludeDirectiveEdgeCases:
 
     def test_shared_fragment_exists_and_nonempty(self):
         """The shared fragment file exists and has content."""
-        shared = PROJECT_ROOT / "agents" / "_shared" / "prompts" / "bmad-agent-shared.md"
+        shared = PROJECT_ROOT / "prompts" / "bmad-agent-shared.md"
         assert shared.exists()
         assert len(shared.read_text().strip()) > 100
 

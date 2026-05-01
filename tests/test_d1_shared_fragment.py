@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
-SHARED = PROJECT / 'agents' / '_shared' / 'prompts' / 'bmad-agent-shared.md'
+SHARED = PROJECT / 'prompts' / 'bmad-agent-shared.md'
 
 SHARED_SECTIONS = [
     'A0 Variable Resolution',

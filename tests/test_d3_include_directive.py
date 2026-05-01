@@ -3,7 +3,7 @@ from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
 AGENTS_DIR = PROJECT / 'agents'
-SHARED = PROJECT / 'agents' / '_shared' / 'prompts' / 'bmad-agent-shared.md'
+SHARED = PROJECT / 'prompts' / 'bmad-agent-shared.md'
 
 
 def _get_non_master_agents():
@@ -15,11 +15,11 @@ def _get_non_master_agents():
 class TestD3IncludeDirective(unittest.TestCase):
     """D3: 19 non-master agent specifics must use {{ include "bmad-agent-shared.md" }}."""
 
-    def test_master_does_not_use_include(self):
-        """bmad-master must NOT use the include directive."""
+    def test_master_uses_include(self):
+        """bmad-master must use the include directive."""
         spec = AGENTS_DIR / 'bmad-master' / 'prompts' / 'agent.system.main.specifics.md'
         content = spec.read_text()
-        self.assertNotIn('bmad-agent-shared.md', content)
+        self.assertIn('{{ include "bmad-agent-shared.md" }}', content)
 
     def test_non_master_agents_use_include(self):
         """All 19 non-master agents must include bmad-agent-shared.md."""

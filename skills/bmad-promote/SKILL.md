@@ -1,13 +1,16 @@
 ---
 name: bmad-promote
-description: Promotes agents and skills from project scope to plugin scope for global availability. Use when the user says 'promote agent', 'promote workflow', 'make agent global', 'make skill global', '/promote-agent', '/promote-workflow'.
+description: Promotes agents and skills from project scope to plugin scope for global availability. Use when the user says 'promote agent', 'promote workflow', 'promote skill', 'make agent global', 'make skill global', '/promote-agent', '/promote-workflow', '/promote-skill'.
 trigger_patterns:
   - /promote-agent
   - /promote-workflow
+  - /promote-skill
   - "promote agent"
   - "promote workflow"
+  - "promote skill"
   - "make agent global"
   - "make workflow global"
+  - "make skill global"
   - "promote to plugin"
 ---
 
@@ -47,6 +50,18 @@ Promotes a workflow (skill) from project scope to plugin scope.
    ```bash
    bash {skill-root}/scripts/promote.sh workflow "{name}" "{project_root}"
    ```
+
+### `/promote-skill {name}`
+
+Promotes a skill from project scope to plugin scope.
+
+1. Source: `{project_root}/.a0proj/skills/{name}/`
+2. Target: `/a0/usr/plugins/bmad_method/skills/{name}/`
+3. Run the promotion script:
+   ```bash
+   bash {skill-root}/scripts/promote.sh skill "{name}" "{project_root}"
+   ```
+
 
 ## Safety Checks
 

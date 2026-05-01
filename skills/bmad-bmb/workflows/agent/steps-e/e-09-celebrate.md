@@ -2,7 +2,7 @@
 name: 'e-09-celebrate'
 description: 'Celebrate successful agent edit completion'
 
-editPlan: '{bmb_creations_output_folder}/edit-plan-{agent-name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{agent-name}.md'
 
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'
 partyModeWorkflow: '{project-root}/skills/bmad-init/core/workflows/party-mode/workflow.md'

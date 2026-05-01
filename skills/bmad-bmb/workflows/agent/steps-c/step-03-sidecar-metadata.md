@@ -4,7 +4,7 @@ description: 'Determine if agent needs memory (sidecar) and define metadata'
 
 # File References
 nextStepFile: './step-04-persona.md'
-agentPlan: '{bmb_creations_output_folder}/agent-plan-{agent_name}.md'
+agentPlan: '{bmb_staging_folder}/agent-plan-{agent_name}.md'
 agentTypesDoc: ../data/understanding-agent-types.md
 agentMetadata: ../data/agent-metadata.md
 

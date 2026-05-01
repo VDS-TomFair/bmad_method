@@ -3,7 +3,7 @@ name: 'e-02-discover-edits'
 description: 'Discover what user wants to change about the agent'
 
 nextStepFile: './e-04-sidecar-metadata.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{agent-name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{agent-name}.md'
 
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'
 partyModeWorkflow: '{project-root}/skills/bmad-init/core/workflows/party-mode/workflow.md'

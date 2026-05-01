@@ -3,7 +3,7 @@ name: 'step-e-07-complete'
 description: 'Complete the edit session with summary and next steps'
 
 # File References
-editPlan: '{bmb_creations_output_folder}/edit-plan-{workflow_name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{workflow_name}.md'
 targetWorkflowPath: '{targetWorkflowPath}'
 validationReport: '{targetWorkflowPath}/validation-report-{workflow_name}.md'
 ---

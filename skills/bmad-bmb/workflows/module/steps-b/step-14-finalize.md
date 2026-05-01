@@ -3,14 +3,14 @@ name: 'step-14-finalize'
 description: 'Final polish, output the brief document'
 
 briefTemplateFile: '../templates/brief-template.md'
-bmbCreationsOutputFolder: '{bmb_creations_output_folder}'
+bmbCreationsOutputFolder: '{bmb_staging_folder}'
 ---
 
 # Step 14: Finalize
 
 ## STEP GOAL:
 
-Create the final module brief document and save it to the bmb-creations output folder.
+Create the final module brief document and save it to the bmb-staging output folder.
 
 ## MANDATORY EXECUTION RULES:
 

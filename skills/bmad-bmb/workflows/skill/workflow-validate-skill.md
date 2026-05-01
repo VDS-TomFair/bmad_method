@@ -45,7 +45,7 @@ web_bundle: true
 ### 1. Configuration Loading
 
 Load and read full config from `{project-root}/skills/bmad-bmb/config.yaml`:
-- `project_name`, `user_name`, `communication_language`, `document_output_language`, `bmb_creations_output_folder`
+- `project_name`, `user_name`, `communication_language`, `document_output_language`, `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills`
 - ✅ YOU MUST ALWAYS SPEAK OUTPUT in your agent communication style with the config `{communication_language}`
 
 ### 2. Prompt for Skill Directory

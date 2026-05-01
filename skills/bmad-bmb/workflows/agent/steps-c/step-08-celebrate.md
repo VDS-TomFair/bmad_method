@@ -5,7 +5,7 @@ description: 'Celebrate completion and guide next steps for using the agent'
 # File References
 thisStepFile: ./step-08-celebrate.md
 workflowFile: ../workflow-create-agent.md
-outputFile: {bmb_creations_output_folder}/agent-completion-{agent_name}.md
+outputFile: {bmb_staging_folder}/agent-completion-{agent_name}.md
 
 # Task References
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'

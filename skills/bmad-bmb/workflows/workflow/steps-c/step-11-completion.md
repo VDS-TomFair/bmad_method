@@ -2,7 +2,7 @@
 name: 'step-11-completion'
 description: 'Complete the workflow creation and provide next steps'
 
-targetWorkflowPath: '{bmb_creations_output_folder}/workflows/{new_workflow_name}'
+targetWorkflowPath: '{bmb_build_output_skills}/{new_workflow_name}'
 workflowPlanFile: '{targetWorkflowPath}/workflow-plan-{new_workflow_name}.md'
 ---
 

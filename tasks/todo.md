@@ -1,122 +1,113 @@
-# TODO: BMAD Method Plugin — Phase G (Agent Prompt Fixes) — 10 tasks
+# TODO: BMAD Method Plugin — Phase H (BMB Creation Path Fixes) — 5 tasks
 
-Phases A–F: COMPLETE (47+/47+ tasks done)
-
----
-
-## Phase G — P0: Critical Fixes ✅ COMPLETE
-
-- [x] **G-P0-1**: Fix broken `{{ include }}` — move shared fragment to `prompts/` (S) 🔑 MUST BE FIRST
-  - Move `agents/_shared/prompts/bmad-agent-shared.md` → `prompts/bmad-agent-shared.md`
-  - Remove `agents/_shared/` directory entirely
-  - `agents/_shared/prompts/bmad-agent-shared.md`, `prompts/bmad-agent-shared.md`, `docs/adr/0002-shared-fragments-include.md`
-  - Verify: `test -f prompts/bmad-agent-shared.md` → exists
-  - Verify: `test -d agents/_shared` → fails (directory removed)
-  - Verify: ADR 0002 revised — status updated, false claims corrected
-  - Verify: Runtime include resolution for all 19 non-master agents on VPS
-  - Verify: `python -m pytest tests/ -v` all green
-
-- [x] **G-P0-2**: Add process compliance gate to all 20 role.md files (M)
-  - Add `MANDATORY PROCESS COMPLIANCE` section BEFORE persona definition in all 20 agents
-  - 6-point directive: load skill, follow steps, sequential execution, read fully, halt at checkpoints, no artifacts outside process
-  - `agents/*/prompts/agent.system.main.role.md` (20 files)
-  - Verify: `grep -rl 'MANDATORY PROCESS COMPLIANCE' agents/*/prompts/agent.system.main.role.md` → 20 files
-  - Verify: Compliance section appears BEFORE persona definition
-  - Verify: `python -m pytest tests/ -v` all green
-
-- [x] **G-P0-3**: Rewrite shared fragment Initial Clarification — escape hatch removal (S)
-  - Replace `Initial Clarification` section in `prompts/bmad-agent-shared.md` with process-aware version
-  - Key change: "Clarification determines WHICH step to START at, not WHETHER to follow the process"
-  - `prompts/bmad-agent-shared.md` (one file fixes all 19 agents)
-  - Verify: `grep 'NEVER interpret' prompts/bmad-agent-shared.md` → found
-  - Verify: No escape hatch language remains
-  - Verify: `python -m pytest tests/ -v` all green
-
-- [x] **G-P0-4**: Rewrite solving.md — clean full override, remove high-agency conflict (M)
-  - Replace all 20 `solving.md` files with clean BMAD-specific content
-  - Clean full override (NOT `{{ extend }}`) — eliminates conflict entirely
-  - Key: "Complete task" means complete the PROCESS, not skip to the output
-  - `agents/*/prompts/agent.system.main.solving.md` (20 files)
-  - Verify: `grep -rl 'PROCESS-DRIVEN BMAD agent' agents/*/prompts/agent.system.main.solving.md` → 20 files
-  - Verify: No "high-agency" or "don't accept failure" in any solving.md
-  - Verify: `python -m pytest tests/ -v` all green
-
-- [x] **G-P0-5**: Convert bmad-master specifics.md from 109-line inline to `{{ include }}` (S)
-  - Extract master-specific content, replace inline with `{{ include "bmad-agent-shared.md" }}`
-  - Prevents divergence between master and 19 agents after G-P0-3 rewrite
-  - `agents/bmad-master/prompts/agent.system.main.specifics.md`
-  - Verify: `grep '{{ include "bmad-agent-shared.md" }}' agents/bmad-master/prompts/agent.system.main.specifics.md` → found
-  - Verify: File significantly shorter than 109 lines (now 29 lines)
-  - Verify: Master-specific content preserved
-  - Verify: `python -m pytest tests/ -v` all green
-
-### P0 Checkpoint ✅ PASSED
-
-- [x] `bmad-agent-shared.md` moved to `prompts/` — `agents/_shared/` removed
-- [x] Runtime include resolution passes for all 19 non-master agents on VPS
-- [x] All 20 `role.md` files contain `MANDATORY PROCESS COMPLIANCE` before persona
-- [x] `bmad-agent-shared.md` Initial Clarification is process-aware (no escape hatch)
-- [x] All 20 `solving.md` use clean BMAD-specific full override
-- [x] bmad-master specifics.md uses `{{ include }}` (no divergence)
-- [x] ADR 0002 revised
-- [x] `python -m pytest tests/ -v` → 292 tests green
+Phases A–G: COMPLETE (57+/57+ tasks done)
 
 ---
 
-## Phase G — P1: High Priority ✅ COMPLETE
+## Phase G — Completed ✅
 
-- [x] **G-P1-1**: Add subordinate-mode detection to all 20 communication_additions.md (M)
-  - Add `Subordinate Mode Detection` section: recognize superior agent, load skill, route, execute, return results
-  - Suppress menu display in subordinate mode
-  - `agents/*/prompts/agent.system.main.communication_additions.md` (20 files)
-  - Verify: `grep -rl 'Subordinate Mode Detection' agents/*/prompts/agent.system.main.communication_additions.md` → 20 files
-  - Verify: `python -m pytest tests/ -v` all green
-
-- [x] **G-P1-2**: Create shared solving.md fragment `prompts/bmad-agent-shared-solving.md` (S)
-  - Extract common solving.md content from G-P0-4 to shared fragment
-  - Replace all 20 `solving.md` with `{{ include "bmad-agent-shared-solving.md" }}`
-  - NEW: `prompts/bmad-agent-shared-solving.md`
-  - Verify: `test -f prompts/bmad-agent-shared-solving.md` → exists
-  - Verify: `grep -rl '{{ include "bmad-agent-shared-solving.md" }}' agents/*/prompts/agent.system.main.solving.md` → 20 files
-  - Verify: `python -m pytest tests/ -v` all green
-
-- [x] **G-P1-3**: Verify bmad-master response.md include resolves on VPS (XS)
-  - Verify `{{ include "agent.system.response_tool_tips.md" }}` resolves in bmad-master context
-  - Framework file at `/a0/prompts/agent.system.response_tool_tips.md` should be in search path
-  - Verification only — no file changes needed
-
-### P1 Checkpoint ✅ PASSED
-
-- [x] All 20 `communication_additions.md` contain `Subordinate Mode Detection`
-- [x] Shared solving.md fragment at `prompts/bmad-agent-shared-solving.md`
-- [x] All 20 `solving.md` reduced to single `{{ include }}` directive
-- [x] bmad-master response.md include verified on VPS
-- [x] `python -m pytest tests/ -v` → all green
+10 tasks (P0: 5, P1: 3, P2: 2) — all complete. Agent prompt defects fixed, include mechanism working.
+Delivered: v1.3.0 — failure probability reduced from 95-100% → <5%.
 
 ---
 
-## Phase G — P2: Nice to Have ✅ COMPLETE
+## Phase H — P0: Critical Fixes
 
-- [x] **G-P2-1**: Add A0 framework skill awareness to BMB specifics.md (XS)
-  - Add `A0 Framework Integration` section to Wendy, Bond, Morgan specifics.md
-  - `agents/bmad-workflow-builder/prompts/agent.system.main.specifics.md`
-  - `agents/bmad-agent-builder/prompts/agent.system.main.specifics.md`
-  - `agents/bmad-module-builder/prompts/agent.system.main.specifics.md`
-  - Verify: `grep -rl 'A0 Framework Integration' agents/bmad-workflow-builder/prompts/ agents/bmad-agent-builder/prompts/ agents/bmad-module-builder/prompts/` → 3 files
+- [ ] **H-P0-1**: Split BMB config paths — add `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills` (S) 🔑 MUST BE FIRST
+  - Remove `bmb_creations_output_folder` from `skills/bmad-bmb/config.yaml`
+  - Add 3 new paths: staging → `.a0proj/_bmad-output/bmb-staging/`, agents → `.a0proj/agents/`, skills → `.a0proj/skills/`
+  - `skills/bmad-bmb/config.yaml` (1 file)
+  - Verify: `grep 'bmb_staging_folder' skills/bmad-bmb/config.yaml` → found
+  - Verify: `grep 'bmb_build_output_agents' skills/bmad-bmb/config.yaml` → found
+  - Verify: `grep 'bmb_build_output_skills' skills/bmad-bmb/config.yaml` → found
+  - Verify: `grep 'bmb_creations_output_folder' skills/bmad-bmb/config.yaml` → NOT found
+  - Verify: BMB reads new path variables correctly
   - Verify: `python -m pytest tests/ -v` all green
 
-- [x] **G-P2-2**: Update failure analysis report to reflect clean full override decision (XS)
-  - Update `docs/workflow-builder-failure-analysis.md` — replace `{{ extend }}` references with clean full override
-  - Document rationale for choosing clean override over extend
-  - `docs/workflow-builder-failure-analysis.md`
-  - Verify: Report references clean full override, not `{{ extend }}`
-  - Verify: Rationale documented
+- [ ] **H-P0-2**: Update BMB step files for new paths (~80 files) (L)
+  - Find all refs: `grep -rl 'bmb_creations_output_folder\|bmb-creations' skills/bmad-bmb/workflows/`
+  - Agent build steps → `bmb_build_output_agents`
+  - Workflow build steps → `bmb_build_output_skills`
+  - Staging steps (plans, reports, validation) → `bmb_staging_folder`
+  - Module build steps → clarify destination (Q13)
+  - Key files:
+    - `skills/bmad-bmb/workflows/agent/steps-c/step-07-build-agent.md`
+    - `skills/bmad-bmb/workflows/agent/steps-c/step-08-celebrate.md`
+    - `skills/bmad-bmb/workflows/workflow/steps-c/step-09-build-next-step.md`
+    - `skills/bmad-bmb/workflows/workflow/steps-c/step-11-completion.md`
+    - `skills/bmad-bmb/workflows/module/steps-c/step-07-complete.md`
+  - ~75 additional step files in `skills/bmad-bmb/workflows/`
+  - Verify: `grep -rl 'bmb_creations_output_folder' skills/bmad-bmb/workflows/` → 0 files
+  - Verify: Agent build steps reference `bmb_build_output_agents`
+  - Verify: Workflow build steps reference `bmb_build_output_skills`
+  - Verify: Staging steps reference `bmb_staging_folder`
+  - Verify: `python -m pytest tests/ -v` all green
 
-### P2 Checkpoint (ready for /ship) ✅ PASSED
+### P0 Checkpoint
 
-- [x] BMB agents have A0 framework skill awareness
-- [x] Failure analysis report updated
-- [x] CHANGELOG updated with Phase G entries
-- [x] Plugin version `1.3.0`
-- [x] All 292 tests pass
-- [x] Failure probability reduced from 95-100% → <5%
+- [ ] `bmb_creations_output_folder` removed from config.yaml
+- [ ] `bmb_staging_folder`, `bmb_build_output_agents`, `bmb_build_output_skills` defined
+- [ ] All BMB step files updated — no old variable references
+- [ ] Agent build steps → `bmb_build_output_agents` (→ `.a0proj/agents/`)
+- [ ] Workflow build steps → `bmb_build_output_skills` (→ `.a0proj/skills/`)
+- [ ] Staging artifacts → `bmb_staging_folder` (→ `.a0proj/_bmad-output/bmb-staging/`)
+- [ ] `python -m pytest tests/ -v` → 292+ tests green
+
+---
+
+## Phase H — P1: High Priority
+
+- [ ] **H-P1-1**: Create `bmad-promote` skill for project → plugin promotion (M)
+  - Triggers: `/promote-agent`, `/promote-workflow`, `/promote-skill`
+  - Validate source exists (`.a0proj/agents/{name}/` or `.a0proj/skills/{name}/`)
+  - Validate structure (`agent.yaml` for agents, `SKILL.md` for skills)
+  - Copy to plugin dir: `plugins/bmad_method/agents/{name}/` or `plugins/bmad_method/skills/{name}/`
+  - Overwrite protection (Q14)
+  - NEW: `skills/bmad-promote/SKILL.md`
+  - NEW: `skills/bmad-promote/module-help.csv`
+  - NEW: `tests/test_bmad_promote_skill.py`
+  - Verify: `test -f skills/bmad-promote/SKILL.md` → exists
+  - Verify: `/promote-agent {name}` copies correctly
+  - Verify: `/promote-skill {name}` copies correctly
+  - Verify: `python -m pytest tests/ -v` all green
+
+- [ ] **H-P1-2**: Update `bmad-init.sh` to create `.a0proj/agents/` and `.a0proj/skills/` dirs (XS)
+  - Add `mkdir -p "$A0PROJ/agents"` and `mkdir -p "$A0PROJ/skills"`
+  - `skills/bmad-init/scripts/bmad-init.sh` (add 2 lines)
+  - Verify: `bash -n skills/bmad-init/scripts/bmad-init.sh` → no errors
+  - Verify: Smoke test creates both directories
+  - Verify: `python -m pytest tests/ -v` all green
+
+### P1 Checkpoint
+
+- [ ] `bmad-promote` skill created with correct triggers
+- [ ] Promotion copies `.a0proj/agents/` → `plugins/bmad_method/agents/` correctly
+- [ ] Promotion copies `.a0proj/skills/` → `plugins/bmad_method/skills/` correctly
+- [ ] `bmad-init.sh` creates `.a0proj/agents/` and `.a0proj/skills/`
+- [ ] `python -m pytest tests/ -v` → all green
+
+---
+
+## Phase H — P2: Nice to Have
+
+- [ ] **H-P2-1**: Update celebrate steps with A0 auto-discovery guidance (S)
+  - Replace manual install instructions with A0 auto-discovery:
+    - Agent auto-discovered in `.a0proj/agents/`
+    - Use via `call_subordinate` with profile `bmad-{name}`
+    - Promote globally via `/promote-agent {name}`
+  - `skills/bmad-bmb/workflows/agent/steps-c/step-08-celebrate.md`
+  - Additional celebrate steps in workflow/module flows
+  - Verify: Celebrate steps contain `A0 Auto-Discovery` section
+  - Verify: No manual install instructions remain
+  - Verify: `python -m pytest tests/ -v` all green
+
+### P2 Checkpoint (ready for /ship)
+
+- [ ] All celebrate steps updated with A0 auto-discovery guidance
+- [ ] CHANGELOG updated with Phase H entries
+- [ ] Plugin version `1.4.0`
+- [ ] All 292+ tests green
+- [ ] BMB agent creation end-to-end — agent in `call_subordinate` profile list
+- [ ] BMB workflow creation end-to-end — skill in `skills_tool:list`
+- [ ] Promotion tested — project → plugin scope works
+- [ ] Tagged `v1.4.0`; merged to `main`

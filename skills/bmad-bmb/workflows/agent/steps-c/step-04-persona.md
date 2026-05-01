@@ -4,7 +4,7 @@ description: 'Shape the agent personality through four-field persona system'
 
 # File References
 nextStepFile: './step-05-commands-menu.md'
-agentPlan: '{bmb_creations_output_folder}/agent-plan-{agent_name}.md'
+agentPlan: '{bmb_staging_folder}/agent-plan-{agent_name}.md'
 personaProperties: ../data/persona-properties.md
 principlesCrafting: ../data/principles-crafting.md
 communicationPresets: ../data/communication-presets.csv

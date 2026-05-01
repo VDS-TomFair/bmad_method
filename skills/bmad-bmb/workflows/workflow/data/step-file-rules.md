@@ -145,7 +145,7 @@ See: `step-type-patterns.md`
 - `{document_output_language}`
 
 ### Module-Specific (e.g., BMB)
-- `{bmb_creations_output_folder}`
+- `{bmb_staging_folder}`
 
 ### User-Defined
 - New variables can be defined in steps for future steps

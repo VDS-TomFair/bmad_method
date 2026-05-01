@@ -5,7 +5,7 @@ description: 'Discover what user wants to change - fix validation issues, make c
 # File References
 nextStepFile: './step-e-03-fix-validation.md'
 directEditStep: './step-e-04-direct-edit.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{workflow_name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{workflow_name}.md'
 targetWorkflowPath: '{targetWorkflowPath}'
 validationReport: '{targetWorkflowPath}/validation-report-{workflow_name}.md'
 ---

@@ -3,7 +3,7 @@ name: 'v-02e-validate-sidecar'
 description: 'Validate sidecar structure and append to report'
 
 nextStepFile: './v-03-summary.md'
-validationReport: '{bmb_creations_output_folder}/validation-report-{agent-name}.md'
+validationReport: '{bmb_staging_folder}/validation-report-{agent-name}.md'
 agentValidation: ../data/agent-validation.md
 criticalActions: ../data/critical-actions.md
 agentFile: '{agent-file-path}'

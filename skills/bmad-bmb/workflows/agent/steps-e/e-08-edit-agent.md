@@ -3,7 +3,7 @@ name: 'e-08-edit-agent'
 description: 'Apply edits to agent (with or without sidecar)'
 
 nextStepFile: './e-09-celebrate.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{agent-name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{agent-name}.md'
 agentFile: '{original-agent-path}'
 agentBackup: '{original-agent-path}.backup'
 

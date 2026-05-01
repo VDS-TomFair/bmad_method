@@ -4,13 +4,13 @@ description: 'Generate agent YAML from plan (with or without sidecar)'
 
 # File References
 nextStepFile: './step-08-celebrate.md'
-agentPlan: '{bmb_creations_output_folder}/agent-plan-{agent_name}.md'
+agentPlan: '{bmb_staging_folder}/agent-plan-{agent_name}.md'
 
 # Output paths (determined by hasSidecar)
-agentBuildOutput: '{bmb_creations_output_folder}/{agent-name}/'
-agentYamlOutput: '{bmb_creations_output_folder}/{agent-name}/{agent-name}.agent.yaml'
-agentYamlOutputNoSidecar: '{bmb_creations_output_folder}/{agent-name}.agent.yaml'
-sidecarOutput: '{bmb_creations_output_folder}/{agent-name}/{agent-name}-sidecar/'
+agentBuildOutput: '{bmb_build_output_agents}/{agent-name}/'
+agentYamlOutput: '{bmb_build_output_agents}/{agent-name}/{agent-name}.agent.yaml'
+agentYamlOutputNoSidecar: '{bmb_build_output_agents}/{agent-name}.agent.yaml'
+sidecarOutput: '{bmb_build_output_agents}/{agent-name}/{agent-name}-sidecar/'
 
 # Template and Architecture
 agentTemplate: ../templates/agent-template.md

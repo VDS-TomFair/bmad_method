@@ -3,7 +3,7 @@ name: 'e-04-sidecar-metadata'
 description: 'Review and plan metadata edits'
 
 nextStepFile: './e-05-persona.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{agent-name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{agent-name}.md'
 agentMetadata: ../data/agent-metadata.md
 agentTypesDoc: ../data/understanding-agent-types.md
 

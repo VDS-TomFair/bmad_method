@@ -3,7 +3,7 @@ name: 'v-02d-validate-structure'
 description: 'Validate YAML structure and append to report'
 
 nextStepFile: './v-02e-validate-sidecar.md'
-validationReport: '{bmb_creations_output_folder}/validation-report-{agent-name}.md'
+validationReport: '{bmb_staging_folder}/validation-report-{agent-name}.md'
 agentValidation: ../data/agent-validation.md
 agentCompilation: ../data/agent-compilation.md
 agentFile: '{agent-file-path}'

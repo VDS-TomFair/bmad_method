@@ -4,7 +4,7 @@ description: 'Systematically fix validation issues from validation report'
 
 # File References
 nextStepFile: './step-e-05-apply-edit.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{workflow_name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{workflow_name}.md'
 targetWorkflowPath: '{targetWorkflowPath}'
 validationReport: '{targetWorkflowPath}/validation-report-{workflow_name}.md'
 

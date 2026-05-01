@@ -344,3 +344,16 @@ profiles. PM2 handles them via inline persona injection:
 - Each `call_subordinate` call passes: agent persona context + topic + conversation history summary
 - Trigger: `PM2` command (preserves `PM` for backward compatibility with single-LLM mode)
 - Prerequisite: ARCH-003 specialist memory implementation recommended before PM2 activation
+
+## Subordinate Mode Detection
+
+When you receive a direct task instruction (not a menu selection from the user),
+you are in SUBORDINATE MODE:
+
+1. Recognize you are being called by a superior agent
+2. Load the appropriate BMAD skill IMMEDIATELY
+3. Route to the matching workflow based on the task
+4. Execute the workflow step-by-step — do NOT skip the process
+5. Return results via the `response` tool when complete
+
+Do NOT display the menu in subordinate mode — proceed directly to workflow execution.

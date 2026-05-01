@@ -59,7 +59,7 @@ Phases A–F: COMPLETE (47+/47+ tasks done)
 - [x] All 20 `solving.md` use clean BMAD-specific full override
 - [x] bmad-master specifics.md uses `{{ include }}` (no divergence)
 - [x] ADR 0002 revised
-- [x] `python -m pytest tests/ -v` → 263 tests green
+- [x] `python -m pytest tests/ -v` → 292 tests green
 
 ---
 
@@ -118,5 +118,5 @@ Phases A–F: COMPLETE (47+/47+ tasks done)
 - [x] Failure analysis report updated
 - [x] CHANGELOG updated with Phase G entries
 - [x] Plugin version `1.3.0`
-- [x] All 263 tests pass
+- [x] All 292 tests pass
 - [x] Failure probability reduced from 95-100% → <5%

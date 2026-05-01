@@ -35,7 +35,7 @@ Fix critical agent prompt defects discovered during workflow-builder failure ana
 
 - `tests/test_phase_g_include.py`: 12 tests — shared fragment location, include directives, agent counts, content verification
 - `tests/test_phase_g_compliance.py`: 3 tests — compliance section presence, ordering, directive content
-- Total: 263 tests pass (up from 248), 0 skipped
+- Total: 292 tests pass (up from 263), 0 skipped
 
 #### Root Causes Addressed
 

@@ -733,24 +733,24 @@ This phase fixes critical agent prompt defects discovered during failure analysi
 #### Phase G acceptance criteria:
 
 **P0 (merge gate — no P1/P2 work until these pass):**
-- [ ] `bmad-agent-shared.md` moved to `prompts/` directory — `agents/_shared/prompts/` removed
-- [ ] Runtime include resolution test passes for all 19 non-master agents on VPS
-- [ ] All 20 `role.md` files contain `MANDATORY PROCESS COMPLIANCE` section before persona
-- [ ] `bmad-agent-shared.md` Initial Clarification replaced with process-aware version (no escape hatch)
-- [ ] All 20 `solving.md` files use clean BMAD-specific full override (no conflicting "high-agency" directive)
-- [ ] ADR 0002 revised to reflect actual state (include was never working)
-- [ ] `python -m pytest tests/ -v` → all 250+ tests green (no regressions)
-- [ ] bmad-master specifics.md converted from 109-line inline to {{ include }} (no divergence)
+- [x] `bmad-agent-shared.md` moved to `prompts/` directory — `agents/_shared/prompts/` removed
+- [x] Runtime include resolution test passes for all 19 non-master agents on VPS
+- [x] All 20 `role.md` files contain `MANDATORY PROCESS COMPLIANCE` section before persona
+- [x] `bmad-agent-shared.md` Initial Clarification replaced with process-aware version (no escape hatch)
+- [x] All 20 `solving.md` files use clean BMAD-specific full override (no conflicting "high-agency" directive)
+- [x] ADR 0002 revised to reflect actual state (include was never working)
+- [x] `python -m pytest tests/ -v` → all 292+ tests green (no regressions)
+- [x] bmad-master specifics.md converted from 109-line inline to {{ include }} (no divergence)
 
 **P1:**
-- [ ] All 20 `communication_additions.md` files contain `Subordinate Mode Detection` section
-- [ ] Shared solving.md fragment exists in `prompts/bmad-agent-shared-solving.md`
-- [ ] All 20 `solving.md` files reduced to `{{ include "bmad-agent-shared-solving.md" }}`
-- [ ] bmad-master response.md include verified resolving on VPS
+- [x] All 20 `communication_additions.md` files contain `Subordinate Mode Detection` section
+- [x] Shared solving.md fragment exists in `prompts/bmad-agent-shared-solving.md`
+- [x] All 20 `solving.md` files reduced to `{{ include "bmad-agent-shared-solving.md" }}`
+- [x] bmad-master response.md include verified resolving on VPS
 
 **P2:**
-- [ ] BMB agent specifics.md (Wendy, Bond, Morgan) contain `A0 Framework Integration` section
-- [ ] Failure analysis report updated to reflect clean full override
+- [x] BMB agent specifics.md (Wendy, Bond, Morgan) contain `A0 Framework Integration` section
+- [x] Failure analysis report updated to reflect clean full override
 
 ---
 
@@ -759,28 +759,28 @@ This phase fixes critical agent prompt defects discovered during failure analysi
 ### Phase G — Agent Prompt Fixes
 
 **P0 (merge gate — no P1/P2 work until these pass):**
-- [ ] Broken include fixed — shared fragment resolves for all 19 non-master agents
-- [ ] Process compliance gate present in all 20 agent role.md files
-- [ ] Shared fragment clarification is process-aware (no escape hatch)
-- [ ] solving.md conflict resolved (clean BMAD-specific full override)
-- [ ] ADR 0002 revised
-- [ ] All 250+ existing tests pass without modification
-- [ ] bmad-master specifics.md uses {{ include }} instead of 109-line inline (no divergence from shared fragment)
+- [x] Broken include fixed — shared fragment resolves for all 19 non-master agents
+- [x] Process compliance gate present in all 20 agent role.md files
+- [x] Shared fragment clarification is process-aware (no escape hatch)
+- [x] solving.md conflict resolved (clean BMAD-specific full override)
+- [x] ADR 0002 revised
+- [x] All 292+ existing tests pass without modification
+- [x] bmad-master specifics.md uses {{ include }} instead of 109-line inline (no divergence from shared fragment)
 
 **P1:**
-- [ ] Subordinate-mode detection present in all 20 agents
-- [ ] Shared solving.md fragment eliminates 20-file copy
-- [ ] bmad-master response.md include verified resolving on VPS
+- [x] Subordinate-mode detection present in all 20 agents
+- [x] Shared solving.md fragment eliminates 20-file copy
+- [x] bmad-master response.md include verified resolving on VPS
 
 **P2:**
-- [ ] BMB agents have A0 framework skill awareness
-- [ ] Failure analysis report updated to reflect clean full override decision
+- [x] BMB agents have A0 framework skill awareness
+- [x] Failure analysis report updated to reflect clean full override decision
 
 **Overall (pre-`main` merge):**
-- [ ] All 20 BMAD agents functional end-to-end on VPS testing instance
-- [ ] Include resolution empirically verified on VPS for all 19 non-master agents
-- [ ] BMAD initializable from workdir, `/a0/usr/projects/`, `/tmp/`, any arbitrary path
-- [ ] Failure probability reduced from 95-100% → <15% (P0 only) or <5% (all fixes)
+- [x] All 20 BMAD agents functional end-to-end on VPS testing instance
+- [x] Include resolution empirically verified on VPS for all 19 non-master agents
+- [x] BMAD initializable from workdir, `/a0/usr/projects/`, `/tmp/`, any arbitrary path
+- [x] Failure probability reduced from 95-100% → <5%
 
 ---
 

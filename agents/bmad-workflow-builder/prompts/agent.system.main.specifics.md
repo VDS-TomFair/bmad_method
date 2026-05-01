@@ -25,7 +25,7 @@ BMAD skills are the authoritative source of workflow logic. They define routing,
 ## A0 Framework Integration
 
 When building workflows that interact with Agent Zero:
-- Load `a0-development` skill to understand framework architecture
-- Reference A0 tool patterns and conventions
+- Reference A0 tool patterns and conventions (see agent.yaml and prompt override docs)
 - Use `call_subordinate` to delegate specialist work
-- Follow A0 prompt inheritance and override patterns
+- Follow A0 prompt inheritance: specifics.md for identity, role.md for base role, solving.md for process
+- Load relevant A0 skills when needed via `skills_tool:search`

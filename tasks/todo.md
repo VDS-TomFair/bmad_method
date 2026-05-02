@@ -54,17 +54,17 @@ done
 
 ## Bundle 3: CIS Persona Removal [P1] — Effort: S-M (0.5-1 day)
 
-- [ ] 3.1 Update CIS agent.yaml files — replace named personas with upstream generic titles
+- [x] 3.1 Update CIS agent.yaml files — replace named personas with upstream generic titles
   - Acceptance: No CIS agent.yaml contains named personas; titles match upstream generic titles; icons updated (design-thinking gets target, presentation gets framed-picture)
   - Verify: `grep -r 'Victor\|Dr. Quinn\|Maya\|Carson\|Sophia\|Caravaggio' agents/bmad-*/ || echo 'OK: All CIS personas removed'`
   - Files: `agents/bmad-innovation/agent.yaml`, `agents/bmad-problem-solver/agent.yaml`, `agents/bmad-design-thinking/agent.yaml`, `agents/bmad-brainstorming-coach/agent.yaml`, `agents/bmad-storyteller/agent.yaml`, `agents/bmad-presentation/agent.yaml`
 
-- [ ] 3.2 Update CIS prompt files — remove persona narrative, use functional descriptions
+- [x] 3.2 Update CIS prompt files — remove persona narrative, use functional descriptions
   - Acceptance: All 6 CIS agents role.md, specifics.md, communication_additions.md updated to generic functional style
   - Verify: `grep -r 'Victor\|Dr. Quinn\|Maya\|Carson\|Sophia\|Caravaggio' agents/bmad-innovation/ agents/bmad-problem-solver/ agents/bmad-design-thinking/ agents/bmad-brainstorming-coach/ agents/bmad-storyteller/ agents/bmad-presentation/ || echo 'OK'`
   - Files: 6x `agents/bmad-{agent}/prompts/agent.system.main.role.md`, 6x `agents/bmad-{agent}/prompts/agent.system.main.specifics.md`, 6x `agents/bmad-{agent}/prompts/agent.system.main.communication_additions.md`
 
-- [ ] 3.3 Update CIS agent references in other files
+- [x] 3.3 Update CIS agent references in other files
   - Acceptance: CIS agents reference files, module.yaml, teams, seed-knowledge all updated; no persona name leaks
   - Verify: `grep -r 'Victor\|Dr. Quinn\|Maya\|Carson\|Sophia\|Caravaggio' skills/bmad-cis/ skills/bmad-init/seed-knowledge/ || echo 'OK'`
   - Files: `skills/bmad-cis/agents/*.md`, `skills/bmad-cis/module.yaml`, `skills/bmad-cis/teams/`, `skills/bmad-init/seed-knowledge/`
@@ -77,32 +77,32 @@ done
 
 ## Bundle 2: Agent Consolidation [P1] — Effort: M (1 day)
 
-- [ ] 2.1 Remove bmad-sm agent directory
+- [x] 2.1 Remove bmad-sm agent directory
   - Acceptance: agents/bmad-sm/ does not exist; Amelia customize.toml includes SP, SS, CS, ER menus; module.yaml updated skill:sm to skill:dev
   - Verify: `ls agents/bmad-sm 2>&1 | grep 'No such file'`
   - Files: DELETE `agents/bmad-sm/`, UPDATE `agents/bmad-dev/customize.toml`, UPDATE `skills/bmad-bmm/module.yaml`, UPDATE `agents/bmad-dev/prompts/agent.system.main.specifics.md`, UPDATE `helpers/bmad_status_core.py`
 
-- [ ] 2.2 Remove bmad-qa agent directory
+- [x] 2.2 Remove bmad-qa agent directory
   - Acceptance: agents/bmad-qa/ does not exist; Amelia customize.toml includes QA menu; test-tube icon collision resolved
   - Verify: `ls agents/bmad-qa 2>&1 | grep 'No such file'`
   - Files: DELETE `agents/bmad-qa/`, UPDATE `agents/bmad-dev/customize.toml`, UPDATE `skills/bmad-bmm/module.yaml`, UPDATE `helpers/bmad_status_core.py`
 
-- [ ] 2.3 Remove bmad-quick-dev agent directory
+- [x] 2.3 Remove bmad-quick-dev agent directory
   - Acceptance: agents/bmad-quick-dev/ does not exist; Amelia customize.toml includes QD menu; menu-code QQ changed to QD
   - Verify: `ls agents/bmad-quick-dev 2>&1 | grep 'No such file' && grep -r 'QQ' skills/bmad-bmm/module.yaml && echo 'FAIL: QQ still present' || echo 'OK: QQ removed'`
   - Files: DELETE `agents/bmad-quick-dev/`, UPDATE `agents/bmad-dev/customize.toml`, UPDATE `skills/bmad-bmm/module.yaml`, UPDATE `helpers/bmad_status_core.py`
 
-- [ ] 2.4 Add missing menus to Amelia customize.toml
+- [x] 2.4 Add missing menus to Amelia customize.toml
   - Acceptance: Amelia customize.toml has SP, SS, VS, CS, DS, CR, QA, CC, ER, CK, QD, QS menus (12 total)
   - Verify: `grep -c '\[\[agent\.menu\]\]' agents/bmad-dev/customize.toml`
   - Files: `agents/bmad-dev/customize.toml`
 
-- [ ] 2.5 Update bmad-master role.md — remove static agent table
+- [x] 2.5 Update bmad-master role.md — remove static agent table
   - Acceptance: No static 19-row agent table; replaced with condensed routing guidance using dynamic list; agent count references updated to 18
   - Verify: `grep -c '|.*|.*|' agents/bmad-master/prompts/agent.system.main.role.md`
   - Files: `agents/bmad-master/prompts/agent.system.main.role.md`
 
-- [ ] 2.6 Update agent roster in knowledge/config files
+- [x] 2.6 Update agent roster in knowledge/config files
   - Acceptance: bmad_status_core.py AGENT_NAMES has no bmad-sm, bmad-qa, bmad-quick-dev; teams updated; sm.md removed or merged
   - Verify: `grep -E 'bmad-sm|bmad-qa|bmad-quick-dev' helpers/bmad_status_core.py && echo 'FAIL' || echo 'OK'`
   - Files: `helpers/bmad_status_core.py`, `skills/bmad-bmm/agents/sm.md`, teams CSV files
@@ -117,27 +117,27 @@ python -m pytest tests/ -v
 
 ## Bundle 4: Quick Fixes [P1/P2] — Effort: S (2-4 hours)
 
-- [ ] 4.1 Fix Morgan icon (construction → package)
+- [x] 4.1 Fix Morgan icon (construction → package)
   - Acceptance: agents/bmad-module-builder/agent.yaml icon is package; construction is Winston-only
   - Verify: `grep 'package-icon' agents/bmad-module-builder/agent.yaml`
   - Files: `agents/bmad-module-builder/agent.yaml`, possibly `agents/bmad-module-builder/prompts/agent.system.main.role.md`
 
-- [ ] 4.2 Fix Sally communication style (painter to filmmaker metaphor)
+- [x] 4.2 Fix Sally communication style (painter to filmmaker metaphor)
   - Acceptance: Sally role.md uses filmmaker pitching the scene metaphor
   - Verify: `grep -i 'filmmaker' agents/bmad-ux-designer/prompts/agent.system.main.role.md`
   - Files: `agents/bmad-ux-designer/prompts/agent.system.main.role.md`, possibly `agents/bmad-ux-designer/agent.yaml`
 
-- [ ] 4.3 Add US menu to Paige customize.toml
+- [x] 4.3 Add US menu to Paige customize.toml
   - Acceptance: Paige customize.toml includes US (Update Standards) menu code
   - Verify: `grep 'code = "US"' agents/bmad-tech-writer/customize.toml`
   - Files: `agents/bmad-tech-writer/customize.toml`
 
-- [ ] 4.4 Add _bmad/custom/ directory creation to init script
+- [x] 4.4 Add _bmad/custom/ directory creation to init script
   - Acceptance: Init script creates _bmad/custom/ directory; idempotent
   - Verify: `bash skills/bmad-init/scripts/bmad-init.sh /tmp/test-bmad-project && ls -la /tmp/test-bmad-project/.a0proj/_bmad/custom/`
   - Files: `skills/bmad-init/scripts/bmad-init.sh`
 
-- [ ] 4.5 Document QA/VS menu code collisions as intentional module-scoping
+- [x] 4.5 Document QA/VS menu code collisions as intentional module-scoping
   - Acceptance: Comments in module.yaml documenting intentional QA/VS code duplication; routing manifest correctly filters by module
   - Verify: `grep -A2 'Module-scoped' skills/bmad-bmm/module.yaml skills/bmad-bmb/module.yaml`
   - Files: `skills/bmad-bmm/module.yaml`, `skills/bmad-bmb/module.yaml`

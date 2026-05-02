@@ -7,6 +7,78 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ---
 ---
 
+## [1.4.0] — 2026-05-02
+
+### Alignment Fix Sprint — Full Upstream v6.6.0 Sync
+
+Comprehensive alignment of the BMAD Method A0 Plugin with upstream BMAD Method v6.6.0.
+6 implementation bundles, 8 security fixes, 503 tests (up from 292).
+
+#### Bundle 1: CSV → YAML Migration
+
+- Convert 5 CSV config files to YAML (`module.yaml`) format
+- Rewrite routing extension for YAML-based parsing with graceful degradation
+- Create ADR-0010 documenting YAML canonical routing decision
+- Archive CSV-to-YAML migration script
+
+#### Bundle 2: Agent Consolidation
+
+- Remove 3 agents: `bmad-sm`, `bmad-qa`, `bmad-quick-dev`
+- Expand Amelia (`bmad-dev`) to 12 menus covering SM, QA, and quick-dev functions
+- Update `bmad-master` to 16 subordinate agents
+- Update agent roster in `bmad_status_core.py`
+
+#### Bundle 3: CIS Persona Removal
+
+- Remove 6 named CIS personas (Victor, Dr. Quinn, Maya, Carson, Sophia, Caravaggio)
+- Replace with generic functional descriptions across 24 prompt files
+- Fix icon collisions: design-thinking 🎨→🎯, presentation 🎨→🖼️
+
+#### Bundle 4: Quick Fixes
+
+- Update Morgan icon to 📦
+- Change Sally style to filmmaker metaphor
+- Add US menu code to Paige's customize.toml
+- Add `_bmad/custom/` directory creation to init script
+- Add module-scoped collision comments for QA/VS codes
+
+#### Bundle 5: Test Updates
+
+- 503 tests passing (up from 292)
+- 56 test files covering all sprint bundles
+- Test pyramid: 82% unit / 17% integration / 1% E2E (healthy)
+
+#### Bundle 6: P3 Structural Alignment
+
+- Implement 8-step activation sequence in `bmad-agent-shared.md`
+- Add `resolve_customization` first-call instructions
+- Add `persistent_facts` processing instructions
+- Add prepend/append hooks processing instructions
+- Standardize `project-context.md` loading across 8 implementation workflows
+- Add file-based sidecar directories to init script
+- Add sidecar loading to activation sequence
+- Add sidecar writing instructions to agent prompts
+- Create `bmad-sidecar-import` skill for upstream migration
+- Create `resolve_customization.py` script (stdlib-only, zero external deps)
+
+#### Security Fixes (8 issues from review phase)
+
+1. **CSS injection** in `bmad-dashboard.html` — Alpine.js `x-text` bindings, zero `innerHTML`
+2. **`shell=True` removal** — all subprocess calls use list-form args
+3. **Error message disclosure** — generic errors to client, details server-side only
+4. **Glob injection** — `_sanitize_glob_pattern()` 3-layer validation
+5. **Path traversal** — `_validate_path_in_project()` boundary checks
+6. **Input validation** — TOML strict parser with error handling
+7. **Unsafe YAML loading** — `yaml.safe_load()` exclusively
+8. **Error handling** — `set -euo pipefail`, no-clobber writes, atomic state updates
+
+#### Ship Phase Sign-off
+
+- **Code Review**: APPROVE — all 8 fixes verified, clean architecture
+- **Security Audit**: GO — LOW risk, 0 Critical/High findings
+- **Test Coverage**: GO — 503/503 pass, quality A-
+
+
 ## [1.3.0] — 2026-05-01
 
 ### Agent Prompt Fixes (Phase G)

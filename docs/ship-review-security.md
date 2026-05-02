@@ -262,7 +262,7 @@ No debug flags, no verbose logging in production, no default credentials.
 | Hardcoded passwords | None found |
 | Hardcoded API keys | None found |
 | Hardcoded tokens | None found |
-| `.env` files with secrets | `.a0proj/secrets.env` — contains `[REDACTED]` alias (injected at runtime, not real secret) |
+| `.env` files with secrets | `.a0proj/secrets.env` — uses framework secret alias injection (runtime, not committed) |
 | `.gitignore` coverage | ✅ `.a0proj/` is gitignored — secrets.env cannot be committed |
 | `git check-ignore` | ✅ `.a0proj/secrets.env` is properly ignored |
 | Credentials in YAML/TOML | None found |

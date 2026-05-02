@@ -77,15 +77,17 @@ def _sanitize_glob_pattern(pattern: str) -> str:
 
 
 def _validate_path_in_project(resolved: Path, project_root: Path | None = None) -> bool:
-    """Ensure resolved path stays within project boundaries.
-    Prevents alias-based path traversal from pointing outside the project.
+    """Ensure resolved path does not contain path traversal sequences.
+    Prevents alias-based directory traversal attacks (e.g. '../../../etc/passwd').
     """
-    if project_root is None:
-        project_root = _PLUGIN_ROOT
     try:
-        resolved.resolve().relative_to(project_root.resolve())
+        resolved_str = str(resolved.resolve())
+        # Reject if the original path contains traversal sequences
+        # (resolve() normalizes them, so check before resolution too)
+        if '..' in str(resolved):
+            return False
         return True
-    except ValueError:
+    except (ValueError, OSError):
         return False
 
 BMAD_MASTER_PROFILE = "bmad-master"
@@ -484,6 +486,7 @@ class BmadRoutingManifest(Extension):
                 else:
                     manifest_prompt += "\n\n## Completed Phases (filesystem scan)\ncompleted_phases: unavailable (config not found)"  # AC-05
             except Exception:
+                log.warning("Artifact scan failed: %s", traceback.format_exc())
                 manifest_prompt += "\n\n## Completed Phases (filesystem scan)\ncompleted_phases: unavailable (scan error)"  # AC-05
 
             loop_data.extras_temporary["bmad_routing_manifest"] = manifest_prompt

@@ -88,3 +88,28 @@ skill = "bmad-create-story"
 code = "ER"
 description = "Party mode review of all work completed across an epic"
 skill = "bmad-retrospective"
+
+[[agent.menu]]
+code = "SS"
+description = "Sprint Status"
+skill = "bmad-sprint-status"
+
+[[agent.menu]]
+code = "VS"
+description = "Validate Story"
+skill = "bmad-create-story"
+
+[[agent.menu]]
+code = "CC"
+description = "Correct Course"
+skill = "bmad-correct-course"
+
+[[agent.menu]]
+code = "CK"
+description = "Checkpoint Review"
+skill = "bmad-checkpoint-preview"
+
+[[agent.menu]]
+code = "QS"
+description = "Quick Spec"
+skill = "bmad-quick-spec"

@@ -29,7 +29,7 @@ workflows:
   output-location: output_folder
   outputs: project context
 - module: bmm
-  skill: quick-flow-solo-dev
+  skill: dev
   display-name: Quick Spec
   menu-code: QS
   description: Do not suggest for potentially very complex things unless requested or if the user complains that they do not
@@ -44,9 +44,9 @@ workflows:
   output-location: planning_artifacts
   outputs: tech spec
 - module: bmm
-  skill: quick-flow-solo-dev
+  skill: dev
   display-name: Quick Dev
-  menu-code: QQ
+  menu-code: QD
   description: Quick one-off tasks small changes simple apps utilities without extensive planning - Do not suggest for potentially
     very complex things unless requested or if the user complains that they do not want to follow the extensive planning of
     the bmad method, unless the user is already working through the implementation phase and just requests a 1 off things
@@ -60,7 +60,7 @@ workflows:
   output-location: ''
   outputs: ''
 - module: bmm
-  skill: sm
+  skill: dev
   display-name: Correct Course
   menu-code: CC
   description: 'Anytime: Navigate significant changes. May recommend start over update PRD redo architecture sprint planning
@@ -313,7 +313,7 @@ workflows:
   output-location: planning_artifacts
   outputs: readiness*.md
 - module: bmm
-  skill: sm
+  skill: dev
   display-name: Sprint Planning
   menu-code: SP
   description: Generate sprint plan for development tasks - this kicks off the implementation phase by producing a plan the
@@ -327,7 +327,7 @@ workflows:
   output-location: implementation_artifacts
   outputs: sprint-plan*.md
 - module: bmm
-  skill: sm
+  skill: dev
   display-name: Sprint Status
   menu-code: SS
   description: 'Anytime: Summarize sprint status and route to next workflow'
@@ -340,7 +340,7 @@ workflows:
   output-location: ''
   outputs: ''
 - module: bmm
-  skill: sm
+  skill: dev
   display-name: Validate Story
   # NOTE: VS menu-code is intentionally duplicated across BMM (Validate Story) and BMB (Validate Skill). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
   menu-code: VS
@@ -354,7 +354,7 @@ workflows:
   output-location: implementation_artifacts
   outputs: story validation report
 - module: bmm
-  skill: sm
+  skill: dev
   display-name: Create Story
   menu-code: CS
   description: 'Story cycle start: Prepare first found story in the sprint plan that is next, or if the command is run with
@@ -395,7 +395,7 @@ workflows:
   output-location: ''
   outputs: ''
 - module: bmm
-  skill: qa
+  skill: dev
   display-name: QA Automation Test
   # NOTE: QA menu-code is intentionally duplicated across BMM (QA Automation Test) and BMB (Quality Scan Agent). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
   menu-code: QA
@@ -411,7 +411,7 @@ workflows:
   output-location: implementation_artifacts
   outputs: test suite
 - module: bmm
-  skill: sm
+  skill: dev
   display-name: Retrospective
   menu-code: ER
   description: 'Optional at epic end: Review completed work lessons learned and next epic or if major issues consider CC'

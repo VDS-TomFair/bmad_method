@@ -81,9 +81,6 @@ def _validate_path_in_project(resolved: Path, project_root: Path | None = None) 
     Prevents alias-based directory traversal attacks (e.g. '../../../etc/passwd').
     """
     try:
-        resolved_str = str(resolved.resolve())
-        # Reject if the original path contains traversal sequences
-        # (resolve() normalizes them, so check before resolution too)
         if '..' in str(resolved):
             return False
         return True

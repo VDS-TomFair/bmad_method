@@ -227,6 +227,13 @@ function esc(s) {
   return d.innerHTML;
 }
 
+function sanitizeGrade(g) {
+  // Only allow valid grade letters A-F (including +/- suffixes)
+  if (!g || typeof g !== 'string') return 'N/A';
+  const sanitized = g.replace(/[^A-Fa-f+\-]/g, '');
+  return sanitized.length > 0 ? sanitized : 'N/A';
+}
+
 function init() {
   const m = DATA.meta;
   document.getElementById('skill-name').textContent = m.skill_name;
@@ -234,7 +241,8 @@ function init() {
     `${esc(m.skill_path)} &bull; ${m.timestamp ? m.timestamp.split('T')[0] : ''} &bull; ${m.scanner_count || 0} scanners &bull; <a href="quality-report.md">Full Report &nearr;</a>`;
 
   renderPortrait();
-  document.getElementById('grade-area').innerHTML = `<div class="grade grade-${DATA.grade}">${esc(DATA.grade)}</div>`;
+  const safeGrade = sanitizeGrade(DATA.grade);
+  document.getElementById('grade-area').innerHTML = `<div class="grade grade-${safeGrade}">${esc(DATA.grade)}</div>`;
   document.getElementById('narrative').textContent = DATA.narrative || '';
 
   renderCapabilities();

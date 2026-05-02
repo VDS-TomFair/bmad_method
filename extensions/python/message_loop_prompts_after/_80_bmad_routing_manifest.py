@@ -15,6 +15,7 @@ Supersedes: ADR-0001 (CSV canonical routing)
 import logging
 import traceback
 from pathlib import Path
+import re
 import importlib.util as _ilu
 import yaml
 
@@ -51,6 +52,41 @@ def _evict_if_full(cache: dict) -> None:
         keys_to_remove = list(cache.keys())[:len(cache) // 2]
         for k in keys_to_remove:
             del cache[k]
+
+# ── Security validation helpers ────────────────────────────────────────────────
+
+_SAFE_GLOB_RE = re.compile(r'^[\w\-.*?\[\]{}]+$')
+
+
+def _sanitize_glob_pattern(pattern: str) -> str:
+    """Validate a glob pattern from YAML before passing to Path.glob().
+    Rejects patterns with path traversal (..), absolute paths, or unsafe chars.
+    Returns the pattern if safe, or '*.md' as fallback.
+    """
+    if not pattern:
+        return '*.md'
+    # Reject absolute paths and path traversal
+    if pattern.startswith('/') or '..' in pattern:
+        log.warning("Rejected unsafe glob pattern (traversal/absolute): %s", pattern)
+        return '*.md'
+    # Reject patterns with suspicious characters
+    if not _SAFE_GLOB_RE.match(pattern):
+        log.warning("Rejected unsafe glob pattern (invalid chars): %s", pattern)
+        return '*.md'
+    return pattern
+
+
+def _validate_path_in_project(resolved: Path, project_root: Path | None = None) -> bool:
+    """Ensure resolved path stays within project boundaries.
+    Prevents alias-based path traversal from pointing outside the project.
+    """
+    if project_root is None:
+        project_root = _PLUGIN_ROOT
+    try:
+        resolved.resolve().relative_to(project_root.resolve())
+        return True
+    except ValueError:
+        return False
 
 BMAD_MASTER_PROFILE = "bmad-master"
 
@@ -223,7 +259,13 @@ def _resolve_dir(location_raw: str, alias_map: dict) -> "Path | None":
     if not location:
         return None
     resolved = alias_map.get(location)
-    return Path(resolved) if resolved else None
+    if not resolved:
+        return None
+    p = Path(resolved)
+    if not _validate_path_in_project(p):
+        log.warning("Rejected alias path outside project: %s", resolved)
+        return None
+    return p
 
 
 def _scan_artifact_existence(yaml_files: list, alias_map: dict) -> dict:
@@ -259,10 +301,11 @@ def _scan_artifact_existence(yaml_files: list, alias_map: dict) -> dict:
                     continue
                 # AC-02: glob for artifact
                 pattern = wf.get("outputs", "").strip()
-                if pattern and pattern != "*":
-                    matches = list(resolved_dir.glob(pattern))  # AC-06: Path.glob()
+                if not pattern or pattern == "*":
+                    pattern = "*.md"
                 else:
-                    matches = list(resolved_dir.glob("*.md"))
+                    pattern = _sanitize_glob_pattern(pattern)
+                matches = list(resolved_dir.glob(pattern))  # AC-06: Path.glob()
                 if matches:
                     phase_map[bucket] = (True, matches[0].name)
         except Exception:

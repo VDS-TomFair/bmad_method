@@ -188,58 +188,58 @@ python -m flake8 api/ helpers/ extensions/ --max-line-length 100
 
 ### 6A: 8-Step Activation Sequence
 
-- [ ] 6.1 Rewrite bmad-agent-shared.md activation section (8-step sequence)
+- [x] 6.1 Rewrite bmad-agent-shared.md activation section (8-step sequence)
   - Acceptance: Activation section lists all 8 steps in order; steps 1,2,5,7 are new; steps 3,4,6,8 preserved from current
   - Verify: `grep -c '### Step' prompts/bmad-agent-shared.md` (should show 8 activation steps)
   - Files: `prompts/bmad-agent-shared.md`
 
-- [ ] 6.2 Add resolve_customization first-call instructions per agent
+- [x] 6.2 Add resolve_customization first-call instructions per agent
   - Acceptance: Shared prompt instructs agent to run resolve_customization.py as first tool call; template includes skill-root variable
   - Verify: `grep 'resolve_customization' prompts/bmad-agent-shared.md`
   - Files: `prompts/bmad-agent-shared.md`
 
-- [ ] 6.3 Add persistent_facts processing instructions
+- [x] 6.3 Add persistent_facts processing instructions
   - Acceptance: Shared prompt includes step for processing persistent_facts array; file: prefix handling documented with glob support; literal facts adopted as context
   - Verify: `grep -A5 'persistent_facts' prompts/bmad-agent-shared.md`
   - Files: `prompts/bmad-agent-shared.md`
 
-- [ ] 6.4 Add prepend/append hooks processing instructions
+- [x] 6.4 Add prepend/append hooks processing instructions
   - Acceptance: Prepend step processing before persona adoption; append step processing after greeting before menu; empty arrays result in no-op
   - Verify: `grep 'activation_steps_prepend\|activation_steps_append' prompts/bmad-agent-shared.md`
   - Files: `prompts/bmad-agent-shared.md`
 
 ### 6B: project-context.md Loading
 
-- [ ] 6.5 Standardize project-context.md loading in implementation workflows
+- [x] 6.5 Standardize project-context.md loading in implementation workflows
   - Acceptance: All 8 implementation workflow step-01 files include project-context.md pre-step; pre-step is idempotent
   - Verify: `grep -l 'project-context' skills/bmad-bmm/workflows/*/steps/step-01-init.md | wc -l`
   - Files: `skills/bmad-bmm/workflows/dev-story/steps/step-01-init.md`, `skills/bmad-bmm/workflows/create-story/steps/step-01-init.md`, `skills/bmad-bmm/workflows/code-review/steps/step-01-init.md`, `skills/bmad-bmm/workflows/sprint-planning/steps/step-01-init.md`, `skills/bmad-bmm/workflows/correct-course/steps/step-01-init.md`, `skills/bmad-bmm/workflows/quick-dev/steps/step-01-init.md`, `skills/bmad-bmm/workflows/quick-spec/steps/step-01-init.md`, `skills/bmad-bmm/workflows/create-architecture/steps/step-01-init.md`
 
 ### 6C: File-Based Sidecar Memory
 
-- [ ] 6.6 Add file-based sidecar memory directories to init script
+- [x] 6.6 Add file-based sidecar memory directories to init script
   - Acceptance: Init script creates _bmad/_memory/ with 16 agent sidecar directories; each has memories.md; idempotent
   - Verify: `bash skills/bmad-init/scripts/bmad-init.sh /tmp/test-bmad-project && ls /tmp/test-bmad-project/.a0proj/_bmad/_memory/ | wc -l`
   - Files: `skills/bmad-init/scripts/bmad-init.sh`
 
-- [ ] 6.7 Add sidecar loading to activation sequence
+- [x] 6.7 Add sidecar loading to activation sequence
   - Acceptance: Shared prompt includes sidecar loading between facts (step 5) and greeting (step 6); agent reads all .md files from sidecar directory; missing files handled gracefully
   - Verify: `grep -A5 'sidecar' prompts/bmad-agent-shared.md`
   - Files: `prompts/bmad-agent-shared.md`
 
-- [ ] 6.8 Add sidecar writing instructions to agent prompts
+- [x] 6.8 Add sidecar writing instructions to agent prompts
   - Acceptance: Shared prompt includes sidecar writing instructions; triggers at natural breakpoints; format documented (markdown with date/topic headers); agents append not overwrite
   - Verify: `grep -A5 'Sidecar Memory Writing' prompts/bmad-agent-shared.md`
   - Files: `prompts/bmad-agent-shared.md`
 
-- [ ] 6.9 Create sidecar import skill for upstream migration
+- [x] 6.9 Create sidecar import skill for upstream migration
   - Acceptance: skills/bmad-sidecar-import/SKILL.md exists; import script copies .md files from upstream sidecar directories; idempotent
   - Verify: `ls skills/bmad-sidecar-import/SKILL.md skills/bmad-sidecar-import/scripts/import-sidecars.sh`
   - Files: `skills/bmad-sidecar-import/SKILL.md` (new), `skills/bmad-sidecar-import/scripts/import-sidecars.sh` (new)
 
 ### 6D: P3 Tests
 
-- [ ] 6.10 Add tests for activation sequence, sidecar, project-context loading
+- [x] 6.10 Add tests for activation sequence, sidecar, project-context loading
   - Acceptance: test_activation_sequence.py verifies 8 steps, resolve_customization, persistent_facts, prepend/append, sidecar loading; test_sidecar_memory.py verifies 16 directories, memories.md, readable markdown; test_project_context_loading.py verifies persistent_facts step, workflow pre-steps, customize.toml references; test count >= 310
   - Verify: `python -m pytest tests/test_activation_sequence.py tests/test_sidecar_memory.py tests/test_project_context_loading.py -v`
   - Files: `tests/test_activation_sequence.py` (new), `tests/test_sidecar_memory.py` (new), `tests/test_project_context_loading.py` (new)

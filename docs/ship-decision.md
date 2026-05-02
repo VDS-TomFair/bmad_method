@@ -1,7 +1,7 @@
 # Ship Decision: GO
 
 **Date:** 2026-05-02
-**Sprint:** BMAD Method A0 Plugin Alignment Fix (v2.0.0)
+**Sprint:** BMAD Method A0 Plugin Alignment Fix (v1.4.0)
 **Branch:** develop → main
 
 ---

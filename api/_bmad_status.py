@@ -3,6 +3,9 @@ from pathlib import Path
 from datetime import datetime
 import importlib.util as _ilu
 
+import logging
+_log = logging.getLogger(__name__)
+
 # Direct importlib load to avoid name collision with A0's own 'helpers' package.
 # sys.path manipulation fails here because A0's 'helpers' is already in sys.modules.
 _core_path = str(Path(__file__).resolve().parent.parent / "helpers" / "bmad_status_core.py")
@@ -85,7 +88,8 @@ class BmadStatus(ApiHandler):
                 "recommendation": self._recommend(state, agents, skills, tests),
             }
         except Exception as e:
-            return {"success": False, "error": str(e)}
+            _log.error("BMAD status read failed: %s", e, exc_info=True)
+            return {"success": False, "error": "Internal error reading BMAD status"}
 
     def _read_state(self, state_file: Path | None):
         if state_file is None or not state_file.exists():

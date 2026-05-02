@@ -28,17 +28,16 @@
   - Verify: `grep -r 'import csv' extensions/python/message_loop_prompts_after/_80_bmad_routing_manifest.py && echo 'FAIL' || echo 'OK'
   - Files: `extensions/python/message_loop_prompts_after/_80_bmad_routing_manifest.py` (rewrite)
 
-- [ ] 1.4 Update and add tests for YAML
+- [x] 1.4 Update and add tests for YAML
   - Acceptance: All existing routing tests pass with YAML; new YAML-specific tests cover parsing, caching, error handling; test count >= 300
   - Verify: `python -m pytest tests/test_extension_80.py tests/test_core_yaml_schema.py tests/test_yaml_routing.py tests/test_migration_csv_to_yaml.py -v`
   - Files: `tests/test_extension_80.py` (update), `tests/test_core_csv_schema.py` → `tests/test_core_yaml_schema.py` (rename), `tests/test_yaml_routing.py` (new), `tests/test_migration_csv_to_yaml.py` (new)
-
-- [ ] 1.5 Delete CSV files and clean up references
+- [x] 1.5 Delete CSV files and clean up references
   - Acceptance: grep -r 'module-help' returns zero results; no import csv in routing extension
   - Verify: `grep -r 'module-help' . --include='*.py' --include='*.md' --include='*.sh'`
   - Files: DELETE `skills/bmad-init/module-help.csv`, `skills/bmad-bmm/module-help.csv`, `skills/bmad-tea/module-help.csv`, `skills/bmad-cis/module-help.csv`, `skills/bmad-bmb/module-help.csv`
 
-- [ ] 1.6 Write ADR-0010 and supersede ADR-0001
+- [x] 1.6 Write ADR-0010 and supersede ADR-0001
   - Acceptance: ADR-0010 exists with status Accepted; ADR-0001 header updated to Status: Superseded by ADR-0010
   - Verify: `head -5 docs/adr/0010-yaml-canonical-routing.md && head -5 docs/adr/0001-csv-canonical-routing.md`
   - Files: `docs/adr/0010-yaml-canonical-routing.md` (new), `docs/adr/0001-csv-canonical-routing.md` (update header)

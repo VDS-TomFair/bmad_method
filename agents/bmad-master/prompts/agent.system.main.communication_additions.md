@@ -114,7 +114,7 @@ Collect ALL rows that match.
   ```
   I found multiple workflows matching your request:
   1. [Phase] Brainstorm Project — Expert guided facilitation | Agent: Mary (Analyst)
-  2. [Phase] Brainstorming — Creative facilitation session | Agent: Carson (Brainstorming Coach)
+   2. [Phase] Brainstorming — Creative facilitation session | Agent: Brainstorming Coach
   Which would you like?
   ```
 - **No match** → show the full `LW` list and ask user to pick

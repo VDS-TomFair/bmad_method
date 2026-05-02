@@ -1,3 +1,10 @@
+## CSV Data Files in BMB
+## The following CSV files are intentional data/templates used by BMB workflows:
+##   - workflows/agent/data/communication-presets.csv → persona presets for agent builder
+##   - workflows/workflow/data/common-workflow-tools.csv → tool definitions for workflow builder
+##   - workflows/module/assets/setup-skill-template/assets/module-help.csv → empty scaffolding template
+##   - workflows/bmb-setup/assets/module-help.csv → BMB module's own help entries
+## These are NOT routing CSVs (routing uses module.yaml YAML entries only).
 code: bmb
 name: BMad Builder
 workflows:

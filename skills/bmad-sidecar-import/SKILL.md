@@ -1,36 +1,43 @@
 ---
 name: bmad-sidecar-import
-description: "Import upstream BMAD Method sidecar memory files into A0 plugin. Use when user says: import sidecar, migrate bmad, import bmad memory, sidecar import."
-version: 1.0.0
+version: 1.0.1
+description: "Audit and verify BMAD sidecar memory files. Use when user says: check sidecars, verify sidecar, sidecar status, import sidecar, sidecar import."
 trigger_patterns:
   - /sidecar-import
   - /bmad-sidecar-import
+  - "check sidecars"
+  - "verify sidecar"
+  - "sidecar status"
   - "import sidecar"
-  - "migrate bmad"
-  - "import bmad memory"
   - "sidecar import"
 ---
 
-# BMAD Sidecar Import
+# BMAD Sidecar Verification
 
-Import upstream BMAD Method sidecar memory files into the A0 plugin's sidecar directory structure.
+Audit and verify that sidecar memory files are in place for all BMAD agents.
+
+## What This Skill Does
+
+This is a **verification/audit tool** that:
+
+1. Scans the project's `_bmad/_memory/` directory for `*-sidecar/` subdirectories
+2. For each sidecar directory, checks which `.md` files exist and have content
+3. Reports a summary of found vs. skipped (already existing) files
+4. Confirms readiness for agents to load their sidecar content
+
+> **Note:** In the A0 plugin, sidecar directories and seed files are created by `bmad-init`. 
+> This script audits the result — it does not copy files from an external source.
 
 ## When to Use
 
-- Migrating from an IDE-based BMAD Method installation to Agent Zero
-- You have existing `_bmad/_memory/*-sidecar/` directories from upstream BMAD
-- You want to preserve agent memory, instructions, and accumulated knowledge
-
-## How It Works
-
-1. Scans the project's `_bmad/_memory/` directory for `*-sidecar/` subdirectories
-2. For each sidecar directory, reads all `.md` files
-3. Files are already in the correct location for A0 agents to discover
-4. Reports what was found and confirms readiness
+- After running `bmad init` to verify all sidecar directories were created
+- Checking which agents have memory files populated
+- Auditing sidecar readiness before running BMAD workflows
+- Troubleshooting missing agent memory files
 
 ## Usage
 
-Run the import script:
+Run the verification script:
 
 ```bash
 bash skills/bmad-sidecar-import/scripts/import-sidecars.sh /path/to/project
@@ -41,17 +48,21 @@ Or from within Agent Zero:
 /load-skill bmad-sidecar-import
 ```
 
-## What Gets Imported
+## Output
 
-| File | Purpose |
-|------|---------|
-| `memories.md` | Running memory of past decisions and preferences |
-| `instructions.md` | Agent-specific behavioral instructions |
-| Any other `.md` files | Additional context files |
+The script reports:
+- Each sidecar directory found
+- Files that exist with content (skipped)
+- Files that exist but are empty stubs (counted as found)
+- Summary totals
+
+| Count | Meaning |
+|-------|---------|
+| Files found | Markdown files detected in sidecar directories |
+| Files skipped | Files with existing content (> 5 bytes) |
 
 ## Notes
 
-- Import is idempotent — safe to run multiple times
-- Existing files are NOT overwritten (no-clobber)
-- The import script only copies files that don't already exist in the target
-- After import, agents will automatically load sidecar content on next activation
+- Verification is idempotent — safe to run multiple times
+- Existing files with content are never modified
+- After verification, agents will automatically load sidecar content on activation

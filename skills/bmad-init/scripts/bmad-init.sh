@@ -25,7 +25,7 @@ for agent in analyst pm architect dev ux-designer tech-writer module-builder \
              storyteller presentation; do
     mkdir -p "${A0PROJ}/_bmad/_memory/${agent}-sidecar"
     # Create initial memories.md if it doesn't exist
-    [ -f "${A0PROJ}/_bmad/_memory/${agent}-sidecar/memories.md" ] || echo "# ${agent} memories\n\n" > "${A0PROJ}/_bmad/_memory/${agent}-sidecar/memories.md"
+    [ -f "${A0PROJ}/_bmad/_memory/${agent}-sidecar/memories.md" ] || printf "# %s memories\n\n" "${agent}" > "${A0PROJ}/_bmad/_memory/${agent}-sidecar/memories.md"
 done
 
 # Create project-context.md stub (no-clobber — preserves user content on re-init)

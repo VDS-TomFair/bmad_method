@@ -186,6 +186,7 @@ workflows:
 - module: bmb
   skill: agent-builder
   display-name: Quality Scan Agent
+  # NOTE: QA menu-code is intentionally duplicated across BMB (Quality Scan Agent) and BMM (QA Automation Test). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
   menu-code: QA
   description: Comprehensive quality scan and optimization for existing BMAD agents — produces JSON + HTML report
   action: ''
@@ -226,6 +227,7 @@ workflows:
 - module: bmb
   skill: workflow-builder
   display-name: Validate Skill
+  # NOTE: VS menu-code is intentionally duplicated across BMB (Validate Skill) and BMM (Validate Story). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
   menu-code: VS
   description: Validate a BMAD skill package against all structural and quality rules
   action: ''

@@ -79,3 +79,8 @@ prompt = "Read and follow the instructions in {skill-root}/validate-doc.md"
 code = "EC"
 description = "Create clear technical explanations with examples and diagrams"
 prompt = "Read and follow the instructions in {skill-root}/explain-concept.md"
+
+[[agent.menu]]
+code = "US"
+description = "Update Standards"
+skill = "bmad-update-standards"

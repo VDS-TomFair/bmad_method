@@ -16,6 +16,7 @@ mkdir -p "$A0PROJ/knowledge/solutions"
 mkdir -p "$A0PROJ/instructions"
 mkdir -p "$A0PROJ/agents"
 mkdir -p "$A0PROJ/skills"
+mkdir -p "$A0PROJ/_bmad/custom/"
 
 # Create project-context.md stub (no-clobber — preserves user content on re-init)
 touch "$A0PROJ/knowledge/main/project-context.md"

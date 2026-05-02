@@ -342,6 +342,7 @@ workflows:
 - module: bmm
   skill: sm
   display-name: Validate Story
+  # NOTE: VS menu-code is intentionally duplicated across BMM (Validate Story) and BMB (Validate Skill). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
   menu-code: VS
   description: Validates story readiness and completeness before development work begins
   action: bmad-create-story
@@ -396,6 +397,7 @@ workflows:
 - module: bmm
   skill: qa
   display-name: QA Automation Test
+  # NOTE: QA menu-code is intentionally duplicated across BMM (QA Automation Test) and BMB (Quality Scan Agent). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
   menu-code: QA
   description: Generate automated API and E2E tests for implemented code using the project's existing test framework (detects
     existing well known in use test frameworks). Use after implementation to add test coverage. NOT for code review or story

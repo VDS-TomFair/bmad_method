@@ -11,6 +11,12 @@ Before starting: read the `stepsCompleted` array in this workflow's output docum
 
 # Step 1: Architecture Workflow Initialization
 
+## Pre-step: Project Context
+
+Before starting, check for `{output_folder}/project-context.md`.
+If it exists, read it and apply its conventions throughout this workflow.
+
+
 ## MANDATORY EXECUTION RULES (READ FIRST):
 
 - 🛑 NEVER generate content without user input

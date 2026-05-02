@@ -157,7 +157,7 @@ def main():
         for s in broken_s:
             print("   \U0001f534 " + s)
             wwn(
-                s + "/module-help.csv not found",
+                s + "/module.yaml not found",
                 "Skill not accessible \u2014 workflow routing will fail",
                 "Verify BMAD plugin is installed at " + str(skills_dir)
             )

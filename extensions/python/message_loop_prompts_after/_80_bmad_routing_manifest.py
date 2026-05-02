@@ -1,20 +1,24 @@
 """
-BmadRoutingManifest — Dynamically build BMAD routing table from all module-help.csv files.
+BmadRoutingManifest — Dynamically build BMAD routing table from all module.yaml files.
 
-Reads from skills/*/module-help.csv (single source of truth) instead of a
-pre-compiled _config/bmad-help.csv aggregate. This eliminates the two-file
-duplication problem — adding a workflow to module-help.csv is all that's needed.
+Reads from skills/*/module.yaml and skills/bmad-init/core/module.yaml
+(single source of truth) instead of CSV files. Uses yaml.safe_load() for parsing.
 
 Injects a compact routing table into extras_temporary["bmad_routing_manifest"]
 for bmad-master to use on every message loop.
+
+Migration: CSV → YAML (Bundle 1, Slice 1.3)
+Source: SPEC.md §1.3, §Migration Guide
+Supersedes: ADR-0001 (CSV canonical routing)
 """
 
-import csv
-import io
 import logging
 import traceback
 from pathlib import Path
+import re
 import importlib.util as _ilu
+import yaml
+
 from helpers.extension import Extension
 from helpers import files
 from agent import LoopData
@@ -38,7 +42,7 @@ _read_state = _core_mod.read_state
 # Module-level caches — keyed by (path_str, mtime_ns) for auto-invalidation on file change
 _MAX_CACHE_ENTRIES = 128
 _alias_cache: dict = {}
-_csv_cache: dict = {}
+_yaml_cache: dict = {}
 
 
 def _evict_if_full(cache: dict) -> None:
@@ -48,6 +52,40 @@ def _evict_if_full(cache: dict) -> None:
         keys_to_remove = list(cache.keys())[:len(cache) // 2]
         for k in keys_to_remove:
             del cache[k]
+
+# ── Security validation helpers ────────────────────────────────────────────────
+
+_SAFE_GLOB_RE = re.compile(r'^[\w\-.*?\[\]{}]+$')
+
+
+def _sanitize_glob_pattern(pattern: str) -> str:
+    """Validate a glob pattern from YAML before passing to Path.glob().
+    Rejects patterns with path traversal (..), absolute paths, or unsafe chars.
+    Returns the pattern if safe, or '*.md' as fallback.
+    """
+    if not pattern:
+        return '*.md'
+    # Reject absolute paths and path traversal
+    if pattern.startswith('/') or '..' in pattern:
+        log.warning("Rejected unsafe glob pattern (traversal/absolute): %s", pattern)
+        return '*.md'
+    # Reject patterns with suspicious characters
+    if not _SAFE_GLOB_RE.match(pattern):
+        log.warning("Rejected unsafe glob pattern (invalid chars): %s", pattern)
+        return '*.md'
+    return pattern
+
+
+def _validate_path_in_project(resolved: Path, project_root: Path | None = None) -> bool:
+    """Ensure resolved path does not contain path traversal sequences.
+    Prevents alias-based directory traversal attacks (e.g. '../../../etc/passwd').
+    """
+    try:
+        if '..' in str(resolved):
+            return False
+        return True
+    except (ValueError, OSError):
+        return False
 
 BMAD_MASTER_PROFILE = "bmad-master"
 
@@ -69,15 +107,31 @@ PHASE_MODULES = {
 }
 
 
-def _read_csv_cached(csv_path: Path) -> str:
-    """Read CSV file with mtime-keyed cache invalidation."""
-    global _csv_cache
-    mtime_ns = csv_path.stat().st_mtime_ns
-    cache_key = (str(csv_path), mtime_ns)
-    if cache_key not in _csv_cache:
-        _csv_cache[cache_key] = csv_path.read_text(encoding="utf-8")
-        _evict_if_full(_csv_cache)
-    return _csv_cache[cache_key]
+def _read_yaml_cached(yaml_path: Path) -> dict:
+    """Read and parse YAML file with mtime-keyed cache invalidation.
+    Returns parsed dict from yaml.safe_load().
+    """
+    global _yaml_cache
+    mtime_ns = yaml_path.stat().st_mtime_ns
+    cache_key = (str(yaml_path), mtime_ns)
+    if cache_key not in _yaml_cache:
+        text = yaml_path.read_text(encoding="utf-8")
+        _yaml_cache[cache_key] = yaml.safe_load(text)
+        _evict_if_full(_yaml_cache)
+    return _yaml_cache[cache_key]
+
+
+def _discover_yaml_files() -> list[Path]:
+    """Discover all module.yaml files for routing.
+    Finds skills/*/module.yaml (bmm, tea, cis, bmb) and
+    skills/bmad-init/core/module.yaml (init/core).
+    """
+    yaml_files = sorted(_SKILLS_DIR.glob("*/module.yaml"))
+    # Add init/core/module.yaml if not already found by glob
+    init_core = _SKILLS_DIR / "bmad-init" / "core" / "module.yaml"
+    if init_core.exists() and init_core not in yaml_files:
+        yaml_files.append(init_core)
+    return yaml_files
 
 
 def _resolve_state_file(agent) -> Path | None:
@@ -96,39 +150,40 @@ def _resolve_state_file(agent) -> Path | None:
     return None
 
 
-def _collect_routing_rows(active_modules: list | None, csv_files: list | None = None) -> list[str]:
+def _collect_routing_rows(active_modules: list | None, yaml_files: list | None = None) -> list[str]:
     """
-    Read all skills/*/module-help.csv files and return routing row strings.
-    Filters by active_modules if provided. Uses _csv_cache with mtime invalidation.
+    Read all module.yaml files and return routing row strings.
+    Filters by active_modules if provided. Uses _yaml_cache with mtime invalidation.
+    Output format is identical to the CSV version — this is a contract.
     """
     routing_rows = []
 
-    # Discover all module-help.csv files sorted by skill name (use provided list or glob)
-    if csv_files is None:
-        csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
+    # Discover all module.yaml files sorted by path (use provided list or discover)
+    if yaml_files is None:
+        yaml_files = _discover_yaml_files()
 
-    for csv_path in csv_files:
-
+    for yaml_path in yaml_files:
         try:
-            content = _read_csv_cached(csv_path)
-            reader = csv.DictReader(io.StringIO(content))
+            data = _read_yaml_cached(yaml_path)
+            if not data or "workflows" not in data:
+                continue
 
-            for row in reader:
-                module = row.get("module", "").strip()
-                row_phase = row.get("phase", "").strip()
-                # All CSVs use unified 13-col schema (display-name, menu-code, skill)
-                name = row.get("display-name", "").strip()
-                code = row.get("menu-code", "").strip()
-                description = row.get("description", "").strip()
+            for wf in data["workflows"]:
+                module = wf.get("module", "").strip()
+                row_phase = wf.get("phase", "").strip()
+                # YAML fields map 1:1 to CSV columns (SPEC §Migration Guide)
+                name = wf.get("display-name", "").strip()
+                code = wf.get("menu-code", "").strip()
+                description = wf.get("description", "").strip()
                 # action = canonical skill name for skills_tool:load
                 # args = direct workflow file path fallback when action is empty
-                action = row.get("action", "").strip()
-                args = row.get("args", "").strip()
+                action = wf.get("action", "").strip()
+                args = wf.get("args", "").strip()
                 # agent column maps to profile name for call_subordinate
-                agent_name = row.get("skill", "").strip()
+                agent_name = wf.get("skill", "").strip()
                 # Agent display name — fallback to agent_name
                 agent_display = (
-                    row.get("agent-display-name", "").strip()
+                    wf.get("agent-display-name", "").strip()
                     or agent_name
                 )
 
@@ -203,32 +258,40 @@ def _resolve_dir(location_raw: str, alias_map: dict) -> "Path | None":
     if not location:
         return None
     resolved = alias_map.get(location)
-    return Path(resolved) if resolved else None
+    if not resolved:
+        return None
+    p = Path(resolved)
+    if not _validate_path_in_project(p):
+        log.warning("Rejected alias path outside project: %s", resolved)
+        return None
+    return p
 
 
-def _scan_artifact_existence(csv_files: list, alias_map: dict) -> dict:
+def _scan_artifact_existence(yaml_files: list, alias_map: dict) -> dict:
     """Scan filesystem for required phase-gating artifacts.
     AC-02, AC-03: glob output dirs, return phase → (found: bool, note: str).
     Phase is complete if ANY required=true artifact for that phase is found.
     AC-06: uses Path.glob() for performance.
     """
     phase_map: dict = {k: (False, "no required artifact found") for k in PHASE_BUCKETS}
-    for csv_path in csv_files:
+    for yaml_path in yaml_files:
         try:
-            content = _read_csv_cached(csv_path)
-            reader = csv.DictReader(io.StringIO(content))
-            for row in reader:
+            data = _read_yaml_cached(yaml_path)
+            if not data or "workflows" not in data:
+                continue
+            for wf in data["workflows"]:
                 # AC-03: only required=true rows gate phase completion
-                if row.get("required", "").strip().lower() != "true":
+                required = wf.get("required", False)
+                if not required:
                     continue
-                row_phase = row.get("phase", "").strip()
+                row_phase = wf.get("phase", "").strip()
                 # Map phase value to bucket by prefix ("1-", "2-", etc.)
                 bucket = next((k for k in phase_map if row_phase.startswith(k[:2])), None)
                 if not bucket:
                     continue
                 if phase_map[bucket][0]:
                     continue  # AC-03: already found for this bucket — skip
-                output_location = row.get("output-location", "").strip()
+                output_location = wf.get("output-location", "").strip()
                 if not output_location:
                     continue
                 # AC-05: skip row if alias cannot be resolved
@@ -236,11 +299,12 @@ def _scan_artifact_existence(csv_files: list, alias_map: dict) -> dict:
                 if not resolved_dir or not resolved_dir.exists():
                     continue
                 # AC-02: glob for artifact
-                pattern = row.get("outputs", "").strip()
-                if pattern and pattern != "*":
-                    matches = list(resolved_dir.glob(pattern))  # AC-06: Path.glob()
+                pattern = wf.get("outputs", "").strip()
+                if not pattern or pattern == "*":
+                    pattern = "*.md"
                 else:
-                    matches = list(resolved_dir.glob("*.md"))
+                    pattern = _sanitize_glob_pattern(pattern)
+                matches = list(resolved_dir.glob(pattern))  # AC-06: Path.glob()
                 if matches:
                     phase_map[bucket] = (True, matches[0].name)
         except Exception:
@@ -344,8 +408,8 @@ class BmadRoutingManifest(Extension):
     Phase-aware: loads all modules when phase=ready, otherwise loads
     phase-relevant modules only.
 
-    Reads dynamically from all skills/*/module-help.csv files — no compiled
-    aggregate needed. Adding a workflow to module-help.csv is immediately
+    Reads dynamically from all module.yaml files — no compiled
+    aggregate needed. Adding a workflow to module.yaml is immediately
     reflected in the routing table without any sync step.
     """
 
@@ -382,11 +446,11 @@ class BmadRoutingManifest(Extension):
                 phase = state_result["phase"]
                 active_modules = PHASE_MODULES.get(phase)
 
-            # Single glob per execute() — reused for routing rows and artifact scan
-            csv_files = sorted(_SKILLS_DIR.glob("*/module-help.csv"))
+            # Single discovery per execute() — reused for routing rows and artifact scan
+            yaml_files = _discover_yaml_files()
 
-            # Collect routing rows from all module-help.csv files
-            routing_rows = _collect_routing_rows(active_modules, csv_files)
+            # Collect routing rows from all module.yaml files
+            routing_rows = _collect_routing_rows(active_modules, yaml_files)
 
             if not routing_rows:
                 return
@@ -410,7 +474,7 @@ class BmadRoutingManifest(Extension):
                 config_path = state_path.parent / "01-bmad-config.md"  # AC-01
                 if config_path.exists():
                     alias_map = _parse_alias_map(config_path)  # AC-06: cached
-                    phase_map = _scan_artifact_existence(csv_files, alias_map)  # AC-02, AC-03
+                    phase_map = _scan_artifact_existence(yaml_files, alias_map)  # AC-02, AC-03
                     completed_text = _build_completed_phases_text(phase_map)  # AC-04
                     manifest_prompt += f"\n\n{completed_text}"
                     staleness_text = _build_staleness_warnings(alias_map)
@@ -419,6 +483,7 @@ class BmadRoutingManifest(Extension):
                 else:
                     manifest_prompt += "\n\n## Completed Phases (filesystem scan)\ncompleted_phases: unavailable (config not found)"  # AC-05
             except Exception:
+                log.warning("Artifact scan failed: %s", traceback.format_exc())
                 manifest_prompt += "\n\n## Completed Phases (filesystem scan)\ncompleted_phases: unavailable (scan error)"  # AC-05
 
             loop_data.extras_temporary["bmad_routing_manifest"] = manifest_prompt

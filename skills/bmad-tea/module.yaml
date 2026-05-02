@@ -1,0 +1,120 @@
+code: tea
+name: Test Engineering Architecture
+workflows:
+- module: tea
+  skill: tea
+  display-name: Teach Me Testing
+  menu-code: TMT
+  description: Teach testing fundamentals through 7 sessions (TEA Academy)
+  action: bmad-teach-me-testing
+  args: skills/bmad-tea/workflows/testarch/teach-me-testing/workflow.md
+  phase: 0-learning
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: progress file|session notes|certificate
+- module: tea
+  skill: tea
+  display-name: Test Design
+  menu-code: TD
+  description: Risk-based test planning
+  action: bmad-testarch-test-design
+  args: skills/bmad-tea/workflows/testarch/test-design/workflow.yaml
+  phase: 3-solutioning
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: test design document
+- module: tea
+  skill: tea
+  display-name: Test Framework
+  menu-code: TF
+  description: Initialize production-ready test framework
+  action: bmad-testarch-framework
+  args: skills/bmad-tea/workflows/testarch/framework/workflow.yaml
+  phase: 3-solutioning
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: framework scaffold
+- module: tea
+  skill: tea
+  display-name: CI Setup
+  menu-code: CI
+  description: Configure CI/CD quality pipeline
+  action: bmad-testarch-ci
+  args: skills/bmad-tea/workflows/testarch/ci/workflow.yaml
+  phase: 3-solutioning
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: ci config
+- module: tea
+  skill: tea
+  display-name: ATDD
+  menu-code: AT
+  description: Generate failing tests (TDD red phase)
+  action: bmad-testarch-atdd
+  args: skills/bmad-tea/workflows/testarch/atdd/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: atdd tests
+- module: tea
+  skill: tea
+  display-name: Test Automation
+  menu-code: TA
+  description: Expand test coverage
+  action: bmad-testarch-automate
+  args: skills/bmad-tea/workflows/testarch/automate/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: test suite
+- module: tea
+  skill: tea
+  display-name: Test Review
+  menu-code: RV
+  description: Quality audit (0-100 scoring)
+  action: bmad-testarch-test-review
+  args: skills/bmad-tea/workflows/testarch/test-review/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: review report
+- module: tea
+  skill: tea
+  display-name: NFR Assessment
+  menu-code: NR
+  description: Non-functional requirements
+  action: bmad-testarch-nfr
+  args: skills/bmad-tea/workflows/testarch/nfr-assess/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: nfr report
+- module: tea
+  skill: tea
+  display-name: Traceability
+  menu-code: TRC
+  description: Coverage traceability and gate
+  action: bmad-testarch-trace
+  args: skills/bmad-tea/workflows/testarch/trace/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: test_artifacts
+  outputs: traceability matrix|gate decision

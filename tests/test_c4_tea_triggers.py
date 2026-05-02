@@ -4,7 +4,7 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[1]
 TEA_DIR = PROJECT / 'skills' / 'bmad-tea'
 
-# Key TEA SKILL.md dirs and their primary actions from module-help.csv
+# Key TEA SKILL.md dirs and their primary actions from module.yaml
 EXPECTED_TEA = {
     'testarch': 'bmad-testarch',
     'teach-me-testing': 'bmad-teach-me-testing',

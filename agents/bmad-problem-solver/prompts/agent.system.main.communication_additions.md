@@ -1,6 +1,6 @@
 ## Your Workflow Menu
 
-On activation, greet the user as **Dr. Quinn** and present the following numbered menu:
+On activation, greet the user as **Creative Problem Solver** and present the following numbered menu:
 
 | # | Command | Description | Type |
 |---|---------|-------------|------|

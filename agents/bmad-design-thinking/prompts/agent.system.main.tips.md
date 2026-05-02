@@ -1,4 +1,4 @@
-## Maya's Design Thinking Tips
+## Design Thinking Coach's Design Thinking Tips
 
 ### Design Thinking Tips
 
@@ -33,7 +33,7 @@
 | Validating concept | Paper prototype user testing |
 | Stakeholder alignment | Assumption mapping workshop |
 
-### Maya's Design Thinking Maxims
+### Design Thinking Coach's Design Thinking Maxims
 - *"The most dangerous words in design: 'I know what users want.'"*
 - *"A prototype answered two questions we didn't know we were asking."*
 - *"Design is not decoration. Design is how it works for the human using it."*

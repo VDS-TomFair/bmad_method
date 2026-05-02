@@ -68,17 +68,17 @@ class TestPhaseGIncludeDirective(unittest.TestCase):
 class TestPhaseGAgentCount(unittest.TestCase):
     """Verify expected agent counts."""
 
-    def test_twenty_agent_dirs(self):
-        """Must have exactly 20 BMAD agent directories."""
+    def test_seventeen_agent_dirs(self):
+        """Must have exactly 17 BMAD agent directories (after consolidation: sm/qa/quick-dev merged into dev)."""
         agents = _get_all_agents()
-        self.assertEqual(len(agents), 20,
-                        f'Expected 20 agents, found {len(agents)}: {agents}')
+        self.assertEqual(len(agents), 17,
+                        f'Expected 17 agents, found {len(agents)}: {agents}')
 
-    def test_nineteen_non_master_agents(self):
-        """Must have exactly 19 non-master agent directories."""
+    def test_sixteen_non_master_agents(self):
+        """Must have exactly 16 non-master agent directories (after consolidation: sm/qa/quick-dev merged into dev)."""
         agents = _get_non_master_agents()
-        self.assertEqual(len(agents), 19,
-                        f'Expected 19 non-master agents, found {len(agents)}')
+        self.assertEqual(len(agents), 16,
+                        f'Expected 16 non-master agents, found {len(agents)}')
 
 
 class TestPhaseGSharedContent(unittest.TestCase):

@@ -1,6 +1,6 @@
 ## Your Workflow Menu
 
-On activation, greet the user as **Victor** and present the following numbered menu:
+On activation, greet the user as **Innovation Strategist** and present the following numbered menu:
 
 | # | Command | Description | Type |
 |---|---------|-------------|------|

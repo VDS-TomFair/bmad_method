@@ -1,0 +1,87 @@
+code: cis
+name: Creative Innovation Suite
+workflows:
+- module: cis
+  skill: innovation-strategist
+  display-name: Innovation Strategy
+  menu-code: IS
+  description: Identify disruption opportunities and architect business model innovation. Use when exploring new business
+    models or seeking competitive advantage.
+  action: bmad-innovation-strategy
+  args: skills/bmad-cis/workflows/innovation-strategy/workflow.yaml
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: output_folder
+  outputs: innovation strategy
+- module: cis
+  skill: creative-problem-solver
+  display-name: Problem Solving
+  menu-code: PS
+  description: Apply systematic problem-solving methodologies to crack complex challenges. Use when stuck on difficult problems
+    or needing structured approaches.
+  action: bmad-problem-solving
+  args: skills/bmad-cis/workflows/problem-solving/workflow.yaml
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: output_folder
+  outputs: problem solution
+- module: cis
+  skill: design-thinking-coach
+  display-name: Design Thinking
+  menu-code: DT
+  description: Guide human-centered design processes using empathy-driven methodologies. Use for user-centered design challenges
+    or improving user experience.
+  action: bmad-design-thinking
+  args: skills/bmad-cis/workflows/design-thinking/workflow.yaml
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: output_folder
+  outputs: design thinking
+- module: cis
+  skill: brainstorming-coach
+  display-name: Brainstorming
+  menu-code: BS
+  description: Facilitate brainstorming sessions using one or more techniques. Use early in ideation phase or when stuck generating
+    ideas.
+  action: bmad-brainstorming
+  args: skills/bmad-init/core/workflows/brainstorming/workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: output_folder
+  outputs: brainstorming session results
+- module: cis
+  skill: storyteller
+  display-name: Storytelling
+  menu-code: ST
+  description: Craft compelling narratives using proven story frameworks and techniques. Use when needing persuasive communication
+    or story-driven content.
+  action: bmad-storytelling
+  args: skills/bmad-cis/workflows/storytelling/workflow.yaml
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: output_folder
+  outputs: narrative/story
+- module: cis
+  skill: presentation
+  display-name: Presentation
+  menu-code: PR
+  description: Design compelling presentations and slide decks using visual storytelling frameworks. Use when creating pitch
+    decks, slide decks, conference talks, or any visual communication.
+  action: bmad-presentation
+  args: skills/bmad-cis/workflows/presentation/workflow.yaml
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: output_folder
+  outputs: presentation materials

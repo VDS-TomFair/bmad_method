@@ -1,0 +1,261 @@
+## CSV Data Files in BMB
+## The following CSV files are intentional data/templates used by BMB workflows:
+##   - workflows/agent/data/communication-presets.csv → persona presets for agent builder
+##   - workflows/workflow/data/common-workflow-tools.csv → tool definitions for workflow builder
+##   - workflows/module/assets/setup-skill-template/assets/module-help.csv → empty scaffolding template
+##   - workflows/bmb-setup/assets/module-help.csv → BMB module's own help entries
+## These are NOT routing CSVs (routing uses module.yaml YAML entries only).
+code: bmb
+name: BMad Builder
+workflows:
+- module: bmb
+  skill: agent-builder
+  display-name: Build Agent
+  menu-code: BA
+  description: Create a new BMAD agent with best practices and compliance
+  action: bmad-agent-builder-workflow
+  args: skills/bmad-bmb/workflows/agent/workflow-create-agent.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_build_output_agents
+  outputs: agent
+- module: bmb
+  skill: agent-builder
+  display-name: Edit Agent
+  menu-code: EA
+  description: Edit existing BMAD agents while maintaining compliance
+  action: ''
+  args: skills/bmad-bmb/workflows/agent/workflow-edit-agent.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_build_output_agents
+  outputs: agent
+- module: bmb
+  skill: agent-builder
+  display-name: Validate Agent
+  menu-code: VA
+  description: Validate existing BMAD agents and offer to improve deficiencies
+  action: ''
+  args: skills/bmad-bmb/workflows/agent/workflow-validate-agent.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: agent being validated folder
+  outputs: validation report
+- module: bmb
+  skill: module-builder
+  display-name: Ideate Module
+  menu-code: IM
+  description: Brainstorm and plan a BMAD module — explore ideas decide architecture and produce a build plan
+  action: ''
+  args: skills/bmad-bmb/workflows/module/workflow-ideate-module.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_reports_output_folder
+  outputs: module plan
+- module: bmb
+  skill: module-builder
+  display-name: Create Module Brief
+  menu-code: PB
+  description: Create product brief for BMAD module development
+  action: ''
+  args: skills/bmad-bmb/workflows/module/workflow-create-module-brief.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_staging_folder
+  outputs: product brief
+- module: bmb
+  skill: module-builder
+  display-name: Create Module
+  menu-code: CM
+  description: Create a complete BMAD module with agents, workflows, and infrastructure
+  action: bmad-module-builder-workflow
+  args: skills/bmad-bmb/workflows/module/workflow-create-module.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_staging_folder
+  outputs: module
+- module: bmb
+  skill: module-builder
+  display-name: Edit Module
+  menu-code: EM
+  description: Edit existing BMAD modules while maintaining coherence
+  action: ''
+  args: skills/bmad-bmb/workflows/module/workflow-edit-module.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_staging_folder
+  outputs: module
+- module: bmb
+  skill: module-builder
+  display-name: Validate Module
+  menu-code: VM
+  description: Run compliance check on BMAD modules against best practices
+  action: ''
+  args: skills/bmad-bmb/workflows/module/workflow-validate-module.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: module being validated folder
+  outputs: validation report
+- module: bmb
+  skill: workflow-builder
+  display-name: Build Workflow
+  menu-code: BW
+  description: Create a new BMAD workflow with proper structure and best practices
+  action: bmad-workflow-builder-workflow
+  args: skills/bmad-bmb/workflows/workflow/workflow-create-workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_build_output_skills
+  outputs: workflow
+- module: bmb
+  skill: workflow-builder
+  display-name: Edit Workflow
+  menu-code: EW
+  description: Edit existing BMAD workflows while maintaining integrity
+  action: ''
+  args: skills/bmad-bmb/workflows/workflow/workflow-edit-workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_build_output_skills
+  outputs: workflow
+- module: bmb
+  skill: workflow-builder
+  display-name: Validate Workflow
+  menu-code: VW
+  description: Run validation check on BMAD workflows against best practices
+  action: ''
+  args: skills/bmad-bmb/workflows/workflow/workflow-validate-workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: workflow being validated folder
+  outputs: validation report
+- module: bmb
+  skill: workflow-builder
+  display-name: Max Parallel Validate
+  menu-code: MV
+  description: Run validation checks in MAX-PARALLEL mode against a workflow requires a tool that supports Parallel Sub-Processes
+  action: ''
+  args: skills/bmad-bmb/workflows/workflow/workflow-validate-max-parallel-workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: workflow being validated folder
+  outputs: validation report
+- module: bmb
+  skill: workflow-builder
+  display-name: Convert Skill
+  menu-code: CW
+  description: Convert any skill to BMad-compliant format with before/after HTML comparison report
+  action: ''
+  args: skills/bmad-bmb/workflows/workflow/references/convert-process.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_reports_output_folder
+  outputs: converted skill + comparison report
+- module: bmb
+  skill: workflow-builder
+  display-name: Rework Workflow
+  menu-code: RW
+  description: Rework a Workflow to a V6 Compliant Version
+  action: ''
+  args: skills/bmad-bmb/workflows/workflow/workflow-rework-workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_build_output_skills
+  outputs: workflow
+- module: bmb
+  skill: agent-builder
+  display-name: Quality Scan Agent
+  # NOTE: QA menu-code is intentionally duplicated across BMB (Quality Scan Agent) and BMM (QA Automation Test). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
+  menu-code: QA
+  description: Comprehensive quality scan and optimization for existing BMAD agents — produces JSON + HTML report
+  action: ''
+  args: skills/bmad-bmb/quality-scanner/agent-builder/quality-optimizer.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_reports_output_folder
+  outputs: quality report
+- module: bmb
+  skill: workflow-builder
+  display-name: Quality Scan Workflow
+  menu-code: QW
+  description: Comprehensive quality scan and optimization for existing BMAD workflows — produces JSON + HTML report
+  action: ''
+  args: skills/bmad-bmb/quality-scanner/workflow-builder/quality-optimizer.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: bmb_reports_output_folder
+  outputs: quality report
+- module: bmb
+  skill: module-builder
+  display-name: Setup Builder
+  menu-code: SB
+  description: Sets up BMad Builder module in a project. Use when the user requests to install bmb module configure BMad Builder
+    or setup BMad Builder.
+  action: bmad-bmb-setup
+  args: skills/bmad-bmb/workflows/bmb-setup/SKILL.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: bmb
+  skill: workflow-builder
+  display-name: Validate Skill
+  # NOTE: VS menu-code is intentionally duplicated across BMB (Validate Skill) and BMM (Validate Story). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
+  menu-code: VS
+  description: Validate a BMAD skill package against all structural and quality rules
+  action: ''
+  args: skills/bmad-bmb/workflows/skill/workflow-validate-skill.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: skill being validated folder
+  outputs: validation report
+- module: bmb
+  skill: workflow-builder
+  display-name: Validate File References
+  menu-code: VF
+  description: Scan a skill directory and verify all referenced file paths exist on disk — reports broken refs with file and
+    line number
+  action: ''
+  args: skills/bmad-bmb/scripts/validate-file-refs.py
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: skill being validated folder
+  outputs: validation report

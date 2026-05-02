@@ -4,7 +4,7 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[1]
 BMB_DIR = PROJECT / 'skills' / 'bmad-bmb'
 
-# Key BMB SKILL.md dirs and their primary actions from module-help.csv
+# Key BMB SKILL.md dirs and their primary actions from module.yaml
 EXPECTED_BMB = {
     'agent': 'bmad-agent-builder-workflow',
     'workflow': 'bmad-workflow-builder-workflow',

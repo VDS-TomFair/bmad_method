@@ -1,0 +1,156 @@
+code: core
+name: BMAD Core Utilities
+workflows:
+- module: core
+  skill: analyst
+  display-name: Brainstorming
+  menu-code: BSP
+  description: Generate diverse ideas through interactive techniques. Use early in ideation phase or when stuck generating
+    ideas.
+  action: bmad-brainstorming
+  args: skills/bmad-init/core/workflows/brainstorming/workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: '{output_folder}/brainstorming/brainstorming-session-{{date}}.md'
+  outputs: ''
+- module: core
+  skill: party-mode facilitator
+  display-name: Party Mode
+  menu-code: PM
+  description: Orchestrate multi-agent discussions. Use when you need multiple agent perspectives or want agents to collaborate.
+  action: ''
+  args: skills/bmad-init/core/workflows/party-mode/workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: core
+  skill: bmad-master
+  display-name: bmad-help
+  menu-code: BH
+  description: BMad Help
+  action: bmad-help
+  args: skills/bmad-init/core/tasks/help.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: core
+  skill: bmad-master
+  display-name: Index Docs
+  menu-code: ID
+  description: Create lightweight index for quick LLM scanning. Use when LLM needs to understand available docs without loading
+    everything.
+  action: bmad-index-docs
+  args: skills/bmad-init/core/tasks/index-docs.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: core
+  skill: bmad-master
+  display-name: Shard Document
+  menu-code: SD
+  description: Split large documents into smaller files by sections. Use when doc becomes too large (>500 lines) to manage
+    effectively.
+  action: bmad-shard-doc
+  args: skills/bmad-init/core/tasks/shard-doc.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: core
+  skill: bmad-master
+  display-name: Editorial Review - Prose
+  menu-code: ERP
+  description: Review prose for clarity, tone, and communication issues. Use after drafting to polish written content.
+  action: bmad-editorial-review-prose
+  args: skills/bmad-init/core/tasks/editorial-review-prose.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: report located with target document
+  outputs: three-column markdown table with suggested fixes
+- module: core
+  skill: bmad-master
+  display-name: Editorial Review - Structure
+  menu-code: ES
+  description: Propose cuts, reorganization, and simplification while preserving comprehension. Use when doc produced from
+    multiple subprocesses or needs structural improvement.
+  action: bmad-editorial-review-structure
+  args: skills/bmad-init/core/tasks/editorial-review-structure.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: report located with target document
+  outputs: ''
+- module: core
+  skill: bmad-master
+  display-name: Adversarial Review (General)
+  menu-code: AR
+  description: Review content critically to find issues and weaknesses. Use for quality assurance or before finalizing deliverables.
+    Code Review in other modules run this automatically, but its useful also for document reviews
+  action: bmad-review-adversarial-general
+  args: skills/bmad-init/core/tasks/review-adversarial-general.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: core
+  skill: bmad-master
+  display-name: Edge Case Hunter Review
+  menu-code: ECH
+  description: Walk every branching path and boundary condition in code, report only unhandled edge cases. Use alongside adversarial
+    review for orthogonal coverage - method-driven not attitude-driven.
+  action: bmad-review-edge-case-hunter
+  args: skills/bmad-init/core/tasks/review-edge-case-hunter.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: core
+  skill: bmad-master
+  display-name: Advanced Elicitation
+  menu-code: AE
+  description: 'Iteratively refine and improve LLM-generated content using proven reasoning methods (Pre-mortem, First Principles,
+    Inversion, Red Team, Socratic and 25+ more). Use after generating any spec, story, or document to improve quality. Best
+    first pick: Pre-mortem Analysis.'
+  action: bmad-advanced-elicitation
+  args: skills/bmad-init/core/workflows/advanced-elicitation/workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: core
+  skill: bmad-master
+  display-name: Distillator
+  menu-code: DG
+  description: Lossless LLM-optimized compression of source documents. Use when you need token-efficient distillates that
+    preserve all information for downstream LLM consumption. Verifiable via round-trip reconstruction. Use when docs are too
+    large for context windows.
+  action: bmad-distillator
+  args: skills/bmad-init/core/tasks/distillator/SKILL.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: adjacent to source document or specified output_path
+  outputs: distillate markdown file(s)

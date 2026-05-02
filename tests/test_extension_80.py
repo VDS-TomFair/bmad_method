@@ -8,8 +8,8 @@ Covers AC-07 requirements:
  - No exception raised when output-location is invalid path
 """
 
-import csv
-import io
+import yaml
+
 import sys
 import tempfile
 import unittest
@@ -142,16 +142,12 @@ class TestResolveDir(unittest.TestCase):
         self.assertIsNone(result)
 
 
-def _make_csv_bytes(rows: list[dict]) -> bytes:
-    """Helper — serialize list of row dicts to CSV bytes."""
+def _make_yaml_bytes(rows: list[dict]) -> bytes:
+    """Helper — serialize list of workflow dicts to YAML bytes."""
     if not rows:
         return b""
-    fieldnames = list(rows[0].keys())
-    buf = io.StringIO()
-    writer = csv.DictWriter(buf, fieldnames=fieldnames)
-    writer.writeheader()
-    writer.writerows(rows)
-    return buf.getvalue().encode()
+    data = {"workflows": rows}
+    return yaml.dump(data, default_flow_style=False).encode()
 
 
 class TestScanArtifactExistence(unittest.TestCase):
@@ -160,11 +156,11 @@ class TestScanArtifactExistence(unittest.TestCase):
     def setUp(self):
         _ext80._alias_cache.clear()
 
-    def _make_csv(self, tmpdir: str, rows: list[dict]) -> Path:
+    def _make_yaml(self, tmpdir: str, rows: list[dict]) -> Path:
         skill_dir = Path(tmpdir) / "skills" / "bmad-bmm"
         skill_dir.mkdir(parents=True)
-        p = skill_dir / "module-help.csv"
-        p.write_bytes(_make_csv_bytes(rows))
+        p = skill_dir / "module.yaml"
+        p.write_bytes(_make_yaml_bytes(rows))
         return p
 
     def test_artifact_found_marks_phase_complete(self):
@@ -175,12 +171,12 @@ class TestScanArtifactExistence(unittest.TestCase):
             (planning / "product-brief.md").touch()
 
             alias_map = {"planning_artifacts": str(planning)}
-            csv_path = self._make_csv(tmpdir, [{
-                "module": "bmm", "phase": "1-analysis", "required": "true",
+            yaml_path = self._make_yaml(tmpdir, [{
+                "module": "bmm", "phase": "1-analysis", "required": True,
                 "output-location": "planning_artifacts", "outputs": "product-brief*.md",
             }])
 
-            result = _scan_artifact_existence([csv_path], alias_map)
+            result = _scan_artifact_existence([yaml_path], alias_map)
 
         self.assertTrue(result["1-analysis"][0])
         self.assertIn("product-brief.md", result["1-analysis"][1])
@@ -193,12 +189,12 @@ class TestScanArtifactExistence(unittest.TestCase):
             # no files
 
             alias_map = {"planning_artifacts": str(planning)}
-            csv_path = self._make_csv(tmpdir, [{
-                "module": "bmm", "phase": "2-planning", "required": "true",
+            yaml_path = self._make_yaml(tmpdir, [{
+                "module": "bmm", "phase": "2-planning", "required": True,
                 "output-location": "planning_artifacts", "outputs": "prd*.md",
             }])
 
-            result = _scan_artifact_existence([csv_path], alias_map)
+            result = _scan_artifact_existence([yaml_path], alias_map)
 
         self.assertFalse(result["2-planning"][0])
 
@@ -206,13 +202,13 @@ class TestScanArtifactExistence(unittest.TestCase):
         """AC-05: unresolvable alias → no exception, phase stays False."""
         with tempfile.TemporaryDirectory() as tmpdir:
             alias_map = {}  # empty — alias will not resolve
-            csv_path = self._make_csv(tmpdir, [{
-                "module": "bmm", "phase": "1-analysis", "required": "true",
+            yaml_path = self._make_yaml(tmpdir, [{
+                "module": "bmm", "phase": "1-analysis", "required": True,
                 "output-location": "planning_artifacts", "outputs": "product-brief*.md",
             }])
 
             try:
-                result = _scan_artifact_existence([csv_path], alias_map)
+                result = _scan_artifact_existence([yaml_path], alias_map)
             except Exception as exc:
                 self.fail(f"_scan_artifact_existence raised unexpectedly: {exc}")
 
@@ -226,12 +222,12 @@ class TestScanArtifactExistence(unittest.TestCase):
             (planning / "brainstorm.md").touch()
 
             alias_map = {"planning_artifacts": str(planning)}
-            csv_path = self._make_csv(tmpdir, [{
-                "module": "bmm", "phase": "1-analysis", "required": "false",
+            yaml_path = self._make_yaml(tmpdir, [{
+                "module": "bmm", "phase": "1-analysis", "required": False,
                 "output-location": "planning_artifacts", "outputs": "brainstorm*.md",
             }])
 
-            result = _scan_artifact_existence([csv_path], alias_map)
+            result = _scan_artifact_existence([yaml_path], alias_map)
 
         self.assertFalse(result["1-analysis"][0])  # not required → doesn't gate
 

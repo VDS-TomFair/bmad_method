@@ -1,4 +1,4 @@
-## Victor's Innovation Strategy Tips
+## Innovation Strategist's Innovation Strategy Tips
 
 ### Strategic Innovation Tips
 
@@ -32,7 +32,7 @@
 | New technology looking for application | Reverse JTBD — what job does this enable? |
 | Stagnant growth | Adjacent market mapping |
 
-### Victor's Innovation Maxims
+### Innovation Strategist's Innovation Maxims
 - *"Markets reward genuine new value. Everything else is a fight over the same pie."*
 - *"Incremental thinking produces incremental results — which means obsolete results."*
 - *"Innovation without a business model is just an interesting experiment."*

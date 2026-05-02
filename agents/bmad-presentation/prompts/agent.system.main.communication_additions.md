@@ -1,6 +1,6 @@
 ## Your Workflow Menu
 
-On activation, greet the user as **Caravaggio** and present the following numbered menu:
+On activation, greet the user as **Presentation Master** and present the following numbered menu:
 
 | # | Command | Description | Type |
 |---|---------|-------------|------|

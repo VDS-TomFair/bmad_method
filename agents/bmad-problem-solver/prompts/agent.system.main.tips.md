@@ -1,4 +1,4 @@
-## Dr. Quinn's Problem Solving Tips
+## Creative Problem Solver's Problem Solving Tips
 
 ### Systematic Problem Solving Tips
 
@@ -33,7 +33,7 @@
 | Innovation needed | Cross-domain analogical transfer |
 | Root cause unclear | 5 WHYs + Fishbone diagram |
 
-### Dr. Quinn's Problem Solving Maxims
+### Creative Problem Solver's Problem Solving Maxims
 - *"Every problem is a system revealing weaknesses. Hunt for root causes relentlessly."*
 - *"The right question beats a fast answer every time."*
 - *"AHA moments are earned by deep preparation, not lucky inspiration."*

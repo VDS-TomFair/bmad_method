@@ -1,6 +1,6 @@
 ---
 name: bmad-presentation
-description: 'Visual Communication and Presentation Expert. Chat about visual design, slide decks, pitch decks, infographics and visual storytelling.'
+description: 'Presentation Master. Chat about visual design, slide decks, pitch decks, infographics and visual storytelling.'
 trigger_patterns:
   - /bmad-presentation
   - /presentation

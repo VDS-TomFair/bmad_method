@@ -106,7 +106,7 @@ class TestGPMasterSpecifics(unittest.TestCase):
 
     def test_master_specifics_preserves_routing(self):
         spec = AGENTS_DIR / "bmad-master" / "prompts" / "agent.system.main.specifics.md"
-        self.assertIn("module-help.csv", spec.read_text())
+        self.assertIn("module.yaml", spec.read_text())
 
     def test_master_specifics_preserves_skill_table(self):
         spec = AGENTS_DIR / "bmad-master" / "prompts" / "agent.system.main.specifics.md"

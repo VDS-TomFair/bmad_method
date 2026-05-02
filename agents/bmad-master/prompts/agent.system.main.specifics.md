@@ -19,10 +19,10 @@ BMAD skills are the authoritative source of workflow logic. They define routing,
 | Skill Name | Purpose |
 |------------|--------|
 | `bmad-init` | BMAD Initialization — initialize workspace, help, orchestration, Party Mode manifest |
-| `bmad-<workflow-skill>` | Individual workflow skill — loaded directly by name from `action` column in `module-help.csv` |
+| `bmad-<workflow-skill>` | Individual workflow skill — loaded directly by name from `action` column in `module.yaml` |
 
 **Skill loading protocol:**
-- Match user request in `module-help.csv` → read `action` column → `skills_tool:load <action>`
+- Match user request in `module.yaml` → read `action` column → `skills_tool:load <action>`
 - The loaded SKILL.md says which workflow file to follow; file tree in result gives exact path
 - If `action` is empty for a row, read the `args` path directly via `text_editor:read`
 - Use `skills_tool:load bmad-init` ONLY for: initialization, bmad-help, Party Mode, and config/CSV discovery

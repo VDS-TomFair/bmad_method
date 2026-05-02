@@ -96,7 +96,7 @@ def check_agents(agents_dir: Path):
 def check_modules(skills_dir: Path):
     ok, broken = [], []
     for n in SKILL_NAMES:
-        (ok if (skills_dir / n / "module-help.csv").exists() else broken).append(n)
+        (ok if (skills_dir / n / "module.yaml").exists() else broken).append(n)
     return ok, broken
 
 

@@ -23,7 +23,7 @@
   - Files: `skills/bmad-init/core/module.yaml`, `skills/bmad-bmm/module.yaml`, `skills/bmad-tea/module.yaml`, `skills/bmad-cis/module.yaml`, `skills/bmad-bmb/module.yaml`
   - Note: Init CSV is special — entries merged into appropriate module.yaml files
 
-- [ ] 1.3 Rewrite routing extension for YAML
+- [x] 1.3 Rewrite routing extension for YAML
   - Acceptance: Zero import csv or csv. references; yaml.safe_load() used; routing manifest output byte-identical to CSV version; mtime caching works
   - Verify: `grep -r 'import csv' extensions/python/message_loop_prompts_after/_80_bmad_routing_manifest.py && echo 'FAIL' || echo 'OK'
   - Files: `extensions/python/message_loop_prompts_after/_80_bmad_routing_manifest.py` (rewrite)

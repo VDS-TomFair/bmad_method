@@ -1,5 +1,6 @@
 """Edge case tests for VERIFY phase — read_state, routing, dashboard, init."""
-import csv
+import yaml  # yaml for module.yaml parsing
+import csv  # csv still used elsewhere
 import io
 import os
 import re
@@ -204,34 +205,32 @@ class TestIncludeDirectiveEdgeCases:
         assert len(shared.read_text().strip()) > 100
 
 
-# ── CSV schema consistency ─────────────────────────────────────────
+
+# -- YAML schema consistency ------------------------------------------------
 
 
-class TestCSVSchemaConsistency:
-    """Verify all module-help.csv files use consistent schema."""
+class TestYAMLSchemaConsistency:
+    """Verify all module.yaml files use consistent schema."""
 
-    EXPECTED_HEADER = "module,skill,display-name,menu-code,description,action,args,phase,after,before,required,output-location,outputs"
+    def test_all_yaml_files_parse(self):
+        """All active module.yaml files parse as valid YAML with workflows."""
+        import yaml
+        yaml_files = list(PROJECT_ROOT.glob("skills/*/module.yaml"))
+        assert len(yaml_files) >= 4, f"Expected at least 4 YAML files, found {len(yaml_files)}"
+        for yaml_file in sorted(yaml_files):
+            with open(yaml_file) as f:
+                data = yaml.safe_load(f)
+            assert isinstance(data, dict), f"{yaml_file.relative_to(PROJECT_ROOT)} must parse to dict"
+            assert "workflows" in data, f"{yaml_file.relative_to(PROJECT_ROOT)} missing workflows key"
 
-    def test_all_csvs_share_same_header(self):
-        """All active module-help.csv files use the 13-column header."""
-        csv_files = list(PROJECT_ROOT.glob("skills/*/module-help.csv"))
-        assert len(csv_files) >= 4, f"Expected at least 4 CSVs, found {len(csv_files)}"
-        for csv_file in sorted(csv_files):
-            header = csv_file.read_text().split("\n")[0]
-            assert header == self.EXPECTED_HEADER, f"{csv_file.relative_to(PROJECT_ROOT)} has wrong header"
-
-    def test_data_rows_have_13_columns_csv_aware(self):
-        """All data rows in active CSVs have exactly 13 columns (using proper CSV parsing)."""
-        csv_files = list(PROJECT_ROOT.glob("skills/*/module-help.csv"))
-        for csv_file in sorted(csv_files):
-            text = csv_file.read_text()
-            reader = csv.reader(io.StringIO(text))
-            for i, row in enumerate(reader):
-                if i == 0:
-                    continue  # skip header
-                if not any(cell.strip() for cell in row):
-                    continue  # skip empty rows
-                assert len(row) == 13, (
-                    f"{csv_file.relative_to(PROJECT_ROOT)} row {i}: "
-                    f"expected 13 cols, got {len(row)}: {row[:3]}..."
-                )
+    def test_all_workflows_have_required_fields(self):
+        """All workflows in all module.yaml files have key fields."""
+        import yaml
+        yaml_files = list(PROJECT_ROOT.glob("skills/*/module.yaml"))
+        for yaml_file in sorted(yaml_files):
+            with open(yaml_file) as f:
+                data = yaml.safe_load(f)
+            for i, wf in enumerate(data.get("workflows", [])):
+                assert "module" in wf, f"{yaml_file.name} wf[{i}] missing module"
+                assert "display-name" in wf, f"{yaml_file.name} wf[{i}] missing display-name"
+                assert "menu-code" in wf, f"{yaml_file.name} wf[{i}] missing menu-code"

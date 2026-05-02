@@ -10,7 +10,7 @@
 
 4. **One module, one problem domain** — Scope creep in module design produces modules that are hard to understand, test, and maintain. If the module tries to cover two unrelated problem domains, split it.
 
-5. **Documentation is part of the deliverable** — A module without a SKILL.md, module-help.csv, and config.yaml is incomplete. These are not optional documentation — they're the integration contract.
+5. **Documentation is part of the deliverable** — A module without a SKILL.md, module.yaml, and config.yaml is incomplete. These are not optional documentation — they're the integration contract.
 
 6. **Validate before shipping** — Run `VM` on every module before committing. Schema compliance issues surface immediately; behavioral issues surface in production.
 

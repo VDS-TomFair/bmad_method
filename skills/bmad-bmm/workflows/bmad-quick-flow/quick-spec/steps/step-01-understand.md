@@ -8,6 +8,12 @@ wipFile: '{implementation_artifacts}/tech-spec-wip.md'
 
 # Step 1: Analyze Requirement Delta
 
+## Pre-step: Project Context
+
+Before starting, check for `{output_folder}/project-context.md`.
+If it exists, read it and apply its conventions throughout this workflow.
+
+
 **Progress: Step 1 of 4** - Next: Deep Investigation
 
 ## RULES:

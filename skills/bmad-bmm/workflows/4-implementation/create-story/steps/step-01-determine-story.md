@@ -1,3 +1,8 @@
+## Pre-step: Project Context
+
+Before starting, check for `{output_folder}/project-context.md`.
+If it exists, read it and apply its conventions throughout this workflow.
+
 > ⚠️ **CRITICAL:** The workflow execution engine is governed by: {project-root}/skills/bmad-init/core/tasks/workflow.md
 > ⚠️ **CRITICAL:** You MUST have already loaded and processed: {installed_path}/workflow.yaml
 > ⚠️ **CRITICAL:** Communicate all responses in {communication_language} and generate all documents in {document_output_language}

@@ -1,5 +1,11 @@
 # Correct Course - Sprint Change Management Instructions
 
+## Pre-step: Project Context
+
+Before starting, check for `{output_folder}/project-context.md`.
+If it exists, read it and apply its conventions throughout this workflow.
+
+
 <critical>The workflow execution engine is governed by: {project-root}/skills/bmad-init/core/tasks/workflow.md</critical>
 <critical>You MUST have already loaded and processed: {project-root}/skills/bmad-bmm/workflows/4-implementation/correct-course/workflow.yaml</critical>
 <critical>Communicate all responses in {communication_language} and language MUST be tailored to {user_skill_level}</critical>

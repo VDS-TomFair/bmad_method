@@ -14,8 +14,8 @@
 
 - [x] 1.1 Define module.yaml schema
   - Acceptance: Schema validates against all 5 CSVs with zero data loss; 13 CSV columns mapped to YAML fields
-  - Verify: `python3 scripts/csv_to_yaml_converter.py --dry-run`
-  - Files: `scripts/csv_to_yaml_converter.py` (new)
+  - Verify: `python3 scripts/archive/csv_to_yaml_converter.py --dry-run`
+  - Files: `scripts/archive/csv_to_yaml_converter.py` (new)
 
 - [x] 1.2 Convert all 5 module-help.csv files to module.yaml
   - Acceptance: All 5 module.yaml files created; row counts match CSVs; yaml.safe_load() succeeds on each

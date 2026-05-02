@@ -107,7 +107,7 @@ Week 2 Day 4:   Final integration, A2A live test, archive
 - `skills/bmad-cis/module-help.csv` → `skills/bmad-cis/module.yaml`
 - `skills/bmad-bmb/module-help.csv` → `skills/bmad-bmb/module.yaml`
 - `extensions/python/message_loop_prompts_after/_80_bmad_routing_manifest.py` (rewrite CSV→YAML parsing)
-- `scripts/csv_to_yaml_converter.py` (new conversion script)
+- `scripts/archive/csv_to_yaml_converter.py` (new conversion script)
 - `docs/adr/0010-yaml-canonical-routing.md` (new ADR)
 - `docs/adr/0001-csv-canonical-routing.md` (supersede)
 

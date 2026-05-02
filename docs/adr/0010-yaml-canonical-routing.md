@@ -50,7 +50,7 @@ The CSV format presented several issues:
 
 ### Conversion Script
 
-`scripts/csv_to_yaml_converter.py` — one-time conversion script that reads all CSV files and produces YAML equivalents with zero data loss.
+`scripts/archive/csv_to_yaml_converter.py` — one-time conversion script (now archived) that reads all CSV files and produces YAML equivalents with zero data loss.
 
 ## Consequences
 

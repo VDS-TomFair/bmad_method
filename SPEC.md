@@ -412,7 +412,7 @@ Convert CSV rows to YAML workflow entries. Files to convert:
 
 **Important:** The init CSV is special — it contains core/anytime workflows that span modules. Its entries should be merged into the appropriate module.yaml files, with any init-specific entries going into `skills/bmad-init/core/module.yaml` under a separate key.
 
-**Conversion script approach:** Write a one-time Python conversion script (`scripts/csv_to_yaml_converter.py`) that:
+**Conversion script approach:** Write a one-time Python conversion script (`scripts/archive/csv_to_yaml_converter.py`) that:
 1. Reads each CSV with `csv.DictReader`
 2. Outputs YAML with `yaml.dump()` (default_flow_style=False)
 3. Validates output round-trips correctly
@@ -1002,7 +1002,7 @@ Add comprehensive tests for all P3 structural changes:
 
 ### Conversion Process
 
-1. **Automated conversion:** Run `scripts/csv_to_yaml_converter.py` — reads each CSV, outputs YAML
+1. **Automated conversion:** Run `scripts/archive/csv_to_yaml_converter.py` — reads each CSV, outputs YAML
 2. **Manual verification:** Diff CSV row count against YAML entry count for each module
 3. **Routing test:** Run routing extension with YAML, compare output to CSV-based output
 4. **Delete CSVs:** After verification, remove all module-help.csv files

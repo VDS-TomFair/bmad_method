@@ -177,7 +177,7 @@ Before returning control to the user, update the project state file using `text_
    - `Phase` → `3-solutioning`
    - `Active Artifact` → `ux-design-specification.md`
    - `Persona` → `BMad Master (Orchestrator)` **(ALWAYS reset to this value — never your own persona)**
-   - `Last Updated` → today's date
+   - `Last Updated` → today's date (YYYY-MM-DD format)
 3. **CRITICAL:** Preserve ALL other content — initiative context, completed workflows, technical investigation log, issues, notes, tables. NEVER overwrite the entire file.
 
 **Example patch:**

@@ -4,10 +4,11 @@ Verifies that all 8 workflow completion files use text_editor:patch
 instead of cat> heredocs, and that celebration/verification guards are present.
 """
 
+import os
 import subprocess
 import pytest
 
-PROJECT = "/a0/usr/projects/a0_bmad_method"
+PROJECT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 # The 8 Fix A target files
 FIX_A_FILES = [
@@ -36,10 +37,14 @@ FIX_C_FILE = f"{PROJECT}/agents/bmad-master/prompts/agent.system.main.communicat
 FIX_B1_FILE = f"{PROJECT}/prompts/bmad-agent-shared.md"
 
 
-def _grep(pattern: str, path: str) -> int:
-    """Return grep match count for pattern in file (basic regex)."""
+def _grep(pattern: str, path: str, mode: str = "basic") -> int:
+    """Return grep match count for pattern in file.
+
+    mode: 'basic' (default), 'extended' (-E), or 'fixed' (-F)
+    """
+    flags = {"basic": [], "extended": ["-E"], "fixed": ["-F"]}
     result = subprocess.run(
-        ["grep", "-c", pattern, path],
+        ["grep", "-c"] + flags.get(mode, []) + [pattern, path],
         capture_output=True, text=True
     )
     if result.returncode != 0:
@@ -47,26 +52,12 @@ def _grep(pattern: str, path: str) -> int:
     return int(result.stdout.strip())
 
 
-def _grep_extended(pattern: str, path: str) -> int:
-    """Return grep match count using extended regex."""
-    result = subprocess.run(
-        ["grep", "-cE", pattern, path],
-        capture_output=True, text=True
-    )
-    if result.returncode != 0:
-        return 0
-    return int(result.stdout.strip())
+def _grep_extended(pattern, path):
+    return _grep(pattern, path, mode="extended")
 
 
-def _grep_fixed(pattern: str, path: str) -> int:
-    """Return grep match count using fixed string matching."""
-    result = subprocess.run(
-        ["grep", "-cF", pattern, path],
-        capture_output=True, text=True
-    )
-    if result.returncode != 0:
-        return 0
-    return int(result.stdout.strip())
+def _grep_fixed(pattern, path):
+    return _grep(pattern, path, mode="fixed")
 
 
 # ============================================================
@@ -79,7 +70,7 @@ def _grep_fixed(pattern: str, path: str) -> int:
 ])
 def test_fix_a_no_cat_heredocs(filepath):
     """No cat > STATEEOF heredocs remain in any workflow file."""
-    assert _grep_fixed("cat >", filepath) == 0 or _grep_fixed("STATEEOF", filepath) == 0, \
+    assert _grep_fixed("cat >", filepath) == 0 and _grep_fixed("STATEEOF", filepath) == 0, \
         f"cat> heredoc still present in {filepath}"
 
 

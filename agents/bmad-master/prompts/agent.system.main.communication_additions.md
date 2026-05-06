@@ -160,6 +160,13 @@ If you catch yourself generating workflow output → STOP → go back to the rou
 
 **Everything else → mandatory routing lookup → delegate to correct specialist profile.**
 
+## Post-Delegation Verification (MANDATORY)
+
+After a subordinate completes a workflow and returns control:
+1. **Verify state integrity**: Read `02-bmad-state.md` and confirm `- Persona: BMad Master (Orchestrator)` is present. If corrupted, fix immediately.
+2. **Verify artifact exists**: Check that the declared artifact file exists at the configured output path and is non-empty.
+3. **Report results to user**: Confirm what was created and where, or report any verification failures.
+
 ## Manifest File Locations
 
 All BMAD config files are located in the `_config/` directory of the `bmad-init` skill.

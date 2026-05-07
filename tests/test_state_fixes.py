@@ -28,6 +28,7 @@ FIX_B_DISPLAY_FILES = [
     f"{PROJECT}/skills/bmad-bmm/workflows/2-plan-workflows/create-prd/steps-c/step-12-complete.md",
     f"{PROJECT}/skills/bmad-bmm/workflows/3-solutioning/create-architecture/steps/step-08-complete.md",
     f"{PROJECT}/skills/bmad-bmm/workflows/3-solutioning/create-epics-and-stories/steps/step-04-final-validation.md",
+    f"{PROJECT}/skills/bmad-bmm/workflows/2-plan-workflows/create-ux-design/steps/step-14-complete.md",
 ]
 
 # Fix C target file
@@ -171,7 +172,7 @@ def test_fix_b1_global_celebration_guard():
 
 
 @pytest.mark.parametrize("filepath", FIX_B_DISPLAY_FILES, ids=[
-    "step-06-complete", "step-12-complete", "step-08-complete", "step-04-final-validation",
+    "step-06-complete", "step-12-complete", "step-08-complete", "step-04-final-validation", "step-14-complete",
 ])
 def test_fix_b2_b5_display_only_prefix(filepath):
     """Display-only prefix present in 4 celebration/announcement files."""
@@ -195,3 +196,122 @@ def test_fix_c1_verify_artifact_exists():
 
 def test_fix_c1_report_results():
     assert _grep_fixed("Report results to user", FIX_C_FILE) >= 1
+
+
+# ============================================================
+# Edge Case: Structural Integrity (Fix A)
+# ============================================================
+
+@pytest.mark.parametrize("filepath", FIX_A_FILES, ids=[
+    "step-06-complete", "step-12-complete", "step-08-complete", "step-14-complete",
+    "sprint-planning", "dev-story", "step-04-final-validation", "quick-spec",
+])
+def test_fix_a_begin_end_patch_pairs(filepath):
+    """Every file with text_editor:patch must have matching Begin Patch and End Patch."""
+    assert _grep_fixed("Begin Patch", filepath) >= 1, f"Missing Begin Patch in {filepath}"
+    assert _grep_fixed("End Patch", filepath) >= 1, f"Missing End Patch in {filepath}"
+
+
+@pytest.mark.parametrize("filepath", FIX_A_FILES, ids=[
+    "step-06-complete", "step-12-complete", "step-08-complete", "step-14-complete",
+    "sprint-planning", "dev-story", "step-04-final-validation", "quick-spec",
+])
+def test_fix_a_always_reset_wording(filepath):
+    """Every file must instruct 'ALWAYS reset' persona to BMad Master."""
+    assert _grep_fixed("ALWAYS reset", filepath) >= 1, f"Missing 'ALWAYS reset' in {filepath}"
+
+
+@pytest.mark.parametrize("filepath", FIX_A_FILES, ids=[
+    "step-06-complete", "step-12-complete", "step-08-complete", "step-14-complete",
+    "sprint-planning", "dev-story", "step-04-final-validation", "quick-spec",
+])
+def test_fix_a_critical_preserve_instruction(filepath):
+    """Every file must have CRITICAL preserve/NEVER overwrite instruction."""
+    has_critical = _grep_fixed("CRITICAL", filepath) >= 1 and _grep_fixed("Preserve", filepath) >= 1
+    has_never = _grep_fixed("NEVER overwrite", filepath) >= 1
+    assert has_critical or has_never, f"Missing CRITICAL Preserve instruction in {filepath}"
+
+
+@pytest.mark.parametrize("filepath", FIX_A_FILES, ids=[
+    "step-06-complete", "step-12-complete", "step-08-complete", "step-14-complete",
+    "sprint-planning", "dev-story", "step-04-final-validation", "quick-spec",
+])
+def test_fix_a_no_partial_fix_cat_and_patch_coexist(filepath):
+    """No file should have BOTH cat> heredoc AND text_editor:patch (partial fix)."""
+    has_cat = _grep_fixed("cat >", filepath) >= 1
+    has_patch = _grep_fixed("text_editor:patch", filepath) >= 1
+    assert not (has_cat and has_patch), f"Partial fix detected in {filepath}: both cat> and text_editor:patch present"
+
+
+@pytest.mark.parametrize("filepath", FIX_A_FILES, ids=[
+    "step-06-complete", "step-12-complete", "step-08-complete", "step-14-complete",
+    "sprint-planning", "dev-story", "step-04-final-validation", "quick-spec",
+])
+def test_fix_a_patch_example_has_all_required_fields(filepath):
+    """Example patch in each file must include Phase, Active Artifact, and Persona fields."""
+    content = open(filepath).read()
+    # Find the example patch section
+    patch_start = content.find("*** Begin Patch")
+    patch_end = content.find("*** End Patch")
+    assert patch_start > 0, f"No Begin Patch found in {filepath}"
+    assert patch_end > patch_start, f"No End Patch after Begin Patch in {filepath}"
+    patch_block = content[patch_start:patch_end]
+    assert "- Phase" in patch_block, f"Example patch missing Phase field in {filepath}"
+    assert "- Active Artifact" in patch_block, f"Example patch missing Active Artifact field in {filepath}"
+    assert "- Persona" in patch_block, f"Example patch missing Persona field in {filepath}"
+
+
+# ============================================================
+# Edge Case: Celebration Guard Cross-Validation (Fix B)
+# ============================================================
+
+# Step-14 has celebration text but was NOT in FIX_B_DISPLAY_FILES.
+# This test proves the bug exists and needs fixing.
+FIX_B_MISSING_GUARD_FILE = (
+    f"{PROJECT}/skills/bmad-bmm/workflows/2-plan-workflows/create-ux-design/steps/step-14-complete.md"
+)
+
+
+def test_fix_b_step14_has_celebration_text():
+    """Prove step-14 has celebration/announcement text (prerequisite for guard test)."""
+    assert _grep_fixed("🎉", FIX_B_MISSING_GUARD_FILE) >= 1, "step-14 should have celebration emoji"
+    assert _grep_fixed("Congratulations", FIX_B_MISSING_GUARD_FILE) >= 1, "step-14 should have Congratulations text"
+
+
+def test_fix_b_step14_display_only_guard():
+    """step-14-complete has celebration text — it MUST have the display-only guard too."""
+    assert _grep_fixed("Display to user (do NOT write to any file)", FIX_B_MISSING_GUARD_FILE) >= 1, \
+        "step-14-complete missing display-only guard despite having celebration text"
+
+
+def test_fix_b_celebration_files_count_matches_guard_files():
+    """Verify every file in FIX_B_DISPLAY_FILES has the display-only guard present."""
+    for filepath in FIX_B_DISPLAY_FILES:
+        assert _grep_fixed("Display to user (do NOT write to any file)", filepath) >= 1, \
+            f"File {filepath} in FIX_B_DISPLAY_FILES but missing display-only guard"
+
+
+# ============================================================
+# Edge Case: Fix C Completeness
+# ============================================================
+
+def test_fix_c_single_verification_section():
+    """Post-Delegation Verification section should appear exactly once."""
+    assert _grep_fixed("Post-Delegation Verification (MANDATORY)", FIX_C_FILE) == 1, \
+        "Post-Delegation Verification section should appear exactly once"
+
+
+def test_fix_c_verification_steps_in_correct_order():
+    """Verification steps should appear in the correct order within the section."""
+    content = open(FIX_C_FILE).read()
+    section_start = content.find("Post-Delegation Verification (MANDATORY)")
+    assert section_start > 0, "Verification section not found"
+    section = content[section_start:]
+    pos_verify_state = section.find("Verify state integrity")
+    pos_verify_artifact = section.find("Verify artifact exists")
+    pos_report = section.find("Report results to user")
+    assert pos_verify_state > 0, "Verify state integrity step not found"
+    assert pos_verify_artifact > 0, "Verify artifact exists step not found"
+    assert pos_report > 0, "Report results to user step not found"
+    assert pos_verify_state < pos_verify_artifact < pos_report, \
+        "Verification steps out of order: should be state → artifact → report"

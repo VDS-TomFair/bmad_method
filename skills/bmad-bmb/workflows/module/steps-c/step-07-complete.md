@@ -2,7 +2,7 @@
 name: 'step-07-complete'
 description: 'Finalize, offer to run validation'
 
-buildTrackingFile: '{bmb_creations_output_folder}/modules/module-build-{module_code}.md'
+buildTrackingFile: '{bmb_staging_folder}/modules/module-build-{module_code}.md'
 targetLocation: '{build_tracking_targetLocation}'
 moduleHelpGenerateWorkflow: '../module-help-generate.md'
 validationWorkflow: '../steps-v/step-01-load-target.md'

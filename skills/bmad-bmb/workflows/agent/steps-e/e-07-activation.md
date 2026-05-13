@@ -2,7 +2,7 @@
 name: 'e-07-activation'
 description: 'Review critical_actions and route to edit step'
 
-editPlan: '{bmb_creations_output_folder}/edit-plan-{agent-name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{agent-name}.md'
 criticalActions: ../data/critical-actions.md
 
 # Edit step route (determined by hasSidecar)

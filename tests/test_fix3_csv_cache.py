@@ -1,6 +1,6 @@
-"""Fix 3: Verify _scan_artifact_existence uses cached CSV reads.
+"""Fix 3: Verify _scan_artifact_existence uses cached YAML reads.
 
-_collect_routing_rows() uses _csv_cache with mtime invalidation, but
+_collect_routing_rows() uses _yaml_cache with mtime invalidation, but
 _scan_artifact_existence() reads CSV via csv_path.read_text() directly,
 bypassing the cache entirely. Every execute() call double-reads each CSV.
 """
@@ -35,31 +35,31 @@ class TestCSVCacheConsistency(unittest.TestCase):
         return ROUTING_FILE.read_text()
 
     def test_cached_read_helper_exists(self):
-        """A _read_csv_cached() helper function must exist."""
+        """A _read_yaml_cached() helper function must exist."""
         source = self._get_source()
         self.assertRegex(
             source,
-            r'def\s+_read_csv_cached\s*\(',
-            "_read_csv_cached() helper function not defined"
+            r'def\s+_read_yaml_cached\s*\(',
+            "_read_yaml_cached() helper function not defined"
         )
 
     def test_scan_artifact_uses_cached_read(self):
-        """_scan_artifact_existence must use _read_csv_cached, not read_text directly."""
+        """_scan_artifact_existence must use _read_yaml_cached, not read_text directly."""
         func_body = _extract_func_body(self._get_source(), "_scan_artifact_existence")
         self.assertTrue(func_body, "_scan_artifact_existence not found")
         self.assertNotIn('.read_text(', func_body,
                           "_scan_artifact_existence still uses direct .read_text() instead of cache")
-        self.assertIn('_read_csv_cached(', func_body,
-                       "_scan_artifact_existence must call _read_csv_cached()")
+        self.assertIn('_read_yaml_cached(', func_body,
+                       "_scan_artifact_existence must call _read_yaml_cached()")
 
     def test_collect_routing_rows_uses_cached_read(self):
-        """_collect_routing_rows must also use _read_csv_cached."""
+        """_collect_routing_rows must also use _read_yaml_cached."""
         func_body = _extract_func_body(self._get_source(), "_collect_routing_rows")
         self.assertTrue(func_body, "_collect_routing_rows not found")
         self.assertNotIn('.read_text(', func_body,
                           "_collect_routing_rows still uses direct .read_text() instead of cache")
-        self.assertIn('_read_csv_cached(', func_body,
-                       "_collect_routing_rows must call _read_csv_cached()")
+        self.assertIn('_read_yaml_cached(', func_body,
+                       "_collect_routing_rows must call _read_yaml_cached()")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-## Caravaggio's Presentation Tips
+## Presentation Master's Presentation Tips
 
 ### Visual Communication Tips
 
@@ -34,7 +34,7 @@
 | Visual metaphor needed | `VM` — Visual Metaphor: Rube Goldberg / journey maps |
 | Information dense content | `IN` — Infographic: spatial organization |
 
-### Caravaggio's Presentation Maxims
+### Presentation Master's Presentation Maxims
 - *"If it needs a legend, you've already lost the audience."*
 - *"White space is focus made visible."*
 - *"The slide that tries to say everything says nothing."*

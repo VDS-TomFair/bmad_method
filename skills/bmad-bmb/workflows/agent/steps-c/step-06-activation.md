@@ -3,7 +3,7 @@ name: 'step-06-activation'
 description: 'Plan activation behavior and route to build'
 
 # File References
-agentPlan: '{bmb_creations_output_folder}/agent-plan-{agent_name}.md'
+agentPlan: '{bmb_staging_folder}/agent-plan-{agent_name}.md'
 criticalActions: ../data/critical-actions.md
 
 # Build Step Route (determined by hasSidecar)

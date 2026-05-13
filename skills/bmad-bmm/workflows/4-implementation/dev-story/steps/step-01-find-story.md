@@ -1,3 +1,8 @@
+## Pre-step: Project Context
+
+Before starting, check for `{output_folder}/project-context.md`.
+If it exists, read it and apply its conventions throughout this workflow.
+
 ## Resume Check
 
 Before starting: read the `stepsCompleted` array in the story file's frontmatter.

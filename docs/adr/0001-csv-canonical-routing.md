@@ -1,6 +1,6 @@
 # ADR-0001: CSV as Canonical Routing Mechanism
 
-**Status:** Accepted
+**Status:** Superseded by ADR-0010
 **Date:** 2026-04-26
 **Phase:** C (Routing Consolidation)
 

@@ -1,0 +1,439 @@
+code: bmm
+name: BMad Method Agile-AI Driven-Development
+workflows:
+- module: bmm
+  skill: analyst
+  display-name: Document Project
+  menu-code: DP
+  description: Analyze an existing project to produce useful documentation
+  action: bmad-document-project
+  args: skills/bmad-bmm/workflows/document-project/workflow.yaml
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: project-knowledge
+  outputs: '*'
+- module: bmm
+  skill: analyst
+  display-name: Generate Project Context
+  menu-code: GPC
+  description: Scan existing codebase to generate a lean LLM-optimized project-context.md containing critical implementation
+    rules patterns and conventions for AI agents. Essential for brownfield projects and quick-flow.
+  action: bmad-generate-project-context
+  args: skills/bmad-bmm/workflows/generate-project-context/workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: output_folder
+  outputs: project context
+- module: bmm
+  skill: dev
+  display-name: Quick Spec
+  menu-code: QS
+  description: Do not suggest for potentially very complex things unless requested or if the user complains that they do not
+    want to follow the extensive planning of the bmad method. Quick one-off tasks small changes simple apps brownfield additions
+    to well established patterns utilities without extensive planning
+  action: bmad-quick-spec
+  args: skills/bmad-bmm/workflows/bmad-quick-flow/quick-spec/workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: tech spec
+- module: bmm
+  skill: dev
+  display-name: Quick Dev
+  menu-code: QD
+  description: Quick one-off tasks small changes simple apps utilities without extensive planning - Do not suggest for potentially
+    very complex things unless requested or if the user complains that they do not want to follow the extensive planning of
+    the bmad method, unless the user is already working through the implementation phase and just requests a 1 off things
+    not already in the plan
+  action: bmad-quick-dev
+  args: skills/bmad-bmm/workflows/bmad-quick-flow/quick-dev/workflow.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: bmm
+  skill: dev
+  display-name: Correct Course
+  menu-code: CC
+  description: 'Anytime: Navigate significant changes. May recommend start over update PRD redo architecture sprint planning
+    or correct epics and stories'
+  action: bmad-correct-course
+  args: skills/bmad-bmm/workflows/4-implementation/correct-course/workflow.yaml
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: change proposal
+- module: bmm
+  skill: tech-writer
+  display-name: Write Document
+  menu-code: WD
+  description: Describe in detail what you want, and the agent will follow the documentation best practices defined in agent
+    memory. Multi-turn conversation with subprocess for research/review.
+  action: ''
+  args: skills/bmad-bmm/agents/tech-writer/tech-writer.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: project-knowledge
+  outputs: document
+- module: bmm
+  skill: tech-writer
+  display-name: Update Standards
+  menu-code: US
+  description: Update agent memory documentation-standards.md with your specific preferences if you discover missing document
+    conventions.
+  action: ''
+  args: skills/bmad-bmm/agents/tech-writer/tech-writer.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: .a0proj/knowledge/tech-writer-sidecar
+  outputs: standards
+- module: bmm
+  skill: tech-writer
+  display-name: Mermaid Generate
+  menu-code: MG
+  description: Create a Mermaid diagram based on user description. Will suggest diagram types if not specified.
+  action: ''
+  args: skills/bmad-bmm/agents/tech-writer/tech-writer.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: mermaid diagram
+- module: bmm
+  skill: tech-writer
+  display-name: Validate Document
+  menu-code: VD
+  description: Review the specified document against documentation standards and best practices. Returns specific actionable
+    improvement suggestions organized by priority.
+  action: ''
+  args: skills/bmad-bmm/agents/tech-writer/tech-writer.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: validation report
+- module: bmm
+  skill: tech-writer
+  display-name: Explain Concept
+  menu-code: EC
+  description: Create clear technical explanations with examples and diagrams for complex concepts. Breaks down into digestible
+    sections using task-oriented approach.
+  action: ''
+  args: skills/bmad-bmm/agents/tech-writer/tech-writer.md
+  phase: anytime
+  after: ''
+  before: ''
+  required: false
+  output-location: project_knowledge
+  outputs: explanation
+- module: bmm
+  skill: analyst
+  display-name: Brainstorm Project
+  menu-code: BP
+  description: Expert Guided Facilitation through a single or multiple techniques
+  action: bmad-brainstorming
+  args: skills/bmad-init/core/workflows/brainstorming/workflow.md
+  phase: 1-analysis
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: brainstorming session
+- module: bmm
+  skill: analyst
+  display-name: Market Research
+  menu-code: MR
+  description: Market analysis competitive landscape customer needs and trends
+  action: bmad-market-research
+  args: skills/bmad-bmm/workflows/1-analysis/research/workflow-market-research.md
+  phase: 1-analysis
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts|project-knowledge
+  outputs: research documents
+- module: bmm
+  skill: analyst
+  display-name: Domain Research
+  menu-code: DR
+  description: Industry domain deep dive subject matter expertise and terminology
+  action: bmad-domain-research
+  args: skills/bmad-bmm/workflows/1-analysis/research/workflow-domain-research.md
+  phase: 1-analysis
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts|project_knowledge
+  outputs: research documents
+- module: bmm
+  skill: analyst
+  display-name: Technical Research
+  menu-code: TR
+  description: Technical feasibility architecture options and implementation approaches
+  action: bmad-technical-research
+  args: skills/bmad-bmm/workflows/1-analysis/research/workflow-technical-research.md
+  phase: 1-analysis
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts|project_knowledge
+  outputs: research documents
+- module: bmm
+  skill: analyst
+  display-name: Create Brief
+  menu-code: CB
+  description: A guided experience to nail down your product idea
+  action: bmad-create-product-brief
+  args: skills/bmad-bmm/workflows/1-analysis/create-product-brief/workflow.md
+  phase: 1-analysis
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: product-brief*.md
+- module: bmm
+  skill: analyst
+  display-name: Working Backwards
+  menu-code: WB
+  description: PRFAQ Challenge
+  action: bmad-prfaq
+  args: skills/bmad-bmm/workflows/1-analysis/prfaq/workflow.md
+  phase: 1-analysis
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: prfaq-*.md
+- module: bmm
+  skill: pm
+  display-name: Create PRD
+  menu-code: CP
+  description: Expert led facilitation to produce your Product Requirements Document
+  action: bmad-create-prd
+  args: skills/bmad-bmm/workflows/2-plan-workflows/create-prd/workflow-create-prd.md
+  phase: 2-planning
+  after: ''
+  before: ''
+  required: true
+  output-location: planning_artifacts
+  outputs: prd*.md
+- module: bmm
+  skill: pm
+  display-name: Validate PRD
+  menu-code: VP
+  description: Validate PRD is comprehensive lean well organized and cohesive
+  action: bmad-validate-prd
+  args: skills/bmad-bmm/workflows/2-plan-workflows/create-prd/workflow-validate-prd.md
+  phase: 2-planning
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: prd validation report
+- module: bmm
+  skill: pm
+  display-name: Edit PRD
+  menu-code: EP
+  description: Improve and enhance an existing PRD
+  action: bmad-edit-prd
+  args: skills/bmad-bmm/workflows/2-plan-workflows/create-prd/workflow-edit-prd.md
+  phase: 2-planning
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: updated prd
+- module: bmm
+  skill: ux-designer
+  display-name: Create UX
+  menu-code: CU
+  description: Guidance through realizing the plan for your UX, strongly recommended if a UI is a primary piece of the proposed
+    project
+  action: bmad-create-ux-design
+  args: skills/bmad-bmm/workflows/2-plan-workflows/create-ux-design/workflow.md
+  phase: 2-planning
+  after: ''
+  before: ''
+  required: false
+  output-location: planning_artifacts
+  outputs: ux design
+- module: bmm
+  skill: architect
+  display-name: Create Architecture
+  menu-code: CA
+  description: Guided Workflow to document technical decisions
+  action: bmad-create-architecture
+  args: skills/bmad-bmm/workflows/3-solutioning/create-architecture/workflow.md
+  phase: 3-solutioning
+  after: ''
+  before: ''
+  required: true
+  output-location: planning_artifacts
+  outputs: architecture*.md
+- module: bmm
+  skill: pm
+  display-name: Create Epics and Stories
+  menu-code: CE
+  description: Create the Epics and Stories Listing
+  action: bmad-create-epics-and-stories
+  args: skills/bmad-bmm/workflows/3-solutioning/create-epics-and-stories/workflow.md
+  phase: 3-solutioning
+  after: ''
+  before: ''
+  required: true
+  output-location: planning_artifacts
+  outputs: epics*.md
+- module: bmm
+  skill: architect
+  display-name: Check Implementation Readiness
+  menu-code: IR
+  description: Ensure PRD UX Architecture and Epics Stories are aligned
+  action: bmad-check-implementation-readiness
+  args: skills/bmad-bmm/workflows/3-solutioning/check-implementation-readiness/workflow.md
+  phase: 3-solutioning
+  after: ''
+  before: ''
+  required: true
+  output-location: planning_artifacts
+  outputs: readiness*.md
+- module: bmm
+  skill: dev
+  display-name: Sprint Planning
+  menu-code: SP
+  description: Generate sprint plan for development tasks - this kicks off the implementation phase by producing a plan the
+    implementation agents will follow in sequence for every story in the plan.
+  action: bmad-sprint-planning
+  args: skills/bmad-bmm/workflows/4-implementation/sprint-planning/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: true
+  output-location: implementation_artifacts
+  outputs: sprint-plan*.md
+- module: bmm
+  skill: dev
+  display-name: Sprint Status
+  menu-code: SS
+  description: 'Anytime: Summarize sprint status and route to next workflow'
+  action: bmad-sprint-status
+  args: skills/bmad-bmm/workflows/4-implementation/sprint-status/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: bmm
+  skill: dev
+  display-name: Validate Story
+  # NOTE: VS menu-code is intentionally duplicated across BMM (Validate Story) and BMB (Validate Skill). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
+  menu-code: VS
+  description: Validates story readiness and completeness before development work begins
+  action: bmad-create-story
+  args: skills/bmad-bmm/workflows/4-implementation/create-story/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: implementation_artifacts
+  outputs: story validation report
+- module: bmm
+  skill: dev
+  display-name: Create Story
+  menu-code: CS
+  description: 'Story cycle start: Prepare first found story in the sprint plan that is next, or if the command is run with
+    a specific epic and story designation with context. Once complete, then VS then DS then CR then back to DS if needed or
+    next CS or ER'
+  action: bmad-create-story
+  args: skills/bmad-bmm/workflows/4-implementation/create-story/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: true
+  output-location: implementation_artifacts
+  outputs: story-*.md
+- module: bmm
+  skill: dev
+  display-name: Dev Story
+  menu-code: DS
+  description: 'Story cycle: Execute story implementation tasks and tests then CR then back to DS if fixes needed'
+  action: bmad-dev-story
+  args: skills/bmad-bmm/workflows/4-implementation/dev-story/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: true
+  output-location: implementation_artifacts
+  outputs: story-*.md
+- module: bmm
+  skill: dev
+  display-name: Code Review
+  menu-code: CR
+  description: 'Story cycle: If issues back to DS if approved then next CS or ER if epic complete'
+  action: bmad-code-review
+  args: skills/bmad-bmm/workflows/4-implementation/code-review/workflow.md
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''
+- module: bmm
+  skill: dev
+  display-name: QA Automation Test
+  # NOTE: QA menu-code is intentionally duplicated across BMM (QA Automation Test) and BMB (Quality Scan Agent). Module-scoped: each agent only sees its own module's codes via routing manifest phase/module filtering.
+  menu-code: QA
+  description: Generate automated API and E2E tests for implemented code using the project's existing test framework (detects
+    existing well known in use test frameworks). Use after implementation to add test coverage. NOT for code review or story
+    validation - use CR for that.
+  action: bmad-qa-automate
+  args: skills/bmad-bmm/workflows/qa-generate-e2e-tests/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: implementation_artifacts
+  outputs: test suite
+- module: bmm
+  skill: dev
+  display-name: Retrospective
+  menu-code: ER
+  description: 'Optional at epic end: Review completed work lessons learned and next epic or if major issues consider CC'
+  action: bmad-retrospective
+  args: skills/bmad-bmm/workflows/4-implementation/retrospective/workflow.yaml
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: implementation_artifacts
+  outputs: retrospective
+- module: bmm
+  skill: dev
+  display-name: Checkpoint Review
+  menu-code: CK
+  description: LLM-assisted human-in-the-loop review. Make sense of a change focus attention where it matters test. Use when
+    the user says checkpoint human review or walk me through this change.
+  action: bmad-checkpoint-preview
+  args: skills/bmad-bmm/workflows/4-implementation/checkpoint-preview/SKILL.md
+  phase: 4-implementation
+  after: ''
+  before: ''
+  required: false
+  output-location: ''
+  outputs: ''

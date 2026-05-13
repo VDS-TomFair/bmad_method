@@ -5,7 +5,7 @@ description: 'Run validation after edits and present results'
 # File References
 nextStepFile: './step-e-07-complete.md'
 fixStep: './step-e-03-fix-validation.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{workflow_name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{workflow_name}.md'
 targetWorkflowPath: '{targetWorkflowPath}'
 validationWorkflow: '../steps-v/step-01-validate.md'
 validationReport: '{targetWorkflowPath}/validation-report-{workflow_name}.md'

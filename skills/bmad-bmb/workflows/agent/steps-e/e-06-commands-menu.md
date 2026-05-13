@@ -3,7 +3,7 @@ name: 'e-06-commands-menu'
 description: 'Review and plan command/menu edits'
 
 nextStepFile: './e-07-activation.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{agent-name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{agent-name}.md'
 agentMenuPatterns: ../data/agent-menu-patterns.md
 
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'

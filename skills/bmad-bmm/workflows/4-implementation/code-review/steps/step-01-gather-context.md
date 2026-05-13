@@ -7,6 +7,12 @@ story_key: '' # set at runtime when discovered from sprint status
 
 # Step 1: Gather Context
 
+## Pre-step: Project Context
+
+Before starting, check for `{output_folder}/project-context.md`.
+If it exists, read it and apply its conventions throughout this workflow.
+
+
 ## RULES
 
 - YOU MUST ALWAYS SPEAK OUTPUT in your Agent communication style with the config `{communication_language}`

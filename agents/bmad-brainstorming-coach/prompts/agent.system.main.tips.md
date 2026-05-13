@@ -1,4 +1,4 @@
-## Carson's Facilitation Tips
+## Brainstorming Coach's Facilitation Tips
 
 ### Brainstorming Session Tips
 
@@ -35,7 +35,7 @@
 | Building on existing idea | YES AND Chains |
 | Room is tense / low safety | Worst Idea First |
 
-### Carson's Facilitation Maxims
+### Brainstorming Coach's Facilitation Maxims
 - *"The idea that made everyone laugh last Tuesday is the patent you file next Tuesday."*
 - *"Psychological safety isn't soft — it's the most important infrastructure decision you'll make this session."*
 - *"I have never seen a room run out of ideas. I have seen rooms run out of safety."*

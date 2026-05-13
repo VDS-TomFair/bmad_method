@@ -39,7 +39,7 @@ When user selects `LT` or "list tasks":
 
 When user selects `LW` or "list workflows":
 1. Resolve plugin root from EXTRAS `bmad_paths` → `bmad_plugin_root` value
-2. Read all `skills/*/module-help.csv` files dynamically: `cat <plugin_root>/skills/*/module-help.csv` using `code_execution_tool` (bash)
+2. Read all `skills/*/module.yaml` files dynamically: `cat <plugin_root>/skills/*/module.yaml` using `code_execution_tool` (bash)
 3. Display all workflows as a numbered list grouped by phase:
    - Show: **#. [Phase] Name** — Description | Agent: agent-display-name
 4. User picks a workflow by number or name
@@ -96,7 +96,7 @@ The `_80_bmad_routing_manifest` extension injects a **BMAD Routing Table** into 
 
 **If the routing table is NOT in EXTRAS** (e.g., extension not loaded), fall back to reading the CSV manually:
 1. Resolve plugin root from EXTRAS `bmad_paths` → `bmad_plugin_root` value
-2. Read all module CSVs: `cat <plugin_root>/skills/*/module-help.csv` using `code_execution_tool` (bash)
+2. Read all module CSVs: `cat <plugin_root>/skills/*/module.yaml` using `code_execution_tool` (bash)
 
 Do NOT route from memory. The routing table or CSV is the source of truth.
 
@@ -165,13 +165,13 @@ If you catch yourself generating workflow output → STOP → go back to the CSV
 All BMAD config files are located in the `_config/` directory of the `bmad-init` skill.
 To discover the correct path, use `skills_tool:load` with `bmad-init` — the returned skill directory contains `_config/` with:
 
-> **Note:** For LW and natural language routing, prefer reading `skills/*/module-help.csv` directly (dynamic, always current). The `bmad-help.csv` aggregate is a compiled snapshot used only when the routing extension is unavailable.
+> **Note:** For LW and natural language routing, prefer reading `skills/*/module.yaml` directly (dynamic, always current). The `bmad-help.csv` aggregate is a compiled snapshot used only when the routing extension is unavailable.
 
 | Manifest | Relative Path |
 |----------|------|
 | Task manifest | `<skill_dir>/_config/task-manifest.csv` |
 | Workflow manifest | `<skill_dir>/_config/workflow-manifest.csv` |
-| Full help manifest (compiled aggregate) | `<skill_dir>/_config/bmad-help.csv` — compiled from `skills/*/module-help.csv` |
+| Full help manifest (compiled aggregate) | `<skill_dir>/_config/bmad-help.csv` — compiled from `skills/*/module.yaml` |
 | Agent manifest | `<skill_dir>/_config/agent-manifest.csv` |
 ---
 
@@ -344,3 +344,16 @@ profiles. PM2 handles them via inline persona injection:
 - Each `call_subordinate` call passes: agent persona context + topic + conversation history summary
 - Trigger: `PM2` command (preserves `PM` for backward compatibility with single-LLM mode)
 - Prerequisite: ARCH-003 specialist memory implementation recommended before PM2 activation
+
+## Subordinate Mode Detection
+
+When you receive a direct task instruction (not a menu selection from the user),
+you are in SUBORDINATE MODE:
+
+1. Recognize you are being called by a superior agent
+2. Load the appropriate BMAD skill IMMEDIATELY
+3. Route to the matching workflow based on the task
+4. Execute the workflow step-by-step — do NOT skip the process
+5. Return results via the `response` tool when complete
+
+Do NOT display the menu in subordinate mode — proceed directly to workflow execution.

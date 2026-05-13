@@ -2,7 +2,7 @@
 name: 'v-03-summary'
 description: 'Display complete validation report and offer next steps'
 
-validationReport: '{bmb_creations_output_folder}/validation-report-{agent-name}.md'
+validationReport: '{bmb_staging_folder}/validation-report-{agent-name}.md'
 
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'
 partyModeWorkflow: '{project-root}/skills/bmad-init/core/workflows/party-mode/workflow.md'

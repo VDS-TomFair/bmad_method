@@ -21,7 +21,7 @@ Six interactive workflows facilitating creative, strategic, and visual communica
 
 **Selection Modes:** User-selected, AI-recommended, random, or progressive
 
-**Note:** Brainstorming is a shared CORE workflow (used by multiple modules). Owned by `skills/bmad-init/core/workflows/brainstorming/` and routed via `bmad-brainstorming` skill. Carson (bmad-brainstorming-coach) is the CIS agent facilitating this workflow.
+**Note:** Brainstorming is a shared CORE workflow (used by multiple modules). Owned by `skills/bmad-init/core/workflows/brainstorming/` and routed via `bmad-brainstorming` skill. Brainstorming Coach (bmad-brainstorming-coach) is the CIS agent facilitating this workflow.
 
 ### [Design Thinking](./design-thinking)
 
@@ -142,12 +142,12 @@ Some workflows additionally contain:
 
 | Agent | Menu Code | Workflow | Owned By |
 |-------|-----------|----------|----------|
-| Carson (brainstorming-coach) | BS | brainstorming/workflow.md | bmad-init/core |
-| Maya (design-thinking-coach) | DT | design-thinking/workflow.yaml | bmad-cis |
-| Victor (innovation-strategist) | IS | innovation-strategy/workflow.yaml | bmad-cis |
-| Caravaggio (presentation) | PR | presentation/workflow.yaml | bmad-cis |
-| Dr. Quinn (creative-problem-solver) | PS | problem-solving/workflow.yaml | bmad-cis |
-| Sophia (storyteller) | ST | storytelling/workflow.yaml | bmad-cis |
+| Brainstorming Coach (brainstorming-coach) | BS | brainstorming/workflow.md | bmad-init/core |
+| Design Thinking Coach (design-thinking-coach) | DT | design-thinking/workflow.yaml | bmad-cis |
+| Innovation Strategist (innovation-strategist) | IS | innovation-strategy/workflow.yaml | bmad-cis |
+| Presentation Master (presentation) | PR | presentation/workflow.yaml | bmad-cis |
+| Creative Problem Solver (creative-problem-solver) | PS | problem-solving/workflow.yaml | bmad-cis |
+| Storyteller (storyteller) | ST | storytelling/workflow.yaml | bmad-cis |
 
 ## Best Practices
 

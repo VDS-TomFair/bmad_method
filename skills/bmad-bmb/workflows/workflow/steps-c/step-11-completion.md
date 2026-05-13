@@ -2,7 +2,7 @@
 name: 'step-11-completion'
 description: 'Complete the workflow creation and provide next steps'
 
-targetWorkflowPath: '{bmb_creations_output_folder}/workflows/{new_workflow_name}'
+targetWorkflowPath: '{bmb_build_output_skills}/{new_workflow_name}'
 workflowPlanFile: '{targetWorkflowPath}/workflow-plan-{new_workflow_name}.md'
 ---
 
@@ -107,7 +107,31 @@ stepsCompleted: ['step-01-discovery' or 'step-00-conversion', 'step-02-classific
 ---
 ```
 
-### 3. Provide Next Steps Guidance
+### 3. A0 Auto-Discovery Guidance
+
+**Your Workflow Is Already Installed! 🚀**
+"Great news — {new_workflow_name} is already installed and auto-discovered by Agent Zero! No additional installation steps needed."
+
+**How It Works:**
+"Agent Zero automatically discovers skills and workflows placed in `.a0proj/skills/`. Your workflow was written there during the build step, so it's ready to use immediately in this project."
+
+**Scopes Explained:**
+
+| Scope | Path | Availability |
+|-------|------|-------------|
+| **Project scope** | `.a0proj/skills/{new_workflow_name}/` | Available in this project only (current) |
+| **Plugin scope** | `plugins/bmad_method/skills/{new_workflow_name}/` | Available across all projects globally |
+
+**To Make Globally Available:**
+"If you want {new_workflow_name} available across all your projects, promote it to plugin scope:"
+
+```
+/promote-workflow {new_workflow_name}
+```
+
+"This copies the workflow from project scope to plugin scope, making it accessible everywhere. The project-scoped version remains as well."
+
+### 4. Provide Next Steps Guidance
 
 "**Next Steps:**
 
@@ -129,9 +153,10 @@ stepsCompleted: ['step-01-discovery' or 'step-00-conversion', 'step-02-classific
 **Resources:**
 - **Validate later:** Load {targetWorkflowPath}/workflow.md with -v flag
 - **Edit later:** Load {targetWorkflowPath}/workflow.md with -e flag
-- **Build more:** Use create workflow mode for new workflows"
+- **Build more:** Use create workflow mode for new workflows
+- **Promote globally:** `/promote-workflow {new_workflow_name}`"
 
-### 4. Conversion-Specific Summary (If Applicable)
+### 5. Conversion-Specific Summary (If Applicable)
 
 **Check workflowPlanFile frontmatter for `conversionFrom`:**
 
@@ -156,7 +181,7 @@ stepsCompleted: ['step-01-discovery' or 'step-00-conversion', 'step-02-classific
 
 **Review the conversion report** in the confirmation step for full details."
 
-### 5. Final Completion Message
+### 6. Final Completion Message
 
 "**Thank you for using BMAD Workflow Creator!**
 
@@ -178,6 +203,8 @@ This is the final step. Present completion summary, finalize plan, and provide n
 
 - Completion summary presented clearly
 - Plan finalized with COMPLETE status
+- A0 auto-discovery guidance provided
+- Promote-workflow option mentioned for global availability
 - Usage guidance provided
 - Conversion specifics noted (if applicable)
 - Session ends positively

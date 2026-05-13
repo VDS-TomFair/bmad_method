@@ -76,7 +76,7 @@ class TestRoutingExtensionLogging(unittest.TestCase):
                     if isinstance(child, ast.Try):
                         for handler in child.handlers:
                             # Check if this handler is near the end of the function
-                            if handler.lineno > 430:
+                            if handler.lineno > 445:
                                 body = handler.body
                                 # Must have a log.warning call
                                 has_log = any(

@@ -2,7 +2,7 @@
 name: 'step-10-confirmation'
 description: 'Confirm workflow completion - validate plan completion or conversion coverage'
 
-targetWorkflowPath: '{bmb_creations_output_folder}/workflows/{new_workflow_name}'
+targetWorkflowPath: '{bmb_build_output_skills}/{new_workflow_name}'
 workflowPlanFile: '{targetWorkflowPath}/workflow-plan-{new_workflow_name}.md'
 nextStepFile: './step-11-completion.md'
 validationWorkflow: '{targetWorkflowPath}/steps-v/step-01-validate.md'

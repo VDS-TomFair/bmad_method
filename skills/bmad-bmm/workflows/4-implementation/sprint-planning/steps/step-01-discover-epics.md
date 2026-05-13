@@ -11,6 +11,12 @@ Before starting: read the `stepsCompleted` array in the `{status_file}` frontmat
 
 # Sprint Planning - Sprint Status Generator
 
+## Pre-step: Project Context
+
+Before starting, check for `{output_folder}/project-context.md`.
+If it exists, read it and apply its conventions throughout this workflow.
+
+
 <critical>The workflow execution engine is governed by: {project-root}/skills/bmad-init/core/tasks/workflow.md</critical>
 <critical>You MUST have already loaded and processed: {project-root}/skills/bmad-bmm/workflows/4-implementation/sprint-planning/workflow.yaml</critical>
 

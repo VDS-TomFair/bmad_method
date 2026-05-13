@@ -3,7 +3,7 @@ name: 'step-07-foundation'
 description: 'Create workflow folder structure, workflow.md, and main output template(s)'
 
 nextStepFile: './step-08-build-step-01.md'
-targetWorkflowPath: '{bmb_creations_output_folder}/workflows/{new_workflow_name}'
+targetWorkflowPath: '{bmb_build_output_skills}/{new_workflow_name}'
 workflowPlanFile: '{targetWorkflowPath}/workflow-plan-{new_workflow_name}.md'
 workflowTemplate: '../templates/workflow-template.md'
 outputFormatStandards: '../data/output-format-standards.md'

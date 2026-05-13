@@ -3,7 +3,7 @@ name: 'v-02a-validate-metadata'
 description: 'Validate metadata and append to report'
 
 nextStepFile: './v-02b-validate-persona.md'
-validationReport: '{bmb_creations_output_folder}/validation-report-{agent-name}.md'
+validationReport: '{bmb_staging_folder}/validation-report-{agent-name}.md'
 agentMetadata: ../data/agent-metadata.md
 agentFile: '{agent-file-path}'
 ---

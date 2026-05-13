@@ -31,7 +31,7 @@ Workflows in a MODULE can access additional variables from its `module.yaml`.
 
 **Example:**
 ```yaml
-bmb_creations_output_folder: '{project-root}/_bmad-output/bmb-creations'
+bmb_staging_folder: '{project-root}/_bmad-output/bmb-staging''
 ```
 
 **Standalone workflows:** Only have access to standard variables.
@@ -138,14 +138,14 @@ Steps can define NEW variables for future steps.
 **Step 01 defines:**
 ```yaml
 ---
-targetWorkflowPath: '{bmb_creations_output_folder}/workflows/{workflow_name}'
+targetWorkflowPath: '{bmb_build_output_skills}/{workflow_name}'
 ---
 ```
 
 **Step 02 uses:**
 ```yaml
 ---
-targetWorkflowPath: '{bmb_creations_output_folder}/workflows/{workflow_name}'
+targetWorkflowPath: '{bmb_build_output_skills}/{workflow_name}'
 workflowPlanFile: '{targetWorkflowPath}/plan.md'
 ---
 ```

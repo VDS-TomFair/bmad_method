@@ -3,7 +3,7 @@ name: 'e-05-persona'
 description: 'Review and plan persona edits'
 
 nextStepFile: './e-06-commands-menu.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{agent-name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{agent-name}.md'
 personaProperties: ../data/persona-properties.md
 principlesCrafting: ../data/principles-crafting.md
 communicationPresets: ../data/communication-presets.csv

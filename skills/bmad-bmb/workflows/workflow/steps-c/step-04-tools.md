@@ -4,7 +4,7 @@ description: 'Preview workflow structure, then configure tools with context'
 
 nextStepFile: './step-05-plan-review.md'
 commonToolsCsv: '../data/common-workflow-tools.csv'
-workflowPlanFile: '{bmb_creations_output_folder}/workflows/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
+workflowPlanFile: '{bmb_build_output_skills}/{new_workflow_name}/workflow-plan-{new_workflow_name}.md'
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'
 partyModeWorkflow: '{project-root}/skills/bmad-init/core/workflows/party-mode/workflow.md'
 ---

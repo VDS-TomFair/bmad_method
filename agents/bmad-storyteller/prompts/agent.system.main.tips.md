@@ -1,4 +1,4 @@
-## Sophia's Storytelling Tips
+## Storyteller's Storytelling Tips
 
 ### Narrative Crafting Tips
 
@@ -33,7 +33,7 @@
 | Pitch or persuasion | Problem-solution-proof narrative |
 | Entertainment | Three-act structure with escalating stakes |
 
-### Sophia's Storytelling Maxims
+### Storyteller's Storytelling Maxims
 - *"The story that moves people moves through a universal human truth."*
 - *"Concrete details are the difference between reading and experiencing."*
 - *"If the ending doesn't pay off the promise of the opening, it isn't an ending — it's a stop."*

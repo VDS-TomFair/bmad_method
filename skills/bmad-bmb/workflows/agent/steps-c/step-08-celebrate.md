@@ -5,20 +5,19 @@ description: 'Celebrate completion and guide next steps for using the agent'
 # File References
 thisStepFile: ./step-08-celebrate.md
 workflowFile: ../workflow-create-agent.md
-outputFile: {bmb_creations_output_folder}/agent-completion-{agent_name}.md
+outputFile: {bmb_staging_folder}/agent-completion-{agent_name}.md
 
 # Task References
 advancedElicitationTask: '{project-root}/skills/bmad-init/core/workflows/advanced-elicitation/workflow.md'
 partyModeWorkflow: '{project-root}/skills/bmad-init/core/workflows/party-mode/workflow.md'
-installationDocs: 'https://github.com/bmad-code-org/BMAD-METHOD/blob/main/docs/modules/bmb-bmad-builder/custom-content-installation.md#standalone-content-agents-workflows-tasks-tools-templates-prompts'
 validationWorkflow: '{project-root}/src/modules/bmb/workflows/agent/steps-v/v-01-load-review.md'
 ---
 
-# Step 8: Celebration and Installation Guidance
+# Step 8: Celebration and Activation Guidance
 
 ## STEP GOAL:
 
-Celebrate the successful agent creation, recap the agent's capabilities, provide installation guidance, and mark workflow completion.
+Celebrate the successful agent creation, recap the agent's capabilities, provide A0 activation guidance, and mark workflow completion.
 
 ## MANDATORY EXECUTION RULES (READ FIRST):
 
@@ -31,34 +30,32 @@ Celebrate the successful agent creation, recap the agent's capabilities, provide
 
 ### Role Reinforcement:
 
-- ✅ You are a celebration coordinator who guides users through agent installation and activation
+- ✅ You are a celebration coordinator who guides users through agent activation and discovery
 - ✅ If you already have been given a name, communication_style and identity, continue to use those while playing this new role
 - ✅ We engage in collaborative dialogue, not command-response
-- ✅ You bring installation expertise, user brings their excitement about their new agent, together we ensure successful agent installation and usage
+- ✅ You bring activation expertise, user brings their excitement about their new agent, together we ensure successful agent usage
 - ✅ Maintain collaborative celebratory tone throughout
 
 ### Step-Specific Rules:
 
-- 🎯 Focus only on celebrating completion and guiding installation
+- 🎯 Focus only on celebrating completion and guiding activation
 - 🚫 FORBIDDEN to end without marking workflow completion in frontmatter
-- 💬 Approach: Celebrate enthusiastically while providing practical installation guidance
-- 📋 Ensure user understands installation steps and agent capabilities
-- 🔗 Always provide installation documentation link for reference
+- 💬 Approach: Celebrate enthusiastically while providing practical activation guidance
+- 📋 Ensure user understands auto-discovery and agent availability
 
 ## EXECUTION PROTOCOLS:
 
 - 🎉 Celebrate agent creation achievement enthusiastically
 - 💾 Mark workflow completion in frontmatter
-- 📖 Provide clear installation guidance
-- 🔗 Share installation documentation link
+- 📖 Provide clear A0 auto-discovery guidance
 - 🚫 FORBIDDEN to end workflow without proper completion marking
 
 ## CONTEXT BOUNDARIES:
 
 - Available context: Complete, validated, and built agent from previous steps
-- Focus: Celebration, installation guidance, and workflow completion
-- Limits: No agent modifications, only installation guidance and celebration
-- Dependencies: Complete agent ready for installation
+- Focus: Celebration, activation guidance, and workflow completion
+- Limits: No agent modifications, only activation guidance and celebration
+- Dependencies: Complete agent written to `.a0proj/agents/{agent_name}/`
 
 ## MANDATORY SEQUENCE
 
@@ -100,7 +97,7 @@ Present enthusiastic celebration:
 
 **Activation Steps:**
 
-1. **Locate your agent files:** `{agent_file_location}`
+1. **Locate your agent files:** `.a0proj/agents/{agent_name}/`
 2. **If compiled:** Use the compiled version at `{compiled_location}`
 3. **For customization:** Edit the customization file at `{customization_location}`
 4. **First interaction:** Start by asking for help to see available commands
@@ -112,45 +109,29 @@ Present enthusiastic celebration:
 - 'Tell me about your capabilities'
 - 'Help me with [specific task related to agent purpose]'"
 
-### 4. Installation Guidance
+### 4. A0 Auto-Discovery Guidance
 
-**Making Your Agent Installable:**
-"Now that {agent_name} is complete, let's get it installed and ready to use!"
+**Your Agent Is Already Installed! 🚀**
+"Great news — {agent_name} is already installed and auto-discovered by Agent Zero! No additional installation steps needed."
 
-**Installation Overview:**
-"To make your agent installable and sharable, you'll need to package it as a standalone BMAD content module. Here's what you need to know:"
+**How It Works:**
+"Agent Zero automatically discovers agents placed in `.a0proj/agents/`. Your agent was written there during the build step, so it's ready to use immediately in this project."
 
-**Key Steps:**
-1. **Create a module folder:** Name it something descriptive (e.g., `my-custom-stuff`)
-2. **Add module.yaml:** Include a `module.yaml` file with `code`, `name`, `version`
-3. **Copy your agent:** Copy the entire folder from `_bmad-creations/{agent-name}/` to `agents/`
-4. **The workflow handles structure:** Sidecar folders are already in the right place
+**Scopes Explained:**
 
-**Module Structure Example:**
+| Scope | Path | Availability |
+|-------|------|-------------|
+| **Project scope** | `.a0proj/agents/{agent_name}/` | Available in this project only (current) |
+| **Plugin scope** | `plugins/bmad_method/agents/{agent_name}/` | Available across all projects globally |
+
+**To Make Globally Available:**
+"If you want {agent_name} available across all your projects, promote it to plugin scope:"
+
 ```
-my-custom-stuff/
-├── module.yaml
-├── agents/                              # Copy entire folder from _bmad-creations/
-│   └── {agent-name}/
-│       ├── {agent-name}.agent.yaml
-│       └── {agent-name}-sidecar/        # Already created by workflow if hasSidecar: true
-│           ├── memories.md
-│           └── instructions.md
-└── workflows/                           # Optional: standalone custom workflows
-    └── {workflow-name}/
-        └── workflow.md
+/promote-agent {agent_name}
 ```
 
-**Note:** Your custom module can contain agents, workflows, or both. The `agents/` and `workflows/` folders are siblings alongside `module.yaml`.
-
-**Installation Methods:**
-- **New projects:** The BMAD installer will prompt for local custom modules
-- **Existing projects:** Use "Modify BMAD Installation" to add your module
-
-**Full Documentation:**
-"For complete details on packaging, sharing, and installing your custom agent, including all the configuration options and troubleshooting tips, see the official installation guide:"
-
-📖 **[BMAD Custom Content Installation Guide]({installationDocs})**
+"This copies the agent from project scope to plugin scope, making it accessible everywhere. The project-scoped version remains as well."
 
 ### 5. Final Documentation
 
@@ -164,25 +145,19 @@ my-custom-stuff/
 - **Name:** {agent_name}
 - **Type:** {agent_type}
 - **Purpose:** {agent_purpose}
-- **Status:** Ready for installation
+- **Status:** Ready — auto-discovered by Agent Zero
 
 ### File Locations
 
-- **Agent Config:** {agent_file_path}
+- **Agent Config:** .a0proj/agents/{agent_name}/
 - **Compiled Version:** {compiled_agent_path}
 - **Customization:** {customization_file_path}
 
-### Installation
+### A0 Auto-Discovery
 
-Package your agent as a standalone module with a `module.yaml` file.
-See: {installationDocs}
-
-### Quick Start
-
-1. Create a module folder
-2. Add module.yaml with code, name, version
-3. Copy entire agent folder from `_bmad-creations/{agent-name}/` to `agents/`
-4. Install via BMAD installer
+Agent is installed at project scope (`.a0proj/agents/{agent_name}/`).
+Agent Zero auto-discovers agents in this location.
+To make globally available: `/promote-agent {agent_name}`
 ```
 
 Save this content to `{outputFile}` for reference.
@@ -190,10 +165,10 @@ Save this content to `{outputFile}` for reference.
 ### 6. Workflow Completion
 
 **Mark Complete:**
-"Agent creation workflow completed successfully! {agent_name} is ready to be installed and used. Amazing work!"
+"Agent creation workflow completed successfully! {agent_name} is auto-discovered and ready to use. Amazing work!"
 
 **Final Achievement:**
-"You've successfully created a custom BMAD agent from concept to installation-ready configuration. The journey from idea to deployable agent is complete!"
+"You've successfully created a custom agent from concept to deployment-ready configuration. The journey from idea to a live, auto-discovered agent is complete!"
 
 ### 7. Present MENU OPTIONS
 
@@ -201,8 +176,8 @@ Display: "**✅ Agent Build Complete! Select an Option:** [V] Run Validation [S]
 
 #### Menu Handling Logic:
 
-- IF V: "Loading validation phase..." → Save celebration content to {outputFile}, update frontmatter with build completion, then load, read entire file, then execute {validationWorkflow}
-- IF S: "Skipping validation. Completing workflow..." → Save content to {outputFile}, update frontmatter with workflow completion, then end workflow gracefully
+- IF V: "Loading validation phase..." → Save completion status, update frontmatter with build completion, then load, read entire file, then execute {validationWorkflow}
+- IF S: "Skipping validation. Completing workflow..." → Save completion status and end workflow gracefully
 - IF A: Execute {advancedElicitationTask}, and when finished redisplay the menu
 - IF P: Execute {partyModeWorkflow}, and when finished redisplay the menu
 - IF Any other comments or queries: help user respond then [Redisplay Menu Options](#7-present-menu-options)
@@ -212,11 +187,10 @@ Display: "**✅ Agent Build Complete! Select an Option:** [V] Run Validation [S]
 - ALWAYS halt and wait for user input after presenting menu
 - User can choose validation (V), skip to complete (S), or use advanced elicitation (A) or party mode (P)
 - After other menu items execution (A/P), return to this menu
-- User can chat or ask questions - always respond and then end with display again of the menu options
 
 ## CRITICAL STEP COMPLETION NOTE
 
-ONLY WHEN [S skip option] is selected and [workflow completion marked in frontmatter], will the workflow end gracefully with agent ready for installation.
+ONLY WHEN [S skip option] is selected and [completion documented], will the workflow end gracefully with agent build complete.
 IF [V validation option] is selected, the validation workflow will be loaded to perform comprehensive validation checks.
 
 ---
@@ -225,23 +199,18 @@ IF [V validation option] is selected, the validation workflow will be loaded to 
 
 ### ✅ SUCCESS:
 
-- Enthusiastic celebration of agent creation achievement
-- Clear installation guidance provided
-- Agent capabilities and value clearly communicated
-- Installation documentation link shared with context
-- Module structure and packaging explained
-- User confidence in agent installation established
-- Workflow properly marked as complete in frontmatter
-- Content properly saved to output file
-- Menu presented with exit option
+- Enthusiastic celebration of agent creation
+- Clear recap of agent capabilities provided
+- A0 auto-discovery guidance explained
+- Project scope vs plugin scope explained
+- Promote-agent option mentioned for global availability
+- Workflow completion marked
 
 ### ❌ SYSTEM FAILURE:
 
 - Ending without marking workflow completion
-- Not providing clear installation guidance
+- Not providing clear activation guidance
 - Missing celebration of achievement
-- Not sharing installation documentation link
-- Not ensuring user understands installation steps
-- Failing to update frontmatter completion status
+- Referencing upstream installation commands
 
 **Master Rule:** Skipping steps, optimizing sequences, or not following exact instructions is FORBIDDEN and constitutes SYSTEM FAILURE.

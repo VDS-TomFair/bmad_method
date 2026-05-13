@@ -97,7 +97,7 @@ outputFile: '{output_folder}/[output].md'
 
 ### Module-Specific
 ```yaml
-bmb_creations_output_folder: '{project-root}/_bmad-output/bmb-creations'
+bmb_staging_folder: '{project-root}/_bmad-output/bmb-staging''
 ```
 
 ### Rules

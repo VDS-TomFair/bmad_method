@@ -42,7 +42,7 @@ Options:
 Based on selection, load the target file(s).
 
 **IF Brief:**
-- Path: `{bmb_creations_output_folder}/modules/module-brief-{code}.md`
+- Path: `{bmb_staging_folder}/modules/module-brief-{code}.md`
 
 **IF Yaml:**
 - Path: `src/modules/{code}/module.yaml`

@@ -4,7 +4,7 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[1]
 BMM_DIR = PROJECT / 'skills' / 'bmad-bmm'
 
-# BMM SKILL.md dirs and their primary actions from module-help.csv
+# BMM SKILL.md dirs and their primary actions from module.yaml
 EXPECTED_BMM = {
     'create-product-brief': 'bmad-create-product-brief',
     'prfaq': 'bmad-prfaq',

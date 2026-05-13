@@ -14,6 +14,19 @@ mkdir -p "$A0PROJ/knowledge/main"
 mkdir -p "$A0PROJ/knowledge/fragments"
 mkdir -p "$A0PROJ/knowledge/solutions"
 mkdir -p "$A0PROJ/instructions"
+mkdir -p "$A0PROJ/agents"
+mkdir -p "$A0PROJ/skills"
+mkdir -p "$A0PROJ/_bmad/custom/"
+# Create sidecar memory directories for all agents
+mkdir -p "${A0PROJ}/_bmad/_memory"
+for agent in analyst pm architect dev ux-designer tech-writer module-builder \
+             agent-builder workflow-builder test-architect innovation \
+             problem-solver design-thinking brainstorming-coach \
+             storyteller presentation; do
+    mkdir -p "${A0PROJ}/_bmad/_memory/${agent}-sidecar"
+    # Create initial memories.md if it doesn't exist
+    [ -f "${A0PROJ}/_bmad/_memory/${agent}-sidecar/memories.md" ] || printf "# %s memories\n\n" "${agent}" > "${A0PROJ}/_bmad/_memory/${agent}-sidecar/memories.md"
+done
 
 # Create project-context.md stub (no-clobber — preserves user content on re-init)
 touch "$A0PROJ/knowledge/main/project-context.md"
@@ -100,6 +113,10 @@ echo "    test-artifacts/"
 echo "  .a0proj/knowledge/                <- Project knowledge base"
 echo "    main/ | fragments/ | solutions/"
 echo "  .a0proj/instructions/             <- Auto-injected state"
+echo "  .a0proj/agents/                   <- BMB agent output (A0 discovers)"
+echo "  .a0proj/_bmad/_memory/             <- Agent sidecar memory"
+echo "    *-sidecar/memories.md"
+echo "  .a0proj/skills/                   <- BMB skill output (A0 discovers)"
 echo ""
 echo "Note: BMAD framework workflows are bundled in skills — no project copy needed."
 echo ""

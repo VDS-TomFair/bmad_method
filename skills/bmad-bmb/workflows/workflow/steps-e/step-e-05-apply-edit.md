@@ -5,7 +5,7 @@ description: 'Offer validation after edits, complete or continue editing'
 # File References
 nextStepFile: './step-e-06-validate-after.md'
 completeStep: './step-e-07-complete.md'
-editPlan: '{bmb_creations_output_folder}/edit-plan-{workflow_name}.md'
+editPlan: '{bmb_staging_folder}/edit-plan-{workflow_name}.md'
 targetWorkflowPath: '{targetWorkflowPath}'
 validationWorkflow: '../steps-v/step-01-validate.md'
 ---

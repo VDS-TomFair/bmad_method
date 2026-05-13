@@ -1,17 +1,21 @@
-import csv
-import io
 import unittest
 from pathlib import Path
+import yaml
 
 PROJECT = Path(__file__).resolve().parents[1]
 SKILLS_DIR = PROJECT / 'skills'
 
-NEW_HEADER = ['module', 'skill', 'display-name', 'menu-code', 'description', 'action', 'args', 'phase', 'after', 'before', 'required', 'output-location', 'outputs']
+REQUIRED_FIELDS = ['module', 'skill', 'display-name', 'menu-code', 'description', 'action', 'args', 'phase', 'after', 'before', 'required', 'output-location', 'outputs']
 
 
-def _all_module_help_csvs() -> list[Path]:
-    """Find all module-help.csv files across skill modules."""
-    return sorted(SKILLS_DIR.glob('*/module-help.csv')) + sorted(SKILLS_DIR.glob('*/*/module-help.csv'))
+def _all_module_yaml_files() -> list[Path]:
+    """Find all module.yaml files across skill modules."""
+    files = sorted(SKILLS_DIR.glob('*/module.yaml'))
+    # Also check bmad-init/core/module.yaml
+    init_core = SKILLS_DIR / 'bmad-init' / 'core' / 'module.yaml'
+    if init_core.exists() and init_core not in files:
+        files.append(init_core)
+    return files
 
 
 def _all_skill_md_files() -> list[Path]:
@@ -19,47 +23,60 @@ def _all_skill_md_files() -> list[Path]:
     return sorted(SKILLS_DIR.rglob('SKILL.md'))
 
 
-class TestC7CSVSchemaCoverage(unittest.TestCase):
-    """C7: Verify ALL module-help.csv files use the 13-col upstream schema."""
+class TestC7YAMLSchemaCoverage(unittest.TestCase):
+    """C7: Verify ALL module.yaml files use the upstream schema."""
 
-    def test_all_csv_files_found(self):
-        """Must find module-help.csv files in all skill modules."""
-        csvs = _all_module_help_csvs()
-        module_names = set(p.parent.name for p in csvs)
-        expected = {'bmad-init', 'core', 'bmad-bmm', 'bmad-cis', 'bmad-tea', 'bmad-bmb'}
+    def test_all_yaml_files_found(self):
+        """Must find module.yaml files in all skill modules."""
+        yaml_files = _all_module_yaml_files()
+        module_names = set()
+        for p in yaml_files:
+            # Extract module name from path
+            parts = p.relative_to(SKILLS_DIR).parts
+            if len(parts) >= 2:
+                module_names.add(parts[0])
+            if len(parts) >= 3 and parts[1] == 'core':
+                module_names.add('core')
+        expected = {'bmad-init', 'bmad-bmm', 'bmad-cis', 'bmad-tea', 'bmad-bmb'}
         for name in expected:
-            self.assertTrue(any(name in str(p) for p in csvs),
-                        f'No module-help.csv found for module: {name}')
+            self.assertTrue(any(name in str(p) for p in yaml_files),
+                        f'No module.yaml found for module: {name}')
 
-    def test_all_csvs_have_13_col_header(self):
-        """Every CSV must use the 13-column upstream header."""
-        expected = ','.join(NEW_HEADER)
-        for csv_path in _all_module_help_csvs():
-            header_line = csv_path.read_text().splitlines()[0].strip()
-            self.assertEqual(header_line, expected,
-                        f'{csv_path}: header mismatch.\n  got:      {header_line}\n  expected: {expected}')
+    def test_all_yaml_files_parse(self):
+        """Every module.yaml must parse cleanly with yaml.safe_load."""
+        for yaml_path in _all_module_yaml_files():
+            try:
+                with open(yaml_path) as f:
+                    data = yaml.safe_load(f)
+                self.assertIsInstance(data, dict,
+                            f'{yaml_path}: must parse to a dict')
+            except Exception as e:
+                self.fail(f'{yaml_path}: failed to parse: {e}')
 
-    def test_all_csvs_exactly_13_columns(self):
-        """Every data row in every CSV must have exactly 13 fields."""
-        for csv_path in _all_module_help_csvs():
-            text = csv_path.read_text()
-            reader = csv.reader(io.StringIO(text))
-            headers = next(reader)
-            self.assertEqual(len(headers), 13, f'{csv_path}: header has {len(headers)} cols')
-            for i, row in enumerate(reader, 2):
-                self.assertEqual(len(row), 13,
-                            f'{csv_path} row {i}: {len(row)} cols: {row}')
+    def test_all_yaml_have_workflows(self):
+        """Every module.yaml must have a workflows list."""
+        for yaml_path in _all_module_yaml_files():
+            with open(yaml_path) as f:
+                data = yaml.safe_load(f)
+            self.assertIn('workflows', data,
+                        f'{yaml_path}: missing top-level "workflows" key')
+            self.assertIsInstance(data['workflows'], list,
+                        f'{yaml_path}: workflows must be a list')
 
-    def test_all_csvs_have_required_columns(self):
-        """All CSVs must have key columns: display-name, menu-code, action, skill."""
-        for csv_path in _all_module_help_csvs():
-            text = csv_path.read_text()
-            reader = csv.DictReader(io.StringIO(text))
-            for i, row in enumerate(reader, 2):
-                self.assertIn('display-name', row, f'{csv_path} row {i}: missing display-name')
-                self.assertIn('menu-code', row, f'{csv_path} row {i}: missing menu-code')
-                self.assertIn('action', row, f'{csv_path} row {i}: missing action')
-                self.assertIn('skill', row, f'{csv_path} row {i}: missing skill')
+    def test_all_workflows_have_required_fields(self):
+        """All workflows must have key fields: display-name, menu-code, action, skill."""
+        for yaml_path in _all_module_yaml_files():
+            with open(yaml_path) as f:
+                data = yaml.safe_load(f)
+            for i, wf in enumerate(data.get('workflows', [])):
+                self.assertIn('display-name', wf,
+                            f'{yaml_path} workflow[{i}]: missing display-name')
+                self.assertIn('menu-code', wf,
+                            f'{yaml_path} workflow[{i}]: missing menu-code')
+                self.assertIn('action', wf,
+                            f'{yaml_path} workflow[{i}]: missing action')
+                self.assertIn('skill', wf,
+                            f'{yaml_path} workflow[{i}]: missing skill')
 
 
 class TestC7TriggerPatternCoverage(unittest.TestCase):
@@ -110,14 +127,13 @@ class TestC7TriggerPatternCoverage(unittest.TestCase):
 
 
 class TestC7RoutingExtensionHealth(unittest.TestCase):
-    """C7: Verify routing extension is healthy after all Phase C changes."""
+    """C7: Verify routing extension is healthy after YAML migration."""
 
     def test_routing_ext_imports(self):
-        """Routing extension must import cleanly."""
+        """Routing extension must import cleanly with yaml."""
         ext_file = PROJECT / 'extensions' / 'python' / 'message_loop_prompts_after' / '_80_bmad_routing_manifest.py'
         source = ext_file.read_text()
-        self.assertIn('import csv', source)
-        self.assertIn('import io', source)
+        self.assertIn('import yaml', source)
         self.assertIn('import logging', source)
         self.assertIn('from pathlib import Path', source)
 
@@ -125,16 +141,16 @@ class TestC7RoutingExtensionHealth(unittest.TestCase):
         """Routing extension must NOT have dual-read compatibility code."""
         ext_file = PROJECT / 'extensions' / 'python' / 'message_loop_prompts_after' / '_80_bmad_routing_manifest.py'
         source = ext_file.read_text()
-        self.assertNotIn('or row.get("name"', source)
-        self.assertNotIn('or row.get("code"', source)
-        self.assertNotIn('or row.get("agent-name"', source)
+        self.assertNotIn('or wf.get("name"', source)
+        self.assertNotIn('or wf.get("code"', source)
+        self.assertNotIn('or wf.get("agent-name"', source)
 
-    def test_routing_ext_uses_new_columns(self):
-        """Routing extension must use new 13-col column names directly."""
+    def test_routing_ext_uses_new_fields(self):
+        """Routing extension must use YAML field names directly."""
         ext_file = PROJECT / 'extensions' / 'python' / 'message_loop_prompts_after' / '_80_bmad_routing_manifest.py'
         source = ext_file.read_text()
-        self.assertIn('row.get("display-name"', source)
-        self.assertIn('row.get("menu-code"', source)
+        self.assertIn('wf.get("display-name"', source)
+        self.assertIn('wf.get("menu-code"', source)
 
 
 if __name__ == '__main__':
